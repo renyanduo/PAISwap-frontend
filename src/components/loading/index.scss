@@ -1,0 +1,36 @@
+@keyframes custom-loading-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.custom-loading {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 100;
+  background-color: rgba(255, 255, 255, 0.95);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  .custom-loading-round {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2px solid rgb(25, 137, 250);
+    border-left-color: transparent;
+    animation: custom-loading-rotate 1s linear infinite;
+  }
+  .custom-loading-text {
+    color: rgb(25, 137, 250);
+    margin-top: 14px;
+    font-size: 16px;
+  }
+}
