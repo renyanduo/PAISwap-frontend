@@ -1,5 +1,10 @@
 .header {
+  margin: 45px 0;
+
   &-wrap {
-    background: rgba(0, 0, 0, 0.3);
+    .logo {
+      width: 144px;
+      height: 29px;
+    }
   }
 }

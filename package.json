@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@craco/craco": "^6.1.2",
+    "@pancakeswap-libs/sdk": "^1.0.1",
     "@pancakeswap-libs/uikit": "^0.29.4",
     "@tailwindcss/postcss7-compat": "^2.1.2",
     "@testing-library/jest-dom": "^5.11.4",
@@ -21,6 +22,8 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "redux": "^4.1.0",
+    "redux-logger": "^3.0.6",
+    "redux-thunk": "^2.3.0",
     "styled-components": "^5.3.0",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat",
     "web-vitals": "^1.0.1"
