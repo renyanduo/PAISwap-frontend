@@ -19,3 +19,43 @@
     }
   }
 }
+
+.modal {
+  width: 600px;
+  height: 507px;
+  background: #ffffff;
+  border-radius: 38px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.7);
+  padding: 54px 25px;
+
+  .tab {
+    font-size: 24px;
+    color: #3e3c44;
+    display: flex;
+    justify-content: space-evenly;
+    margin-bottom: 54px;
+
+    &-item {
+      &.active {
+        font-weight: bold;
+        position: relative;
+
+        &::after {
+          content: '';
+          height: 4px;
+          background: #ffd136;
+          position: absolute;
+          left: 0;
+          bottom: -14px;
+          width: 100%;
+        }
+      }
+    }
+  }
+}

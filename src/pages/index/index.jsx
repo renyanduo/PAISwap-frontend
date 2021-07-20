@@ -8,20 +8,22 @@ import banner from '@/assets/images/banner.png'
 
 const Index = () => {
 
-  const BackButtonModal = ({ title, onDismiss }) => {
-    const handleOnBack = () => {
-      return 1
-    }
-
-    return (
-      <Modal title={title} onDismiss={onDismiss} onBack={handleOnBack} hideCloseButton>
-        <Button onClick={onDismiss} variant="text">
-          Consumer can still close it.
-        </Button>
-      </Modal>
-    )
-  }
-  const [onPresent1] = useModal(<BackButtonModal title="Modal with no X" />, false);
+  const modal = (
+    <div className="modal">
+      <div className="tab">
+        <div className="tab-item active">质押</div>
+        <div className="tab-item">提取</div>
+      </div>
+      <div>
+        质押数量
+      </div>
+      <div>
+        <div>钱包余额</div>
+        <div>1.99 PI</div>
+      </div>
+      <Button>质押</Button>
+    </div>
+  )
 
   const [onPresent] = useModal(<PledgeModal />)
 
@@ -31,7 +33,7 @@ const Index = () => {
         <img src={banner} alt="" />
       </div>
       <Button onClick={onPresent}>aaa</Button>
-      <Button onClick={onPresent1}>Only Back Button</Button>
+
       <div className="content">
         <div className="box">
           <Text fontSize="38px">当前全网质押总量为</Text>
@@ -46,6 +48,7 @@ const Index = () => {
           <div>1,000,000</div>
         </div>
       </div>
+      {modal}
     </>
   )
 }
