@@ -1,6 +1,7 @@
 import React from 'react'
 import './index.scss'
-import { Box, Button } from '@pancakeswap-libs/uikit'
+import { Box } from '@pancakeswap-libs/uikit'
+import Button from '@/components/Button'
 import logo from '@/assets/images/logo.png'
 
 function Index(props) {
@@ -8,8 +9,8 @@ function Index(props) {
     <header className="header">
       <div className="header-wrap flex justify-between items-center	">
         <img src={logo} alt="piswap" className="logo" />
-        <div>
-          <span>首页</span>
+        <div className="header-title">
+          首页
         </div>
         <div>
           <Box>
