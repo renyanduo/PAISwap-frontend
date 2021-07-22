@@ -7,7 +7,7 @@ import banner from '@/assets/images/banner.png'
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('pledge')
-  const [text, setText] = useState('')
+  const [pledgeAmount, setPledgeAmount] = useState('')
   const [showModal, setShowModal] = React.useState(false)
 
   const modal = (
@@ -34,7 +34,7 @@ const Index = () => {
           </div>
           <div className="modal-input">
             <div className="modal-input-max">MAX</div>
-            <input type="number" onChange={e => setText(e.target.value)} />
+            <input type="number" onChange={e => setPledgeAmount(e.target.value)} />
             <div>Pi</div>
           </div>
           <div className="modal-cell">
@@ -76,7 +76,7 @@ const Index = () => {
       <div className="content">
         <div className="box">
           <div className="box-title">当前全网质押总量为</div>
-          <div className="box-amount">8,996,798,492.726 PI</div>
+          <div className="box-amount">8,798,492.726 PI</div>
           <div className="box-highlight">待挖取PNFT数量</div>
           <div className="box-amount">1,000,000</div>
         </div>
