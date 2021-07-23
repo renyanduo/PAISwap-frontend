@@ -1,14 +1,147 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './index.scss'
 import { ThemeContext } from 'styled-components'
 import Button from '@/components/Button'
+import Web3 from 'web3'
+import { ABI, PNFT_CONTRACT_ADDRESS, PISTAKING_CONTRACT_ADDRESS, gas, gasPrice } from '@/util/abi'
+import { message } from 'antd'
 
 import banner from '@/assets/images/banner.png'
 
+let web3
+if (typeof window.web3 !== 'undefined') {
+  web3 = new Web3(window.web3.currentProvider)
+}
+
 const Index = () => {
+  const [address, setAddress] = useState('')
   const [activeTab, setActiveTab] = useState('pledge')
   const [pledgeAmount, setPledgeAmount] = useState('')
   const [showModal, setShowModal] = React.useState(false)
+  const [totalBalance, setTotalBalance] = useState(0)
+
+  const depositButtonOnClick = () => {
+    let MyContract = new web3.eth.Contract(ABI, PISTAKING_CONTRACT_ADDRESS)
+
+    const balance = document.getElementById('balance').value
+
+    console.log(balance, web3.utils.toWei(balance, 'ether'))
+
+    MyContract.methods
+      .deposit()
+      .send({
+        from: address,
+        gas: gas,
+        gasPrice: gasPrice,
+        value: web3.utils.toWei(balance, 'ether')
+      })
+      .on('transactionHash', function (hash) {
+        // swapButton.disabled = true
+        message.info(hash, 'Waiting for tx confirmation:')
+      })
+      .on('receipt', function (receipt) {
+        message.success('Swaped successfully, please check your balance!')
+        // swapButton.disabled = false
+      })
+      .on('error', function (error, receipt) {
+        if (!error.message) {
+          message.error('Swap failure', error.toString())
+        } else {
+          message.error(error.message)
+        }
+      })
+  }
+
+  const getStakingButtonOnClick = () => {
+    let MyContract = new web3.eth.Contract(ABI, PISTAKING_CONTRACT_ADDRESS)
+    MyContract.methods
+      .getStaking(address)
+      .call()
+      .then(function (result) {
+        message.info(web3.utils.fromWei(result))
+      })
+      .catch(err => message.error(err.message))
+  }
+
+  const pendingRewardButtonOnClick = () => {
+    let MyContract = new web3.eth.Contract(ABI, PISTAKING_CONTRACT_ADDRESS)
+    MyContract.methods
+      .pendingReward(address)
+      .call()
+      .then(function (result) {
+        message.info(web3.utils.fromWei(result))
+      })
+      .catch(err => message.error(err.message))
+  }
+
+  const withdrawButtonOnClick = () => {
+    let MyContract = new web3.eth.Contract(ABI, PISTAKING_CONTRACT_ADDRESS)
+
+    const balance = document.getElementById('balance').value
+
+    console.log(balance, web3.utils.toWei(balance, 'ether'))
+
+    MyContract.methods
+      .withdraw(web3.utils.toWei(balance, 'ether'))
+      .send({
+        from: address,
+        gas: gas,
+        gasPrice: gasPrice
+      })
+      .on('transactionHash', function (hash) {
+        // swapButton.disabled = true
+        message.info(hash, 'Waiting for tx confirmation:')
+      })
+      .on('receipt', function (receipt) {
+        message.success('Swaped successfully, please check your balance!')
+        // swapButton.disabled = false
+      })
+      .on('error', function (error, receipt) {
+        if (!error.message) {
+          message.error('Swap failure', error.toString())
+        } else {
+          message.error(error.message)
+        }
+      })
+  }
+
+  const getTotalSupplyButtonOnClick = () => {
+    let MyContract = new web3.eth.Contract(ABI, PISTAKING_CONTRACT_ADDRESS)
+    MyContract.methods
+      .getTotalSupply()
+      .call()
+      .then(function (result) {
+        message.info(web3.utils.fromWei(result))
+      })
+      .catch(err => message.error(err.message))
+  }
+
+  const balanceOfButtonOnClick = () => {
+    let MyContract = new web3.eth.Contract(ABI, PNFT_CONTRACT_ADDRESS)
+    MyContract.methods
+      .balanceOf(address)
+      .call()
+      .then(function (result) {
+        message.info(web3.utils.fromWei(result))
+      })
+      .catch(err => message.error(err.message))
+  }
+
+  const getTotalBalance = () => {
+    let MyContract = new web3.eth.Contract(ABI, PNFT_CONTRACT_ADDRESS)
+    MyContract.methods
+      .balanceOf('0xbBeAB8d29458ac35Ac455669949A8907A2307787')
+      .call()
+      .then(result => {
+        setTotalBalance(web3.utils.fromWei(result))
+      })
+      .catch(err => message.error(err.message))
+  }
+
+  useEffect(() => {
+    setAddress(window.sessionStorage.getItem('address'))
+    // balanceOfButtonOnClick()
+  }, [])
 
   const modal = (
     <div className="modal">
@@ -73,10 +206,12 @@ const Index = () => {
         <img src={banner} alt="" />
       </div>
 
+      <Button onClick={getTotalBalance}>aaaa</Button>
+
       <div className="content">
         <div className="box">
           <div className="box-title">当前全网质押总量为</div>
-          <div className="box-amount">8,798,492.726 PI</div>
+          <div className="box-amount">{totalBalance} PI</div>
           <div className="box-highlight">待挖取PNFT数量</div>
           <div className="box-amount">1,000,000</div>
         </div>
