@@ -15,12 +15,13 @@ if (typeof window.web3 !== 'undefined') {
 
 const Index = () => {
   const [address, setAddress] = useState('')
-  const [activeTab, setActiveTab] = useState('pledge')
-  const [pledgeAmount, setPledgeAmount] = useState('')
+  const [activeTab, setActiveTab] = useState('deposit')
   const [showModal, setShowModal] = React.useState(false)
+  const [depositAmount, setDepositAmount] = useState('')
   const [totalBalance, setTotalBalance] = useState(0)
+  const [userBalance, setUserBalance] = useState(0)
 
-  const depositButtonOnClick = () => {
+  const deposit = () => {
     let MyContract = new web3.eth.Contract(ABI, PISTAKING_CONTRACT_ADDRESS)
 
     const balance = document.getElementById('balance').value
@@ -74,7 +75,7 @@ const Index = () => {
       .catch(err => message.error(err.message))
   }
 
-  const withdrawButtonOnClick = () => {
+  const withdraw = () => {
     let MyContract = new web3.eth.Contract(ABI, PISTAKING_CONTRACT_ADDRESS)
 
     const balance = document.getElementById('balance').value
@@ -116,13 +117,14 @@ const Index = () => {
       .catch(err => message.error(err.message))
   }
 
-  const balanceOfButtonOnClick = () => {
+  const getUserBalance = () => {
     let MyContract = new web3.eth.Contract(ABI, PNFT_CONTRACT_ADDRESS)
     MyContract.methods
       .balanceOf(address)
       .call()
       .then(function (result) {
-        message.info(web3.utils.fromWei(result))
+        console.log(web3.utils.fromWei(result))
+        setUserBalance(web3.utils.fromWei(result))
       })
       .catch(err => message.error(err.message))
   }
@@ -140,7 +142,8 @@ const Index = () => {
 
   useEffect(() => {
     setAddress(window.sessionStorage.getItem('address'))
-    // balanceOfButtonOnClick()
+    // getTotalBalance()
+    // getUserBalance()
   }, [])
 
   const modal = (
@@ -150,8 +153,8 @@ const Index = () => {
       </div>
       <div className="tab">
         <div
-          className={`tab-item ${activeTab === 'pledge' ? 'active' : ''}`}
-          onClick={() => setActiveTab('pledge')}>
+          className={`tab-item ${activeTab === 'deposit' ? 'active' : ''}`}
+          onClick={() => setActiveTab('deposit')}>
           质押
         </div>
         <div
@@ -160,21 +163,21 @@ const Index = () => {
           提取
         </div>
       </div>
-      {activeTab === 'pledge' ? (
+      {activeTab === 'deposit' ? (
         <>
           <div className="modal-cell">
             <div className="modal-title">质押数量</div>
           </div>
           <div className="modal-input">
-            <div className="modal-input-max">MAX</div>
-            <input type="number" onChange={e => setPledgeAmount(e.target.value)} />
+            <div className="modal-input-max" onClick={()=>setDepositAmount(userBalance.toString())}>MAX</div>
+            <input type="number" onChange={e => setDepositAmount(e.target.value)} />
             <div>Pi</div>
           </div>
           <div className="modal-cell">
             <div className="modal-title">钱包余额</div>
-            <div className="modal-amount">1.99 PI</div>
+            <div className="modal-amount">{userBalance} PI</div>
           </div>
-          <Button className="submit">质押</Button>
+          <Button className="submit" onClick={deposit}>质押</Button>
         </>
       ) : null}
 
@@ -194,7 +197,7 @@ const Index = () => {
             <input type="number" />
             <div>PNFT</div>
           </div>
-          <Button className="submit">提取</Button>
+          <Button className="submit" onClick={withdraw}>提取</Button>
         </>
       ) : null}
     </div>
@@ -219,12 +222,12 @@ const Index = () => {
           <div className="box-title">质押Pi</div>
           <div className="box-amount">
             <div>0.00</div>
-            <Button>质押</Button>
+            <Button onClick={()=>{setShowModal(true);setActiveTab('deposit')}}>质押</Button>
           </div>
           <div className="box-title">挖矿赚取PNFT</div>
           <div className="box-amount">
             <div>0.00</div>
-            <Button>提取</Button>
+            <Button onClick={()=>{setShowModal(true);setActiveTab('extract')}}>提取</Button>
           </div>
         </div>
       </div>
