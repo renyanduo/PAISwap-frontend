@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import './index.scss'
-import { ThemeContext } from 'styled-components'
 import Button from '@/components/Button'
+import Footer from '@/components/app-footer'
 import Web3 from 'web3'
 import { ABI, PNFT_CONTRACT_ADDRESS, PISTAKING_CONTRACT_ADDRESS, gas, gasPrice } from '@/util/abi'
 import { message } from 'antd'
@@ -19,14 +19,25 @@ const Index = () => {
   const [showModal, setShowModal] = React.useState(false)
   const [depositAmount, setDepositAmount] = useState('')
   const [totalBalance, setTotalBalance] = useState(0)
-  const [userBalance, setUserBalance] = useState(0)
+  const [totalSupply, setTotalSupply] = useState(0)
+  const [userBalance, setUserBalance] = useState(0) // 挖矿赚取PNFT
+  const [stakingAmount, setStakingAmount] = useState(0)
+  const [pendingReward, setPendingReward] = useState(0) // 挖矿赚取
+  const [balance, setBalance] = useState(0) // 钱包余额
+  const [extractAmount, setExtractAmount] = useState(0) // 提取
 
+  // 质押
   const deposit = () => {
+    if (+depositAmount > +balance) {
+      message.error('超过余额')
+      return
+    }
+
     let MyContract = new web3.eth.Contract(ABI, PISTAKING_CONTRACT_ADDRESS)
 
-    const balance = document.getElementById('balance').value
+    const balance_ = depositAmount.toString()
 
-    console.log(balance, web3.utils.toWei(balance, 'ether'))
+    console.log(balance_, web3.utils.toWei(balance_, 'ether'))
 
     MyContract.methods
       .deposit()
@@ -34,15 +45,13 @@ const Index = () => {
         from: address,
         gas: gas,
         gasPrice: gasPrice,
-        value: web3.utils.toWei(balance, 'ether')
+        value: web3.utils.toWei(balance_, 'ether')
       })
       .on('transactionHash', function (hash) {
-        // swapButton.disabled = true
         message.info(hash, 'Waiting for tx confirmation:')
       })
       .on('receipt', function (receipt) {
         message.success('Swaped successfully, please check your balance!')
-        // swapButton.disabled = false
       })
       .on('error', function (error, receipt) {
         if (!error.message) {
@@ -53,24 +62,25 @@ const Index = () => {
       })
   }
 
-  const getStakingButtonOnClick = () => {
+  // 质押Pi
+  const getStaking = () => {
     let MyContract = new web3.eth.Contract(ABI, PISTAKING_CONTRACT_ADDRESS)
     MyContract.methods
       .getStaking(address)
       .call()
       .then(function (result) {
-        message.info(web3.utils.fromWei(result))
+        setStakingAmount(web3.utils.fromWei(result))
       })
       .catch(err => message.error(err.message))
   }
 
-  const pendingRewardButtonOnClick = () => {
+  const getPendingReward = () => {
     let MyContract = new web3.eth.Contract(ABI, PISTAKING_CONTRACT_ADDRESS)
     MyContract.methods
       .pendingReward(address)
       .call()
       .then(function (result) {
-        message.info(web3.utils.fromWei(result))
+        setPendingReward(web3.utils.fromWei(result))
       })
       .catch(err => message.error(err.message))
   }
@@ -78,7 +88,7 @@ const Index = () => {
   const withdraw = () => {
     let MyContract = new web3.eth.Contract(ABI, PISTAKING_CONTRACT_ADDRESS)
 
-    const balance = document.getElementById('balance').value
+    const balance = extractAmount.toString()
 
     console.log(balance, web3.utils.toWei(balance, 'ether'))
 
@@ -90,12 +100,10 @@ const Index = () => {
         gasPrice: gasPrice
       })
       .on('transactionHash', function (hash) {
-        // swapButton.disabled = true
         message.info(hash, 'Waiting for tx confirmation:')
       })
       .on('receipt', function (receipt) {
         message.success('Swaped successfully, please check your balance!')
-        // swapButton.disabled = false
       })
       .on('error', function (error, receipt) {
         if (!error.message) {
@@ -106,17 +114,20 @@ const Index = () => {
       })
   }
 
-  const getTotalSupplyButtonOnClick = () => {
+  // 质押总量
+  const getTotalSupply = () => {
     let MyContract = new web3.eth.Contract(ABI, PISTAKING_CONTRACT_ADDRESS)
     MyContract.methods
       .getTotalSupply()
       .call()
       .then(function (result) {
-        message.info(web3.utils.fromWei(result))
+        console.log(web3.utils.fromWei(result))
+        setTotalSupply(web3.utils.fromWei(result))
       })
       .catch(err => message.error(err.message))
   }
 
+  // 挖矿赚取PNFT
   const getUserBalance = () => {
     let MyContract = new web3.eth.Contract(ABI, PNFT_CONTRACT_ADDRESS)
     MyContract.methods
@@ -129,6 +140,7 @@ const Index = () => {
       .catch(err => message.error(err.message))
   }
 
+  // 待挖取
   const getTotalBalance = () => {
     let MyContract = new web3.eth.Contract(ABI, PNFT_CONTRACT_ADDRESS)
     MyContract.methods
@@ -140,10 +152,53 @@ const Index = () => {
       .catch(err => message.error(err.message))
   }
 
+  // 钱包余额
+  const getBalance = async () => {
+    try {
+      const { ethereum } = window
+      const bal = await ethereum.request({
+        method: 'eth_getBalance',
+        params: [address, 'latest']
+      })
+      setBalance(web3.utils.fromWei(bal.toString(), 'ether'))
+    } catch (error) {
+      setBalance(0)
+      message.error(error.message.toString())
+    }
+  }
+
+  const checkAddress = () => {
+    console.log(address)
+    return Boolean(address)
+  }
+
+  const depositClick = tab => {
+    if (!checkAddress()) {
+      message.error('please connect wallet')
+      return
+    }
+    setShowModal(true)
+    setActiveTab(tab)
+    getPendingReward()
+    getBalance()
+  }
+
+  const isMetaMaskInstalled = () => {
+    //Have to check the ethereum binding on the window object to see if it's installed
+    const { ethereum } = window
+    return Boolean(ethereum && ethereum.isMetaMask)
+  }
+
   useEffect(() => {
+    if (!isMetaMaskInstalled()) {
+      message.error('需要安装metamask')
+      return
+    }
     setAddress(window.sessionStorage.getItem('address'))
-    // getTotalBalance()
-    // getUserBalance()
+    getTotalBalance()
+    address && getUserBalance()
+    getTotalSupply()
+    address && getStaking()
   }, [])
 
   const modal = (
@@ -169,15 +224,23 @@ const Index = () => {
             <div className="modal-title">质押数量</div>
           </div>
           <div className="modal-input">
-            <div className="modal-input-max" onClick={()=>setDepositAmount(userBalance.toString())}>MAX</div>
-            <input type="number" onChange={e => setDepositAmount(e.target.value)} />
+            <div className="modal-input-max" onClick={() => setDepositAmount(balance.toString())}>
+              MAX
+            </div>
+            <input
+              type="number"
+              onChange={e => setDepositAmount(e.target.value)}
+              value={depositAmount}
+            />
             <div>Pi</div>
           </div>
           <div className="modal-cell">
             <div className="modal-title">钱包余额</div>
-            <div className="modal-amount">{userBalance} PI</div>
+            <div className="modal-amount">{balance} PI</div>
           </div>
-          <Button className="submit" onClick={deposit}>质押</Button>
+          <Button className="submit" onClick={deposit}>
+            质押
+          </Button>
         </>
       ) : null}
 
@@ -187,17 +250,23 @@ const Index = () => {
             <div className="modal-title">已质押</div>
           </div>
           <div className="modal-input">
-            <input type="number" />
+            <input
+              type="number"
+              value={extractAmount}
+              onChange={e => setExtractAmount(e.target.value)}
+            />
             <div>Pi</div>
           </div>
           <div className="modal-cell">
             <div className="modal-title">挖矿赚取</div>
           </div>
           <div className="modal-input">
-            <input type="number" />
+            <input value={pendingReward} readOnly />
             <div>PNFT</div>
           </div>
-          <Button className="submit" onClick={withdraw}>提取</Button>
+          <Button className="submit" onClick={withdraw}>
+            提取
+          </Button>
         </>
       ) : null}
     </div>
@@ -208,30 +277,28 @@ const Index = () => {
       <div className="banner">
         <img src={banner} alt="" />
       </div>
-
-      <Button onClick={getTotalBalance}>aaaa</Button>
-
-      <div className="content">
-        <div className="box">
+      <div className="content flex flex-wrap sm:flex-nowrap">
+        <div className="box mr-0 sm:mr-14">
           <div className="box-title">当前全网质押总量为</div>
-          <div className="box-amount">{totalBalance} PI</div>
+          <div className="box-amount">{totalSupply} PI</div>
           <div className="box-highlight">待挖取PNFT数量</div>
-          <div className="box-amount">1,000,000</div>
+          <div className="box-amount">{totalBalance}</div>
         </div>
         <div className="box">
           <div className="box-title">质押Pi</div>
           <div className="box-amount">
-            <div>0.00</div>
-            <Button onClick={()=>{setShowModal(true);setActiveTab('deposit')}}>质押</Button>
+            <div>{stakingAmount}</div>
+            <Button onClick={() => depositClick('deposit')}>质押</Button>
           </div>
           <div className="box-title">挖矿赚取PNFT</div>
           <div className="box-amount">
-            <div>0.00</div>
-            <Button onClick={()=>{setShowModal(true);setActiveTab('extract')}}>提取</Button>
+            <div>{userBalance}</div>
+            <Button onClick={() => depositClick('extract')}>提取</Button>
           </div>
         </div>
       </div>
       {showModal ? modal : null}
+      <Footer />
     </>
   )
 }

@@ -1,0 +1,17 @@
+.footer {
+  margin-top: 113px;
+  padding-bottom: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+
+    & + img {
+      margin-left: 86px;
+    }
+  }
+}
