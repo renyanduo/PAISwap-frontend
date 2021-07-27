@@ -24,7 +24,7 @@ const Index = () => {
   const [stakingAmount, setStakingAmount] = useState(0)
   const [pendingReward, setPendingReward] = useState(0) // 挖矿赚取
   const [balance, setBalance] = useState(0) // 钱包余额
-  const [extractAmount, setExtractAmount] = useState(0) // 提取
+  const [extractAmount, setExtractAmount] = useState('') // 提取
 
   // 质押
   const deposit = () => {
@@ -70,6 +70,7 @@ const Index = () => {
       .call()
       .then(function (result) {
         setStakingAmount(web3.utils.fromWei(result))
+        console.log('staking', web3.utils.fromWei(result))
       })
       .catch(err => message.error(err.message))
   }
@@ -86,6 +87,11 @@ const Index = () => {
   }
 
   const withdraw = () => {
+    if (+extractAmount > +stakingAmount) {
+      message.error('超过余额')
+      return
+    }
+
     let MyContract = new web3.eth.Contract(ABI, PISTAKING_CONTRACT_ADDRESS)
 
     const balance = extractAmount.toString()
@@ -199,7 +205,7 @@ const Index = () => {
     address && getUserBalance()
     getTotalSupply()
     address && getStaking()
-  }, [])
+  })
 
   const modal = (
     <div className="modal">
@@ -254,6 +260,7 @@ const Index = () => {
               type="number"
               value={extractAmount}
               onChange={e => setExtractAmount(e.target.value)}
+              placeholder={`Max: ${stakingAmount}`}
             />
             <div>Pi</div>
           </div>
@@ -278,13 +285,13 @@ const Index = () => {
         <img src={banner} alt="" />
       </div>
       <div className="content flex flex-wrap sm:flex-nowrap">
-        <div className="box mr-0 sm:mr-14">
+        <div className="box mr-0 sm:mr-14 sm:w-1/2 w-full">
           <div className="box-title">当前全网质押总量为</div>
           <div className="box-amount">{totalSupply} PI</div>
           <div className="box-highlight">待挖取PNFT数量</div>
           <div className="box-amount">{totalBalance}</div>
         </div>
-        <div className="box">
+        <div className="box sm:w-1/2 w-full">
           <div className="box-title">质押Pi</div>
           <div className="box-amount">
             <div>{stakingAmount}</div>
