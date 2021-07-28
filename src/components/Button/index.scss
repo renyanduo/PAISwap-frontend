@@ -1,12 +1,26 @@
 .p-button {
   width: 208px;
-  height: 60px;
-  background: #FFD136;
+  height: 50px;
+  background: linear-gradient(180deg, #FFB769, #FC9F29);
   color: #FFFFFF;
-  font-size: 24px;
-  border-radius: 28px;
+  font-size: 20px;
+  border-radius: 25px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+
+  &:hover {
+    background: #FFBF76;
+  }
+
+  &:active {
+    background: #F7830B;
+  }
+
+  &.disable {
+    background: #FEEAD4;
+    color: #C3AA90;
+    pointer-events: none;
+  }
 }

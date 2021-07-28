@@ -5,11 +5,10 @@
 
   .box {
     height: 377px;
-    background: linear-gradient(175deg, #f5fbff, #fffcec);
+    background: linear-gradient(175deg, #fff9f4, #fbe0c7);
     box-shadow: 0px 0px 30px 0px rgba(186, 184, 191, 0.35);
     border-radius: 10px;
     display: flex;
-    align-items: center;
     flex-direction: column;
     justify-content: space-evenly;
     padding: 30px 52px;
@@ -22,7 +21,7 @@
     }
 
     &-title {
-      font-size: 38px;
+      font-size: 30px;
       font-family: Microsoft YaHei UI;
       font-weight: bold;
       color: #403f45;
@@ -30,21 +29,25 @@
 
     &-amount {
       width: 100%;
-      font-size: 56px;
+      font-size: 36px;
       font-family: DIN Alternate;
       font-weight: bold;
-      color: #ffd136;
+      color: #fa9124;
       display: flex;
       align-items: center;
-      justify-content: space-between;
+
+      &-num {
+        width: calc(100% - 208px);
+        overflow: scroll;
+      }
     }
 
     &-highlight {
       font-size: 24px;
       font-family: Microsoft YaHei UI;
       font-weight: bold;
-      color: #3e3c44;
-      background: #fee592;
+      color: #403f45;
+      background: #fec590;
       padding: 8px 30px;
     }
   }
@@ -71,7 +74,7 @@
   }
 
   .tab {
-    font-size: 24px;
+    font-size: 20px;
     color: #3e3c44;
     display: flex;
     justify-content: space-evenly;
@@ -86,7 +89,7 @@
         &::after {
           content: '';
           height: 4px;
-          background: #ffd136;
+          background: #fa9124;
           position: absolute;
           left: 0;
           bottom: -14px;
@@ -98,43 +101,47 @@
 
   &-input {
     width: 100%;
-    height: 86px;
+    height: 74px;
     background: #f8f2f2;
     border-radius: 23px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 22px;
-    font-size: 36px;
+    font-size: 18px;
     font-family: DIN Alternate;
     font-weight: bold;
     color: #1c1b1b;
     margin-bottom: 44px;
 
     &-max {
-      width: 64px;
-      height: 64px;
-      background: #ffd136;
-      border-radius: 20px;
-      font-size: 20px;
+      width: 40px;
+      height: 40px;
+      background: #fa9124;
+      border-radius: 14px;
+      font-size: 14px;
       font-family: MigraHeavy;
-      font-weight: 400;
+      font-weight: bold;
       color: #ffffff;
-      line-height: 64px;
+      line-height: 40px;
       text-align: center;
-      margin-right: 26px;
+      margin-right: 11px;
       cursor: pointer;
     }
 
     input {
       width: 100%;
-      font-size: 36px;
+      font-size: 18px;
       font-family: DIN Alternate;
       font-weight: bold;
       color: #1c1b1b;
       background: transparent;
       flex: 1;
       outline: none;
+      &::-webkit-outer-spin-button, &::-webkit-inner-spin-button {
+        -webkit-appearance: none !important;
+        margin: 0;
+      }
     }
   }
 
@@ -149,15 +156,19 @@
     font-weight: bold;
     font-family: DIN Alternate;
     color: #1c1b1b;
-    font-size: 30px;
+    font-size: 18px;
   }
 
   &-title {
-    font-size: 20px;
+    font-size: 16px;
     color: #3e3c44;
   }
 
   .submit {
     margin: 50px auto 0;
   }
+}
+
+.connect-btn {
+  margin: 92px auto;
 }

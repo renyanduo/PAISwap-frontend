@@ -5,13 +5,30 @@
   align-items: center;
   justify-content: center;
 
-  img {
-    width: 24px;
-    height: 24px;
-    cursor: pointer;
+  &-item {
+    position: relative;
 
-    & + img {
+    img {
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+    }
+
+    & + .footer-item {
       margin-left: 86px;
+    }
+
+    &:hover::after {
+      content: '';
+      width: 44px;
+      height: 44px;
+      background: #fa9124;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: -1;
     }
   }
 }

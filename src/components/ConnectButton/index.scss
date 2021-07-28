@@ -1,0 +1,38 @@
+.connect-button {
+  width: 192px;
+  height: 38px;
+  background: #ffffff;
+  box-shadow: 0px 0px 9px 1px rgba(187, 96, 1, 0.3);
+  border-radius: 18px;
+  color: #2b2b2b;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  padding: 0 20px;
+
+  &:hover {
+    color: #fa9124;
+  }
+
+  &:active {
+    background: #e6e6e6;
+    box-shadow: none;
+  }
+
+  span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+  }
+
+  &-dot {
+    width: 24px;
+    height: 24px;
+    background: #f8c6cd;
+    border-radius: 50%;
+    margin-left: 10px;
+  }
+}

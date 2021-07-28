@@ -3,22 +3,13 @@
 
   &-wrap {
     .logo {
-      width: 144px;
-      height: 29px;
+      width: 129px;
+      height: 30px;
     }
   }
 
   &-title {
-    font-size: 24px;
+    font-size: 16px;
     color: #282828;
-  }
-
-  .connect-btn {
-    span {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      padding: 0 10px;
-    }
   }
 }

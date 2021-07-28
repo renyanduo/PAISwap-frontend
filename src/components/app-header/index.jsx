@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import './index.scss'
 import { Box } from '@pancakeswap-libs/uikit'
-import Button from '@/components/Button'
+import Button from '@/components/ConnectButton'
 import logo from '@/assets/images/logo.png'
 import { message } from 'antd'
 
@@ -33,7 +33,7 @@ function Index(props) {
       window.sessionStorage.setItem('address', accounts[0])
       // setParent(accounts[0])
     } catch (error) {
-      message.error(error)
+      message.error(error.message)
     }
   }
 
@@ -44,7 +44,7 @@ function Index(props) {
         <div className="header-title">首页</div>
         <div>
           <Box>
-            <Button className="connect-btn" onClick={connect}><span>{address ? address : '连接钱包'}</span></Button>
+            <Button onClick={connect}>{address ? address : '连接钱包'}</Button>
           </Box>
         </div>
       </div>

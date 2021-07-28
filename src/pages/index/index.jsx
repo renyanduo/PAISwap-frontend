@@ -202,7 +202,7 @@ const Index = () => {
     }
     setAddress(window.sessionStorage.getItem('address'))
     getTotalBalance()
-    address && getUserBalance()
+    address && getPendingReward()
     getTotalSupply()
     address && getStaking()
   })
@@ -284,26 +284,32 @@ const Index = () => {
       <div className="banner">
         <img src={banner} alt="" />
       </div>
-      <div className="content flex flex-wrap sm:flex-nowrap">
-        <div className="box mr-0 sm:mr-14 sm:w-1/2 w-full">
-          <div className="box-title">当前全网质押总量为</div>
-          <div className="box-amount">{totalSupply} PI</div>
-          <div className="box-highlight">待挖取PNFT数量</div>
-          <div className="box-amount">{totalBalance}</div>
-        </div>
-        <div className="box sm:w-1/2 w-full">
-          <div className="box-title">质押Pi</div>
-          <div className="box-amount">
-            <div>{stakingAmount}</div>
-            <Button onClick={() => depositClick('deposit')}>质押</Button>
+      {/* {address ? ( */}
+        <>
+          <div className="content flex flex-wrap sm:flex-nowrap">
+            <div className="box mr-0 sm:mr-14 sm:w-1/2 w-full items-center">
+              <div className="box-title">当前全网质押总量为</div>
+              <div className="box-amount justify-center">{totalSupply} PI</div>
+              <div className="box-highlight">待挖取PNFT数量</div>
+              <div className="box-amount justify-center">{totalBalance}</div>
+            </div>
+            <div className="box sm:w-1/2 w-full items-start">
+              <div className="box-title">质押Pi</div>
+              <div className="box-amount justify-between">
+                <div className="box-amount-num">{stakingAmount}</div>
+                <Button onClick={() => depositClick('deposit')}>质押</Button>
+              </div>
+              <div className="box-title">挖矿赚取PNFT</div>
+              <div className="box-amount justify-between">
+                <div className="box-amount-num">{pendingReward}</div>
+                <Button onClick={() => depositClick('extract')}>提取</Button>
+              </div>
+            </div>
           </div>
-          <div className="box-title">挖矿赚取PNFT</div>
-          <div className="box-amount">
-            <div>{userBalance}</div>
-            <Button onClick={() => depositClick('extract')}>提取</Button>
-          </div>
-        </div>
-      </div>
+        </>
+      {/* ) : (
+        <Button className="connect-btn">连接钱包</Button>
+      )} */}
       {showModal ? modal : null}
       <Footer />
     </>

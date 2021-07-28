@@ -7,9 +7,15 @@ import telegram from '@/assets/images/telegram.png'
 function Index(props) {
   return (
     <footer className="footer">
-      <img src={github} alt="github" />
-      <img src={twitter} alt="twitter" />
-      <img src={telegram} alt="telegram" />
+      <div className="footer-item">
+        <img src={github} alt="github" />
+      </div>
+      <div className="footer-item">
+        <img src={twitter} alt="twitter" />
+      </div>
+      <div className="footer-item">
+        <img src={telegram} alt="telegram" />
+      </div>
     </footer>
   )
 }
