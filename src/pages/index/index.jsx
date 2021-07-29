@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import './index.scss'
 import Button from '@/components/Button'
-import Footer from '@/components/app-footer'
 import ConnectWallet from '@/components/ConnectWallet'
 import Web3 from 'web3'
 import { ABI, PNFT_CONTRACT_ADDRESS, PISTAKING_CONTRACT_ADDRESS, gas, gasPrice } from '@/util/abi'
 import { message } from 'antd'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 import banner from '@/assets/images/banner.png'
 
@@ -28,11 +27,10 @@ const Index = () => {
   const [balance, setBalance] = useState(0) // 钱包余额
   const [extractAmount, setExtractAmount] = useState('') // 提取
   const userAddress = useSelector(state => state.address)
-  const dispath = useDispatch()
 
   // 质押
   const deposit = () => {
-    if (+depositAmount > +balance) {
+    if (+depositAmount > +balance || !depositAmount || +depositAmount < 0) {
       message.error('invalid input')
       return
     }
@@ -92,7 +90,7 @@ const Index = () => {
   }
 
   const withdraw = () => {
-    if (+extractAmount > +stakingAmount) {
+    if (+extractAmount > +stakingAmount || !extractAmount || +extractAmount < 0) {
       message.error('invalid input')
       return
     }
@@ -286,7 +284,7 @@ const Index = () => {
   )
 
   return (
-    <>
+    <div className="main">
       <div className="banner">
         <img src={banner} alt="" />
       </div>
@@ -319,8 +317,7 @@ const Index = () => {
         </ConnectWallet>
       )}
       {showModal ? modal : null}
-      <Footer />
-    </>
+    </div>
   )
 }
 

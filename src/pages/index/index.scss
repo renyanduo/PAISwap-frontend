@@ -1,7 +1,3 @@
-.banner {
-  margin-top: 128px;
-}
-
 .content {
   display: flex;
   justify-content: space-between;
@@ -73,6 +69,7 @@
   transform: translate(-50%, -50%);
   box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.7);
   padding: 54px 25px;
+  z-index: 999;
 
   &-close {
     position: absolute;

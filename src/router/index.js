@@ -2,6 +2,7 @@ import React, { Suspense, useEffect } from 'react'
 import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom'
 import routes from './routes'
 import AppHeader from '@/components/app-header'
+import AppFooter from '@/components/app-footer'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 NProgress.configure({ showSpinner: false })
@@ -31,6 +32,7 @@ const RouterView = () => (
         <Redirect to="/"></Redirect>
       </Switch>
     </Suspense>
+    <AppFooter></AppFooter>
   </BrowserRouter>
 )
 export default RouterView

@@ -1,10 +1,11 @@
 .header {
   padding: 45px 20px;
   position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background: #FEFAFC;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #fefafc;
+  z-index: 100;
 
   &-wrap {
     .logo {
