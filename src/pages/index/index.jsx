@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react'
 import './index.scss'
 import Button from '@/components/Button'
 import Footer from '@/components/app-footer'
+import ConnectWallet from '@/components/ConnectWallet'
 import Web3 from 'web3'
 import { ABI, PNFT_CONTRACT_ADDRESS, PISTAKING_CONTRACT_ADDRESS, gas, gasPrice } from '@/util/abi'
 import { message } from 'antd'
+import { useSelector, useDispatch } from 'react-redux'
 
 import banner from '@/assets/images/banner.png'
 
@@ -25,6 +27,8 @@ const Index = () => {
   const [pendingReward, setPendingReward] = useState(0) // 挖矿赚取
   const [balance, setBalance] = useState(0) // 钱包余额
   const [extractAmount, setExtractAmount] = useState('') // 提取
+  const userAddress = useSelector((state) => state.address)
+  const dispath = useDispatch()
 
   // 质押
   const deposit = () => {
@@ -52,6 +56,7 @@ const Index = () => {
       })
       .on('receipt', function (receipt) {
         message.success('Swaped successfully, please check your balance!')
+        setShowModal(false)
       })
       .on('error', function (error, receipt) {
         if (!error.message) {
@@ -110,6 +115,7 @@ const Index = () => {
       })
       .on('receipt', function (receipt) {
         message.success('Swaped successfully, please check your balance!')
+        setShowModal(false)
       })
       .on('error', function (error, receipt) {
         if (!error.message) {
@@ -200,11 +206,11 @@ const Index = () => {
       message.error('需要安装metamask')
       return
     }
-    setAddress(window.sessionStorage.getItem('address'))
+    setAddress(window.ethereum.selectedAddress ? window.ethereum.selectedAddress : '')
     getTotalBalance()
-    address && getPendingReward()
+    userAddress && getPendingReward()
     getTotalSupply()
-    address && getStaking()
+    userAddress && getStaking()
   })
 
   const modal = (
@@ -237,8 +243,9 @@ const Index = () => {
               type="number"
               onChange={e => setDepositAmount(e.target.value)}
               value={depositAmount}
+              placeholder="Please enter the number"
             />
-            <div>Pi</div>
+            <div>PI</div>
           </div>
           <div className="modal-cell">
             <div className="modal-title">钱包余额</div>
@@ -262,7 +269,7 @@ const Index = () => {
               onChange={e => setExtractAmount(e.target.value)}
               placeholder={`Max: ${stakingAmount}`}
             />
-            <div>Pi</div>
+            <div>PI</div>
           </div>
           <div className="modal-cell">
             <div className="modal-title">挖矿赚取</div>
@@ -284,7 +291,7 @@ const Index = () => {
       <div className="banner">
         <img src={banner} alt="" />
       </div>
-      {/* {address ? ( */}
+      {userAddress ? (
         <>
           <div className="content flex flex-wrap sm:flex-nowrap">
             <div className="box mr-0 sm:mr-14 sm:w-1/2 w-full items-center">
@@ -294,7 +301,7 @@ const Index = () => {
               <div className="box-amount justify-center">{totalBalance}</div>
             </div>
             <div className="box sm:w-1/2 w-full items-start">
-              <div className="box-title">质押Pi</div>
+              <div className="box-title">质押PI</div>
               <div className="box-amount justify-between">
                 <div className="box-amount-num">{stakingAmount}</div>
                 <Button onClick={() => depositClick('deposit')}>质押</Button>
@@ -307,9 +314,11 @@ const Index = () => {
             </div>
           </div>
         </>
-      {/* ) : (
-        <Button className="connect-btn">连接钱包</Button>
-      )} */}
+      ) : (
+        <ConnectWallet>
+          <Button className="connect-btn">连接钱包</Button>
+        </ConnectWallet>
+      )}
       {showModal ? modal : null}
       <Footer />
     </>
