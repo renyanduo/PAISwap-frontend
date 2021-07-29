@@ -1,5 +1,10 @@
 .header {
-  margin: 45px 0;
+  padding: 45px 20px;
+  position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #FEFAFC;
 
   &-wrap {
     .logo {

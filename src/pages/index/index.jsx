@@ -33,7 +33,7 @@ const Index = () => {
   // 质押
   const deposit = () => {
     if (+depositAmount > +balance) {
-      message.error('超过余额')
+      message.error('invalid input')
       return
     }
 
@@ -93,7 +93,7 @@ const Index = () => {
 
   const withdraw = () => {
     if (+extractAmount > +stakingAmount) {
-      message.error('超过余额')
+      message.error('invalid input')
       return
     }
 
@@ -202,7 +202,7 @@ const Index = () => {
 
   useEffect(() => {
     if (!isMetaMaskInstalled()) {
-      message.error('需要安装metamask')
+      message.error('need to install metamask')
       return
     }
     setAddress(window.ethereum.selectedAddress ? window.ethereum.selectedAddress : '')

@@ -20,6 +20,9 @@ function Index(props) {
     if (!isMetaMaskInstalled() && isMobile()) {
       window.location.href = 'https://metamask.app.link/dapp/' + window.location.host
       return
+    } else if (!isMetaMaskInstalled()) {
+      message.error('need to install metamask')
+      return
     }
     try {
       // Will open the MetaMask UI

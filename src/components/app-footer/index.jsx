@@ -8,13 +8,19 @@ function Index(props) {
   return (
     <footer className="footer">
       <div className="footer-item">
-        <img src={github} alt="github" />
+        <a href="https://pizzap.gitbook.io/pizzap/" target="_blank" rel="noopener noreferrer">
+          <img src={github} alt="github" />
+        </a>
       </div>
       <div className="footer-item">
-        <img src={twitter} alt="twitter" />
+        <a href="https://twitter.com/pizzap_io" target="_blank" rel="noopener noreferrer">
+          <img src={twitter} alt="twitter" />
+        </a>
       </div>
       <div className="footer-item">
-        <img src={telegram} alt="telegram" />
+        <a href="https://t.me/pizzap_io" target="_blank" rel="noopener noreferrer">
+          <img src={telegram} alt="telegram" />
+        </a>
       </div>
     </footer>
   )
