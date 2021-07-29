@@ -1,6 +1,6 @@
 import React from 'react'
 import { message } from 'antd'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { setUserAddress } from '@/store/action'
 
 function Index(props) {

@@ -27,7 +27,7 @@ const Index = () => {
   const [pendingReward, setPendingReward] = useState(0) // 挖矿赚取
   const [balance, setBalance] = useState(0) // 钱包余额
   const [extractAmount, setExtractAmount] = useState('') // 提取
-  const userAddress = useSelector((state) => state.address)
+  const userAddress = useSelector(state => state.address)
   const dispath = useDispatch()
 
   // 质押
@@ -180,8 +180,7 @@ const Index = () => {
   }
 
   const checkAddress = () => {
-    console.log(address)
-    return Boolean(address)
+    return Boolean(userAddress)
   }
 
   const depositClick = tab => {
@@ -222,18 +221,18 @@ const Index = () => {
         <div
           className={`tab-item ${activeTab === 'deposit' ? 'active' : ''}`}
           onClick={() => setActiveTab('deposit')}>
-          质押
+          Stake
         </div>
         <div
           className={`tab-item ${activeTab === 'extract' ? 'active' : ''}`}
           onClick={() => setActiveTab('extract')}>
-          提取
+          Harvest
         </div>
       </div>
       {activeTab === 'deposit' ? (
         <>
           <div className="modal-cell">
-            <div className="modal-title">质押数量</div>
+            <div className="modal-title">Stake amount</div>
           </div>
           <div className="modal-input">
             <div className="modal-input-max" onClick={() => setDepositAmount(balance.toString())}>
@@ -248,11 +247,11 @@ const Index = () => {
             <div>PI</div>
           </div>
           <div className="modal-cell">
-            <div className="modal-title">钱包余额</div>
+            <div className="modal-title">Balance available</div>
             <div className="modal-amount">{balance} PI</div>
           </div>
           <Button className="submit" onClick={deposit}>
-            质押
+            Stake
           </Button>
         </>
       ) : null}
@@ -260,7 +259,7 @@ const Index = () => {
       {activeTab === 'extract' ? (
         <>
           <div className="modal-cell">
-            <div className="modal-title">已质押</div>
+            <div className="modal-title">Staked</div>
           </div>
           <div className="modal-input">
             <input
@@ -272,14 +271,14 @@ const Index = () => {
             <div>PI</div>
           </div>
           <div className="modal-cell">
-            <div className="modal-title">挖矿赚取</div>
+            <div className="modal-title">Earned</div>
           </div>
           <div className="modal-input">
             <input value={pendingReward} readOnly />
             <div>PNFT</div>
           </div>
           <Button className="submit" onClick={withdraw}>
-            提取
+            Harvest
           </Button>
         </>
       ) : null}
@@ -295,28 +294,28 @@ const Index = () => {
         <>
           <div className="content flex flex-wrap sm:flex-nowrap">
             <div className="box mr-0 sm:mr-14 sm:w-1/2 w-full items-center">
-              <div className="box-title">当前全网质押总量为</div>
+              <div className="box-title">Total staked</div>
               <div className="box-amount justify-center">{totalSupply} PI</div>
-              <div className="box-highlight">待挖取PNFT数量</div>
+              <div className="box-highlight">PNFT mining reward (Total undistributed)</div>
               <div className="box-amount justify-center">{totalBalance}</div>
             </div>
             <div className="box sm:w-1/2 w-full items-start">
-              <div className="box-title">质押PI</div>
+              <div className="box-title">Stake PI</div>
               <div className="box-amount justify-between">
                 <div className="box-amount-num">{stakingAmount}</div>
-                <Button onClick={() => depositClick('deposit')}>质押</Button>
+                <Button onClick={() => depositClick('deposit')}>Stake</Button>
               </div>
-              <div className="box-title">挖矿赚取PNFT</div>
+              <div className="box-title">PNFT earned</div>
               <div className="box-amount justify-between">
                 <div className="box-amount-num">{pendingReward}</div>
-                <Button onClick={() => depositClick('extract')}>提取</Button>
+                <Button onClick={() => depositClick('extract')}>Harvest</Button>
               </div>
             </div>
           </div>
         </>
       ) : (
         <ConnectWallet>
-          <Button className="connect-btn">连接钱包</Button>
+          <Button className="connect-btn">Connect Wallet</Button>
         </ConnectWallet>
       )}
       {showModal ? modal : null}

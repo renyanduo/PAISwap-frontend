@@ -53,10 +53,10 @@ function Index(props) {
     <header className="header">
       <div className="header-wrap flex justify-between items-center	">
         <img src={logo} alt="piswap" className="logo" />
-        <div className="header-title">首页</div>
+        <div className="header-title">Home</div>
         <div>
           <ConnectWallet>
-            <Button>{userAddress ? userAddress : '连接钱包'}</Button>
+            <Button>{userAddress ? userAddress : 'Connect Wallet'}</Button>
           </ConnectWallet>
         </div>
       </div>
