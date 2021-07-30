@@ -57,7 +57,7 @@ const Index = () => {
               <div className="modal-title">Deposit form L1 account:</div>
             </div>
             <div className="modal-input">
-              <input />
+              <input value={userAddress} readOnly />
             </div>
             <div className="modal-cell">
               <div className="modal-title">Deposit Amount:</div>
@@ -77,12 +77,12 @@ const Index = () => {
               <div className="modal-title">Withdrawal Address:</div>
             </div>
             <div className="modal-input">
-              <input />
+              <input value={userAddress} readOnly />
             </div>
             <div className="modal-cell">
               <div className="modal-title">Withdrawal Amount:</div>
             </div>
-            <div className="modal-input" style={{marginBottom: '13px'}}>
+            <div className="modal-input" style={{ marginBottom: '13px' }}>
               <input />
               <div className="flex items-center">
                 <img className="pi-logo" src={piLogo} alt="" />
