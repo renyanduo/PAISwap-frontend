@@ -27,7 +27,6 @@ const Index = () => {
   const [balance, setBalance] = useState(0) // 钱包余额
   const [extractAmount, setExtractAmount] = useState('') // 提取
   const userAddress = useSelector(state => state.address)
-
   // 质押
   const deposit = () => {
     if (+depositAmount > +balance || !depositAmount || +depositAmount < 0) {
@@ -205,9 +204,9 @@ const Index = () => {
     }
     setAddress(window.ethereum.selectedAddress ? window.ethereum.selectedAddress : '')
     getTotalBalance()
-    userAddress && getPendingReward()
+    address && getPendingReward()
     getTotalSupply()
-    userAddress && getStaking()
+    address && getStaking()
   })
 
   const modal = (
@@ -276,7 +275,7 @@ const Index = () => {
             <div>PNFT</div>
           </div>
           <Button className="submit" onClick={withdraw}>
-            Harvest
+            Unstake & harvest
           </Button>
         </>
       ) : null}
@@ -293,21 +292,21 @@ const Index = () => {
           <div className="content flex flex-wrap sm:flex-nowrap">
             <div className="box mr-0 sm:mr-14 sm:w-1/2 w-full items-center">
               <div className="box-title">Total staked</div>
-              <div className="box-amount justify-center">{totalSupply} PI</div>
+              <div className="box-amount">{totalSupply} PI</div>
               <div className="box-highlight">PNFT mining reward (Total undistributed)</div>
-              <div className="box-amount justify-center">{totalBalance}</div>
+              <div className="box-amount">{totalBalance}</div>
             </div>
-            <div className="box sm:w-1/2 w-full items-start">
-              <div className="box-title">Stake PI</div>
-              <div className="box-amount justify-between">
-                <div className="box-amount-num">{stakingAmount}</div>
-                <Button onClick={() => depositClick('deposit')}>Stake</Button>
-              </div>
+            <div className="box sm:w-1/2 w-full items-center">
+              <div className="box-title">PI staked</div>
+              <div className="box-amount">{stakingAmount}</div>
+              <Button onClick={() => depositClick('deposit')} style={{ height: '42px' }}>
+                Stake
+              </Button>
               <div className="box-title">PNFT earned</div>
-              <div className="box-amount justify-between">
-                <div className="box-amount-num">{pendingReward}</div>
-                <Button onClick={() => depositClick('extract')}>Harvest</Button>
-              </div>
+              <div className="box-amount">{pendingReward}</div>
+              <Button onClick={() => depositClick('extract')} style={{ height: '42px' }}>
+                Harvest
+              </Button>
             </div>
           </div>
         </>

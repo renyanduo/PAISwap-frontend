@@ -17,5 +17,28 @@
   &-title {
     font-size: 16px;
     color: #282828;
+
+    span {
+      cursor: pointer;
+
+      & + span {
+        margin-left: 62px;
+      }
+
+      &.active {
+        font-weight: bold;
+        position: relative;
+
+        &::after {
+          content: '';
+          height: 4px;
+          background: #fa9124;
+          position: absolute;
+          left: 0;
+          bottom: -14px;
+          width: 100%;
+        }
+      }
+    }
   }
 }
