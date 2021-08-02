@@ -2,6 +2,7 @@ import axios from 'axios'
 import { BASE_URL, TIMEOUT } from './config'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
+import { message } from 'antd'
 NProgress.configure({ showSpinner: false })
 
 const instance = axios.create({
@@ -9,7 +10,7 @@ const instance = axios.create({
   baseURL: BASE_URL,
   timeout: TIMEOUT,
   headers: {},
-  withCredentials: true
+  withCredentials: false
 })
 
 instance.interceptors.request.use(
@@ -38,14 +39,14 @@ instance.interceptors.response.use(
         //   })
       }
       return Promise.reject(res || 'error')
-    } else if (res.result !== 'success') {
-      if (+res.code === 1001) {
-        // token失效
-        // 去登录
-      }
-      return Promise.reject(res.message || 'error')
+    // } else if (res.result !== 'success') {
+    //   if (+res.code === 1001) {
+    //     // token失效
+    //     // 去登录
+    //   }
+    //   return Promise.reject(res.message || 'error')
     } else {
-      return Promise.resolve(res)
+      return Promise.resolve(res.data)
     }
   },
   err => {
@@ -63,6 +64,7 @@ instance.interceptors.response.use(
     }
     // return err
     console.log('err' + err) // for debug
+    message.error(err.message)
     return Promise.reject(err.message)
   }
 )

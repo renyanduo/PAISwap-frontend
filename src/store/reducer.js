@@ -1,6 +1,7 @@
 // 根据业务设置默认数据
 const defaultState = {
-  address: ''
+  address: '',
+  crossChainData: {}
 }
 /**
  *
@@ -10,6 +11,11 @@ const defaultState = {
 export default function reducer(state = defaultState, action) {
   switch (action.type) {
     case 'SET_USER_ADDRESS':
+      return {
+        ...state,
+        ...action.value
+      }
+    case 'SET_CROSS_CHAIN_DATA':
       return {
         ...state,
         ...action.value

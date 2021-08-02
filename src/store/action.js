@@ -4,3 +4,10 @@ export const setUserAddress = (address) => {
     value: address
   }
 }
+
+export const setCrossChainData = (address) => {
+  return {
+    type: 'SET_CROSS_CHAIN_DATA',
+    value: address
+  }
+}

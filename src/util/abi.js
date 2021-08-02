@@ -578,9 +578,69 @@ export const ABI = [
   }
 ]
 
+export const crossChainABI = [{
+  "type": "function",
+  "name": "DepositInMainChain",
+  "constant": false,
+  "inputs": [{
+      "name": "chainId",
+      "type": "string"
+  }
+  ],
+  "outputs": []
+},
+  {
+      "type": "function",
+      "name": "DepositInChildChain",
+      "constant": false,
+      "inputs": [{
+          "name": "chainId",
+          "type": "string"
+      },
+          {
+              "name": "txHash",
+              "type": "bytes32"
+          }
+      ],
+      "outputs": []
+  },
+  {
+      "type": "function",
+      "name": "WithdrawFromChildChain",
+      "constant": false,
+      "inputs": [{
+          "name": "chainId",
+          "type": "string"
+      }
+      ],
+      "outputs": []
+  },
+  {
+      "type": "function",
+      "name": "WithdrawFromMainChain",
+      "constant": false,
+      "inputs": [{
+          "name": "chainId",
+          "type": "string"
+      },
+          {
+              "name": "amount",
+              "type": "uint256"
+          },
+          {
+              "name": "txHash",
+              "type": "bytes32"
+          }
+      ],
+      "outputs": []
+  }
+]
+
 export const PISTAKING_CONTRACT_ADDRESS = '0xbBeAB8d29458ac35Ac455669949A8907A2307787'
 
 export const PNFT_CONTRACT_ADDRESS = '0xD046766524c66B0b2a53B2A0c92b18B9593C7951'
+
+export const CROSS_CONTRACCT_ADDRESS = '0x0000000000000000000000000000000000000065'
 
 export const gas = 3000000
 
