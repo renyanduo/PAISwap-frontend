@@ -30,7 +30,7 @@ function Index(props) {
           <span
             className={location.pathname === '/l2wallet' ? 'active' : ''}
             onClick={() => {
-              jump('/l2wallet')
+              jump('/l2wallet?deposit')
             }}>
             L2 WALLET
           </span>

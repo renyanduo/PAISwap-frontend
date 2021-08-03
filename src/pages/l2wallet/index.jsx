@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react'
 import Button from '@/components/Button'
 import Web3 from 'web3'
 import { crossChainABI, CROSS_CONTRACCT_ADDRESS, gas, gasPrice } from '@/util/abi'
-import { message } from 'antd'
+import { message, Modal } from 'antd'
 import { useSelector, useDispatch } from 'react-redux'
 import './index.scss'
 import request from '@/util/request'
 import { setCrossChainData } from '@/store/action'
 import Loading from '@/components/loading'
+import { useHistory, useLocation } from 'react-router-dom'
 
 import piLogo from '@/assets/images/pi.png'
 
@@ -16,7 +17,7 @@ if (typeof window.web3 !== 'undefined') {
   web3 = new Web3(window.web3.currentProvider)
 }
 
-const Index = () => {
+const Index = props => {
   const [address, setAddress] = useState('')
   const [activeTab, setActiveTab] = useState('deposit')
   const [balance, setBalance] = useState(0)
@@ -27,6 +28,8 @@ const Index = () => {
   const crossChainData = useSelector(state => state.crossChainData)
 
   const dispatch = useDispatch()
+  const history = useHistory()
+  const location = useLocation()
 
   const getBalance = async () => {
     try {
@@ -43,20 +46,35 @@ const Index = () => {
   }
 
   const mainToChind = () => {
+    if (!depositAmount || +depositAmount < 0 || +depositAmount > +balance) {
+      message.error('invalid input')
+      return
+    }
+
+    if (window.ethereum.chainId !== '0xfe3005') {
+      Modal.confirm({
+        content: '当前链不对，是否切换？',
+        okText: 'OK',
+        cancelText: 'Cancel',
+        onOk() {switchPlianChain()}
+      })
+      return
+    }
+
     let MyContract = new web3.eth.Contract(crossChainABI, CROSS_CONTRACCT_ADDRESS)
 
     setShowLoading(true)
 
-    const balance = depositAmount
+    const depositbalance = depositAmount
 
-    console.log(balance, web3.utils.toWei(balance, 'ether'))
+    console.log(depositbalance, web3.utils.toWei(depositbalance, 'ether'))
 
     MyContract.methods
       .DepositInMainChain('child_test')
       .send({
         from: address,
         chainId: 'testnet',
-        value: web3.utils.toWei(balance, 'ether'),
+        value: web3.utils.toWei(depositbalance, 'ether'),
         gas: gas,
         gasPrice: gasPrice
       })
@@ -64,14 +82,14 @@ const Index = () => {
         // receipt can also be a new contract instance, when coming from a "contract.deploy({...}).send()"
         message.success('Swaped successfully, please check your balance!')
         console.log(receipt)
-        switchPlinChain('toChild').then(function (result) {
+        switchPlianChain('toChild').then(function (result) {
           if (result === null) {
             setShowLoading(false)
             dispatch(
               setCrossChainData({
                 crossChainData: {
                   type: 'deposit',
-                  balance,
+                  depositbalance,
                   transactionHash: receipt.transactionHash
                 }
               })
@@ -86,19 +104,34 @@ const Index = () => {
   }
 
   const childToMain = () => {
+    if (!withdrawAmount || +withdrawAmount < 0 || +withdrawAmount > +balance) {
+      message.error('invalid input')
+      return
+    }
+
+    if (window.ethereum.chainId !== '0x999d4b') {
+      Modal.confirm({
+        content: '当前链不对，是否切换？',
+        okText: 'OK',
+        cancelText: 'Cancel',
+        onOk() {switchPlianChain('toChild')}
+      })
+      return
+    }
+
     let MyContract = new web3.eth.Contract(crossChainABI, CROSS_CONTRACCT_ADDRESS)
     setShowLoading(true)
 
-    const balance = withdrawAmount
+    const withdrawbalance = withdrawAmount
 
-    console.log(balance, web3.utils.toWei(balance, 'ether'))
+    console.log(withdrawbalance, web3.utils.toWei(withdrawbalance, 'ether'))
 
     MyContract.methods
       .WithdrawFromChildChain('child_test')
       .send({
         from: address,
         chainId: 'child_test',
-        value: web3.utils.toWei(balance, 'ether'),
+        value: web3.utils.toWei(withdrawbalance, 'ether'),
         gas: gas,
         gasPrice: gasPrice
       })
@@ -119,7 +152,7 @@ const Index = () => {
               console.log(res)
               if (res.result === 'success') {
                 clearInterval(timer)
-                switchPlinChain()
+                switchPlianChain()
                   .then(function (result) {
                     if (result === null) {
                       setShowLoading(false)
@@ -127,7 +160,7 @@ const Index = () => {
                         setCrossChainData({
                           crossChainData: {
                             type: 'withdraw',
-                            balance,
+                            withdrawbalance,
                             transactionHash: receipt.transactionHash
                           }
                         })
@@ -228,7 +261,7 @@ const Index = () => {
     }
   }
 
-  const switchPlinChain = async type => {
+  const switchPlianChain = async type => {
     const { ethereum } = window
     try {
       const flag = await ethereum.request({
@@ -270,16 +303,36 @@ const Index = () => {
     }
   }
 
+  const isMetaMaskInstalled = () => {
+    //Have to check the ethereum binding on the window object to see if it's installed
+    const { ethereum } = window
+    return Boolean(ethereum && ethereum.isMetaMask)
+  }
+
+  const switchTab = type => {
+    setActiveTab(type)
+    history.replace({ pathname: '/l2wallet', search: type })
+  }
+
   useEffect(() => {
+    if (!isMetaMaskInstalled()) {
+      message.error('need to install metamask')
+      return
+    }
     setAddress(window.ethereum.selectedAddress ? window.ethereum.selectedAddress : '')
     address && getBalance()
   })
 
   useEffect(() => {
     checkTransaction()
+    setActiveTab(
+      location.search
+        ? location.search.substr(1)
+        : history.replace({ pathname: '/l2wallet', search: 'deposit' })
+    )
   }, [])
 
-  window.ethereum.on('chainChanged', _chainId => window.location.reload())
+  window.ethereum && window.ethereum.on('chainChanged', _chainId => window.location.reload())
 
   return (
     <div className="main">
@@ -289,14 +342,14 @@ const Index = () => {
             className={`tab-item flex justify-center items-center ${
               activeTab === 'deposit' ? 'active' : ''
             }`}
-            onClick={() => setActiveTab('deposit')}>
+            onClick={() => switchTab('deposit')}>
             Deposit
           </div>
           <div
             className={`tab-item flex justify-center items-center ${
               activeTab === 'withdraw' ? 'active' : ''
             }`}
-            onClick={() => setActiveTab('withdraw')}>
+            onClick={() => switchTab('withdraw')}>
             Withdraw
           </div>
         </div>
@@ -312,7 +365,7 @@ const Index = () => {
             <div className="modal-cell">
               <div className="modal-title">Deposit Amount:</div>
             </div>
-            <div className="modal-input">
+            <div className="modal-input" style={{ marginBottom: '13px' }}>
               <input
                 type="number"
                 onChange={e => setDepositAmount(e.target.value)}
@@ -324,6 +377,7 @@ const Index = () => {
                 PI
               </div>
             </div>
+            <div className="balance">Balance: {balance} PI</div>
             <Button style={{ margin: '0 auto' }} onClick={mainToChind}>
               Submit
             </Button>
