@@ -6,6 +6,7 @@ import Web3 from 'web3'
 import { ABI, PNFT_CONTRACT_ADDRESS, PISTAKING_CONTRACT_ADDRESS, gas, gasPrice } from '@/util/abi'
 import { message } from 'antd'
 import { useSelector } from 'react-redux'
+import Loading from '@/components/loading'
 
 import banner from '@/assets/images/banner.png'
 
@@ -26,6 +27,8 @@ const Index = () => {
   const [pendingReward, setPendingReward] = useState(0) // 挖矿赚取
   const [balance, setBalance] = useState(0) // 钱包余额
   const [extractAmount, setExtractAmount] = useState('') // 提取
+  const [showLoading, setShowLoading] = useState(false)
+
   const userAddress = useSelector(state => state.address)
   // 质押
   const deposit = () => {
@@ -33,6 +36,7 @@ const Index = () => {
       message.error('invalid input')
       return
     }
+    setShowLoading(true)
 
     let MyContract = new web3.eth.Contract(ABI, PISTAKING_CONTRACT_ADDRESS)
 
@@ -48,19 +52,14 @@ const Index = () => {
         gasPrice: gasPrice,
         value: web3.utils.toWei(balance_, 'ether')
       })
-      .on('transactionHash', function (hash) {
-        message.info(hash, 'Waiting for tx confirmation:')
-      })
-      .on('receipt', function (receipt) {
+      .then(receipt => {
         message.success('Swaped successfully, please check your balance!')
         setShowModal(false)
+        setShowLoading(false)
       })
-      .on('error', function (error, receipt) {
-        if (!error.message) {
-          message.error('Swap failure', error.toString())
-        } else {
-          message.error(error.message)
-        }
+      .catch(error => {
+        message.error(error.message)
+        setShowLoading(false)
       })
   }
 
@@ -94,6 +93,8 @@ const Index = () => {
       return
     }
 
+    setShowLoading(true)
+
     let MyContract = new web3.eth.Contract(ABI, PISTAKING_CONTRACT_ADDRESS)
 
     const balance = extractAmount.toString()
@@ -107,19 +108,14 @@ const Index = () => {
         gas: gas,
         gasPrice: gasPrice
       })
-      .on('transactionHash', function (hash) {
-        message.info(hash, 'Waiting for tx confirmation:')
-      })
-      .on('receipt', function (receipt) {
+      .then(receipt => {
         message.success('Swaped successfully, please check your balance!')
         setShowModal(false)
+        setShowLoading(false)
       })
-      .on('error', function (error, receipt) {
-        if (!error.message) {
-          message.error('Swap failure', error.toString())
-        } else {
-          message.error(error.message)
-        }
+      .catch(error => {
+        message.error(error.message)
+        setShowLoading(false)
       })
   }
 
@@ -316,6 +312,7 @@ const Index = () => {
         </ConnectWallet>
       )}
       {showModal ? modal : null}
+      <Loading show={showLoading} />
     </div>
   )
 }
