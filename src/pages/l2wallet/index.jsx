@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import './index.scss'
 import request from '@/util/request'
 import { setCrossChainData } from '@/store/action'
+import Loading from '@/components/loading'
 
 import piLogo from '@/assets/images/pi.png'
 
@@ -21,6 +22,7 @@ const Index = () => {
   const [balance, setBalance] = useState(0)
   const [depositAmount, setDepositAmount] = useState('')
   const [withdrawAmount, setWithdrawAmount] = useState('')
+  const [showLoading, setShowLoading] = useState(false)
   const userAddress = useSelector(state => state.address)
   const crossChainData = useSelector(state => state.crossChainData)
 
@@ -43,6 +45,8 @@ const Index = () => {
   const mainToChind = () => {
     let MyContract = new web3.eth.Contract(crossChainABI, CROSS_CONTRACCT_ADDRESS)
 
+    setShowLoading(true)
+
     const balance = depositAmount
 
     console.log(balance, web3.utils.toWei(balance, 'ether'))
@@ -56,15 +60,13 @@ const Index = () => {
         gas: gas,
         gasPrice: gasPrice
       })
-      .on('transactionHash', function (hash) {
-        message.info(hash, 'Waiting for tx confirmation:')
-      })
-      .on('receipt', function (receipt) {
+      .then(receipt => {
+        // receipt can also be a new contract instance, when coming from a "contract.deploy({...}).send()"
         message.success('Swaped successfully, please check your balance!')
         console.log(receipt)
-        debugger
         switchPlinChain('toChild').then(function (result) {
-          if (result == null) {
+          if (result === null) {
+            setShowLoading(false)
             dispatch(
               setCrossChainData({
                 crossChainData: {
@@ -74,21 +76,18 @@ const Index = () => {
                 }
               })
             )
-            // window.location.reload() // 切换完成刷新页面
           }
         })
       })
-      .on('error', function (error, receipt) {
-        if (!error.message) {
-          message.error('Swap failure', error.toString())
-        } else {
-          message.error(error.message)
-        }
+      .catch(error => {
+        message.error(error.message)
+        setShowLoading(false)
       })
   }
 
   const childToMain = () => {
     let MyContract = new web3.eth.Contract(crossChainABI, CROSS_CONTRACCT_ADDRESS)
+    setShowLoading(true)
 
     const balance = withdrawAmount
 
@@ -103,10 +102,7 @@ const Index = () => {
         gas: gas,
         gasPrice: gasPrice
       })
-      .on('transactionHash', function (hash) {
-        message.info(hash, 'Waiting for tx confirmation:')
-      })
-      .on('receipt', function (receipt) {
+      .then(receipt => {
         message.success('Swaped successfully, please check your balance!')
         console.log(receipt)
         //调用 post https://testnet.plian.org/getChildTxInMainChain 返回sucess 执行下面步骤
@@ -123,78 +119,79 @@ const Index = () => {
               console.log(res)
               if (res.result === 'success') {
                 clearInterval(timer)
-                switchPlinChain().then(function (result) {
-                  debugger
-                  if (result == null) {
-                    debugger
-                    dispatch(
-                      setCrossChainData({
-                        crossChainData: {
-                          type: 'withdraw',
-                          balance,
-                          transactionHash: receipt.transactionHash
-                        }
-                      })
-                    )
-                    // window.location.reload() // 切换完成刷新页面
-                  }
-                })
+                switchPlinChain()
+                  .then(function (result) {
+                    if (result === null) {
+                      setShowLoading(false)
+                      dispatch(
+                        setCrossChainData({
+                          crossChainData: {
+                            type: 'withdraw',
+                            balance,
+                            transactionHash: receipt.transactionHash
+                          }
+                        })
+                      )
+                    } else {
+                      message.error('switch error')
+                      setShowLoading(false)
+                    }
+                  })
+                  .catch(err => {
+                    message.error(err.message)
+                    setShowLoading(false)
+                  })
               } else {
                 message.error('please waiting')
               }
             })
             .catch(err => {
               message.error(err.message)
+              setShowLoading(false)
               clearInterval(timer)
             })
         }, 5000)
       })
-      .on('error', function (error, receipt) {
-        if (!error.message) {
-          message.error('Swap failure', error.toString())
-        } else {
-          message.error(error.message)
-        }
+      .catch(error => {
+        message.error(error.message)
+        setShowLoading(false)
       })
   }
 
-  const checkTransaction = type => {
+  const checkTransaction = () => {
     console.log('check')
     if (!Object.keys(crossChainData).length) return
 
     let MyContract = new web3.eth.Contract(crossChainABI, CROSS_CONTRACCT_ADDRESS)
 
+    setShowLoading(true)
     if (crossChainData.type === 'deposit') {
       MyContract.methods
         .DepositInChildChain('child_test', crossChainData.transactionHash)
         .send({
           from: userAddress,
-          chainId: 'child_test'
-          // gas: gas,
-          // gasPrice: gasPrice
+          chainId: 'child_test',
+          gas: gas,
+          gasPrice: '0'
         })
-        .on('transactionHash', function (hash) {
-          message.info(hash, 'Waiting for tx confirmation:')
-        })
-        .on('receipt', function (receipt) {
+        .then(receipt => {
+          // receipt can also be a new contract instance, when coming from a "contract.deploy({...}).send()"
           message.success('Swaped successfully, please check your balance!')
           dispatch(
             setCrossChainData({
               crossChainData: {}
             })
           )
+          setShowLoading(false)
         })
-        .on('error', function (error, receipt) {
-          if (!error.message) {
-            message.error('Swap failure', error.toString())
-          } else {
-            message.error(error.message)
-          }
+        .catch(error => {
+          message.error(error.message)
           dispatch(
             setCrossChainData({
               crossChainData: {}
             })
           )
+          setShowLoading(false)
         })
     } else if (crossChainData.type === 'withdraw') {
       MyContract.methods
@@ -205,32 +202,28 @@ const Index = () => {
         )
         .send({
           from: userAddress,
-          chainId: 'testnet'
-          // gas: gas,
-          // gasPrice: gasPrice
+          chainId: 'testnet',
+          gas: gas,
+          gasPrice: '0'
         })
-        .on('transactionHash', function (hash) {
-          message.info(hash, 'Waiting for tx confirmation:')
-        })
-        .on('receipt', function (receipt) {
+        .then(receipt => {
+          // receipt can also be a new contract instance, when coming from a "contract.deploy({...}).send()"
           message.success('Swaped successfully, please check your balance!')
           dispatch(
             setCrossChainData({
               crossChainData: {}
             })
           )
+          setShowLoading(false)
         })
-        .on('error', function (error, receipt) {
-          if (!error.message) {
-            message.error('Swap failure', error.toString())
-          } else {
-            message.error(error.message)
-          }
+        .catch(error => {
+          message.error(error.message)
           dispatch(
             setCrossChainData({
               crossChainData: {}
             })
           )
+          setShowLoading(false)
         })
     }
   }
@@ -365,6 +358,7 @@ const Index = () => {
           </>
         )}
       </div>
+      <Loading show={showLoading} />
     </div>
   )
 }
