@@ -319,7 +319,7 @@ const Index = props => {
       message.error('need to install metamask')
       return
     }
-    setAddress(window.ethereum.selectedAddress ? window.ethereum.selectedAddress : '')
+    setAddress(window.ethereum.selectedAddress || '')
     address && getBalance()
   })
 
@@ -331,8 +331,6 @@ const Index = props => {
         : history.replace({ pathname: '/l2wallet', search: 'deposit' })
     )
   }, [])
-
-  window.ethereum && window.ethereum.on('chainChanged', _chainId => window.location.reload())
 
   return (
     <div className="main">
@@ -360,7 +358,7 @@ const Index = props => {
               <div className="modal-title">Deposit form L1 account:</div>
             </div>
             <div className="modal-input">
-              <input value={userAddress} readOnly />
+              <input value={userAddress || ''} readOnly />
             </div>
             <div className="modal-cell">
               <div className="modal-title">Deposit Amount:</div>
@@ -388,7 +386,7 @@ const Index = props => {
               <div className="modal-title">Withdrawal Address:</div>
             </div>
             <div className="modal-input">
-              <input value={userAddress} readOnly />
+              <input value={userAddress || ''} readOnly />
             </div>
             <div className="modal-cell">
               <div className="modal-title">Withdrawal Amount:</div>
