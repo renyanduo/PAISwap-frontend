@@ -53,7 +53,7 @@ const Index = props => {
 
     if (window.ethereum.chainId !== '0xfe3005') {
       Modal.confirm({
-        content: '当前链不对，是否切换？',
+        content: 'switch chain？',
         okText: 'OK',
         cancelText: 'Cancel',
         onOk() {switchPlianChain()}
@@ -89,7 +89,7 @@ const Index = props => {
               setCrossChainData({
                 crossChainData: {
                   type: 'deposit',
-                  depositbalance,
+                  balance: depositbalance,
                   transactionHash: receipt.transactionHash
                 }
               })
@@ -111,7 +111,7 @@ const Index = props => {
 
     if (window.ethereum.chainId !== '0x999d4b') {
       Modal.confirm({
-        content: '当前链不对，是否切换？',
+        content: 'switch chain？',
         okText: 'OK',
         cancelText: 'Cancel',
         onOk() {switchPlianChain('toChild')}
@@ -160,7 +160,7 @@ const Index = props => {
                         setCrossChainData({
                           crossChainData: {
                             type: 'withdraw',
-                            withdrawbalance,
+                            balance: withdrawbalance,
                             transactionHash: receipt.transactionHash
                           }
                         })
