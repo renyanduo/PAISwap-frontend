@@ -72,6 +72,7 @@ const Index = () => {
       .call()
       .then(function (result) {
         setStakingAmount(web3.utils.fromWei(result))
+        setExtractAmount(stakingAmount)
         console.log('staking', web3.utils.fromWei(result))
       })
       .catch(err => message.error(err.message))
@@ -205,6 +206,11 @@ const Index = () => {
     getTotalSupply()
     address && getStaking()
   })
+
+  // useEffect(() => {
+  //   console.log('aaa')
+  //   address && getStaking()
+  // }, [address])
 
   const modal = (
     <div className="modal">

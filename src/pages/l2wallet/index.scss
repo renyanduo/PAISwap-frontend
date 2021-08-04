@@ -111,3 +111,82 @@
     margin-bottom: 30px;
   }
 }
+.small-modal {
+  .waiting-modal {
+    .title {
+      font-size: 20px;
+      font-weight: bold;
+      color: #3c3c3c;
+      margin-bottom: 33px;
+    }
+
+    .desc {
+      font-size: 14px;
+      color: #3c3c3c;
+      margin-bottom: 42px;
+    }
+
+    .warn {
+      font-size: 16px;
+      font-weight: bold;
+      color: #fa9124;
+    }
+
+    .img-wrap {
+      margin-bottom: 33px;
+      .pizza,
+      .wallet {
+        width: 32px;
+        height: 32px;
+      }
+
+      .arrow {
+        width: 17px;
+        height: 14px;
+        margin: 0 32px;
+      }
+    }
+  }
+
+  .error-modal {
+    .title {
+      font-size: 20px;
+      font-weight: bold;
+      color: #3c3c3c;
+      margin-bottom: 38px;
+    }
+
+    .img-warn {
+      width: 56px;
+      height: 50px;
+      margin-bottom: 23px;
+    }
+
+    .desc {
+      font-size: 14px;
+      color: #3c3c3c;
+      margin-bottom: 52px;
+    }
+  }
+
+  .success-modal {
+    .title {
+      font-size: 20px;
+      font-weight: bold;
+      color: #3c3c3c;
+      margin-bottom: 32px;
+    }
+
+    .img-hand {
+      width: 52px;
+      height: 55px;
+      margin-bottom: 34px;
+    }
+
+    .desc {
+      font-size: 14px;
+      color: #3c3c3c;
+      margin-bottom: 34px;
+    }
+  }
+}

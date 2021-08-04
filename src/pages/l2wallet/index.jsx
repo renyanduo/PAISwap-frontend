@@ -9,9 +9,15 @@ import request from '@/util/request'
 import { setCrossChainData } from '@/store/action'
 import { numFormat } from '@/util'
 import Loading from '@/components/loading'
+import SmallModal from '@/components/SmallModal'
 import { useHistory, useLocation } from 'react-router-dom'
 
 import piLogo from '@/assets/images/pi.png'
+import pizza from '@/assets/images/pizza.png'
+import wallet from '@/assets/images/wallet.png'
+import arrow from '@/assets/images/arrow.png'
+import warn from '@/assets/images/warn.png'
+import hand from '@/assets/images/hand.png'
 
 let web3
 if (typeof window.web3 !== 'undefined') {
@@ -25,6 +31,9 @@ const Index = props => {
   const [depositAmount, setDepositAmount] = useState('')
   const [withdrawAmount, setWithdrawAmount] = useState('')
   const [showLoading, setShowLoading] = useState(false)
+  const [showWaiting, setShowWaiting] = useState(false)
+  const [showError, setShowError] = useState(false)
+  const [showSuccess, setShowSuccess] = useState(false)
   const userAddress = useSelector(state => state.address)
   const crossChainData = useSelector(state => state.crossChainData)
 
@@ -64,7 +73,8 @@ const Index = props => {
 
     let MyContract = new web3.eth.Contract(crossChainABI, CROSS_CONTRACCT_ADDRESS)
 
-    setShowLoading(true)
+    // setShowLoading(true)
+    setShowWaiting(true)
 
     const depositbalance = depositAmount
 
@@ -85,7 +95,8 @@ const Index = props => {
         console.log(receipt)
         switchPlianChain('toChild').then(function (result) {
           if (result === null) {
-            setShowLoading(false)
+            // setShowLoading(false)
+            setShowWaiting(false)
             dispatch(
               setCrossChainData({
                 crossChainData: {
@@ -100,7 +111,9 @@ const Index = props => {
       })
       .catch(error => {
         message.error(error.message)
-        setShowLoading(false)
+        // setShowLoading(false)
+        setShowError(true)
+        setShowWaiting(false)
       })
   }
 
@@ -121,7 +134,8 @@ const Index = props => {
     }
 
     let MyContract = new web3.eth.Contract(crossChainABI, CROSS_CONTRACCT_ADDRESS)
-    setShowLoading(true)
+    // setShowLoading(true)
+    setShowWaiting(true)
 
     const withdrawbalance = withdrawAmount
 
@@ -156,7 +170,8 @@ const Index = props => {
                 switchPlianChain()
                   .then(function (result) {
                     if (result === null) {
-                      setShowLoading(false)
+                      // setShowLoading(false)
+                      setShowWaiting(false)
                       dispatch(
                         setCrossChainData({
                           crossChainData: {
@@ -168,12 +183,16 @@ const Index = props => {
                       )
                     } else {
                       message.error('switch error')
-                      setShowLoading(false)
+                      // setShowLoading(false)
+                      setShowError(true)
+                      setShowWaiting(false)
                     }
                   })
                   .catch(err => {
                     message.error(err.message)
-                    setShowLoading(false)
+                    // setShowLoading(false)
+                    setShowError(true)
+                    setShowWaiting(false)
                   })
               } else {
                 message.error('please waiting')
@@ -181,14 +200,18 @@ const Index = props => {
             })
             .catch(err => {
               message.error(err.message)
-              setShowLoading(false)
+              // setShowLoading(false)
+              setShowError(true)
+              setShowWaiting(false)
               clearInterval(timer)
             })
         }, 5000)
       })
       .catch(error => {
         message.error(error.message)
-        setShowLoading(false)
+        // setShowLoading(false)
+        setShowError(true)
+        setShowWaiting(false)
       })
   }
 
@@ -198,7 +221,8 @@ const Index = props => {
 
     let MyContract = new web3.eth.Contract(crossChainABI, CROSS_CONTRACCT_ADDRESS)
 
-    setShowLoading(true)
+    // setShowLoading(true)
+    setShowWaiting(true)
     if (crossChainData.type === 'deposit') {
       MyContract.methods
         .DepositInChildChain('child_test', crossChainData.transactionHash)
@@ -216,7 +240,9 @@ const Index = props => {
               crossChainData: {}
             })
           )
-          setShowLoading(false)
+          // setShowLoading(false)
+          setShowSuccess(true)
+          setShowWaiting(false)
         })
         .catch(error => {
           message.error(error.message)
@@ -225,7 +251,9 @@ const Index = props => {
               crossChainData: {}
             })
           )
-          setShowLoading(false)
+          // setShowLoading(false)
+          setShowError(true)
+          setShowWaiting(false)
         })
     } else if (crossChainData.type === 'withdraw') {
       MyContract.methods
@@ -248,7 +276,9 @@ const Index = props => {
               crossChainData: {}
             })
           )
-          setShowLoading(false)
+          // setShowLoading(false)
+          setShowWaiting(false)
+          setShowSuccess(true)
         })
         .catch(error => {
           message.error(error.message)
@@ -257,7 +287,9 @@ const Index = props => {
               crossChainData: {}
             })
           )
-          setShowLoading(false)
+          // setShowLoading(false)
+          setShowError(true)
+          setShowWaiting(false)
         })
     }
   }
@@ -412,6 +444,34 @@ const Index = props => {
         )}
       </div>
       <Loading show={showLoading} />
+      <SmallModal show={showWaiting}>
+        <div className="waiting-modal flex flex-col	items-center">
+          <div className="title">Confirm Swap</div>
+          <div className="img-wrap flex items-center justify-center">
+            <img src={pizza} className="pizza" alt="" />
+            <img src={arrow} className="arrow" alt="" />
+            <img src={wallet} className="wallet" alt="" />
+          </div>
+          <div className="desc">Waiting For Confirmation</div>
+          <div className="warn">Confirm this transaction in your wallet</div>
+        </div>
+      </SmallModal>
+      <SmallModal show={showError}>
+        <div className="error-modal flex flex-col	items-center">
+          <div className="title">Confirm Swap</div>
+          <img src={warn} alt="" className="img-warn" />
+          <div className="desc">Transaction rejected.</div>
+          <Button onClick={()=>setShowError(false)}>Dismiss</Button>
+        </div>
+      </SmallModal>
+      <SmallModal show={showSuccess}>
+        <div className="success-modal flex flex-col	items-center">
+          <div className="title">Confirm Swap</div>
+          <img src={hand} alt="" className="img-hand" />
+          <div className="desc">Transaction Submitted</div>
+          <Button onClick={()=>setShowSuccess(false)}>Close</Button>
+        </div>
+      </SmallModal>
     </div>
   )
 }
