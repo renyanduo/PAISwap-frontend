@@ -6,6 +6,7 @@ import Web3 from 'web3'
 import { ABI, PNFT_CONTRACT_ADDRESS, PISTAKING_CONTRACT_ADDRESS, gas, gasPrice } from '@/util/abi'
 import { message } from 'antd'
 import { useSelector } from 'react-redux'
+import { numFormat } from '@/util'
 import Loading from '@/components/loading'
 
 import banner from '@/assets/images/banner.png'
@@ -241,7 +242,7 @@ const Index = () => {
           </div>
           <div className="modal-cell">
             <div className="modal-title">Balance available</div>
-            <div className="modal-amount">{balance} PI</div>
+            <div className="modal-amount">{numFormat(balance)} PI</div>
           </div>
           <Button className="submit" onClick={deposit}>
             Stake
@@ -288,18 +289,18 @@ const Index = () => {
           <div className="content flex flex-wrap sm:flex-nowrap">
             <div className="box mr-0 sm:mr-14 sm:w-1/2 w-full items-center">
               <div className="box-title">Total staked</div>
-              <div className="box-amount">{totalSupply} PI</div>
+              <div className="box-amount">{numFormat(totalSupply)} PI</div>
               <div className="box-highlight">PNFT mining reward (Total undistributed)</div>
-              <div className="box-amount">{totalBalance}</div>
+              <div className="box-amount">{numFormat(totalBalance)}</div>
             </div>
             <div className="box sm:w-1/2 w-full items-center">
               <div className="box-title">PI staked</div>
-              <div className="box-amount">{stakingAmount}</div>
+              <div className="box-amount">{numFormat(stakingAmount)}</div>
               <Button onClick={() => depositClick('deposit')} style={{ height: '42px' }}>
                 Stake
               </Button>
               <div className="box-title">PNFT earned</div>
-              <div className="box-amount">{pendingReward}</div>
+              <div className="box-amount">{numFormat(pendingReward)}</div>
               <Button onClick={() => depositClick('extract')} style={{ height: '42px' }}>
                 Harvest
               </Button>

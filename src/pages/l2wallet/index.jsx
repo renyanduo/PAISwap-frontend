@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import Button from '@/components/Button'
 import Web3 from 'web3'
-import { crossChainABI, CROSS_CONTRACCT_ADDRESS, gas, gasPrice } from '@/util/abi'
+import { crossChainABI, CROSS_CONTRACCT_ADDRESS, gasl2, gasPricel2 } from '@/util/abi'
 import { message, Modal } from 'antd'
 import { useSelector, useDispatch } from 'react-redux'
 import './index.scss'
 import request from '@/util/request'
 import { setCrossChainData } from '@/store/action'
+import { numFormat } from '@/util'
 import Loading from '@/components/loading'
 import { useHistory, useLocation } from 'react-router-dom'
 
@@ -75,8 +76,8 @@ const Index = props => {
         from: address,
         chainId: 'testnet',
         value: web3.utils.toWei(depositbalance, 'ether'),
-        gas: gas,
-        gasPrice: gasPrice
+        gas: gasl2,
+        gasPrice: gasPricel2
       })
       .then(receipt => {
         // receipt can also be a new contract instance, when coming from a "contract.deploy({...}).send()"
@@ -132,8 +133,8 @@ const Index = props => {
         from: address,
         chainId: 'child_test',
         value: web3.utils.toWei(withdrawbalance, 'ether'),
-        gas: gas,
-        gasPrice: gasPrice
+        gas: gasl2,
+        gasPrice: gasPricel2
       })
       .then(receipt => {
         message.success('Swaped successfully, please check your balance!')
@@ -204,7 +205,7 @@ const Index = props => {
         .send({
           from: userAddress,
           chainId: 'child_test',
-          gas: gas,
+          gas: gasl2,
           gasPrice: '0'
         })
         .then(receipt => {
@@ -236,7 +237,7 @@ const Index = props => {
         .send({
           from: userAddress,
           chainId: 'testnet',
-          gas: gas,
+          gas: gasl2,
           gasPrice: '0'
         })
         .then(receipt => {
@@ -375,7 +376,7 @@ const Index = props => {
                 PI
               </div>
             </div>
-            <div className="balance">Balance: {balance} PI</div>
+            <div className="balance">Balance: {numFormat(balance)} PI</div>
             <Button style={{ margin: '0 auto' }} onClick={mainToChind}>
               Submit
             </Button>
@@ -403,7 +404,7 @@ const Index = props => {
                 PI
               </div>
             </div>
-            <div className="balance">Balance: {balance} PI</div>
+            <div className="balance">Balance: {numFormat(balance)} PI</div>
             <Button style={{ margin: '0 auto' }} onClick={childToMain}>
               Submit
             </Button>

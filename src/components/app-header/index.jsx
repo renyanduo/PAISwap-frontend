@@ -17,13 +17,13 @@ function Index(props) {
     history.push(route)
   }
 
-  useEffect(() => {
-    dispatch(
-      setUserAddress({
-        address: window.ethereum.selectedAddress || ''
-      })
-    )
-  }, [])
+  // useEffect(() => {
+  //   dispatch(
+  //     setUserAddress({
+  //       address: window.ethereum.selectedAddress || ''
+  //     })
+  //   )
+  // }, [])
 
   window.ethereum && window.ethereum.on('chainChanged', _chainId => window.location.reload())
 
