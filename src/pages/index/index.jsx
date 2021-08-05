@@ -75,7 +75,7 @@ const Index = () => {
       .call()
       .then(function (result) {
         setStakingAmount(web3.utils.fromWei(result))
-        setExtractAmount(stakingAmount)
+        setExtractAmount(web3.utils.fromWei(result))
         console.log('staking', web3.utils.fromWei(result))
       })
       .catch(err => message.error(err.message))
@@ -263,6 +263,7 @@ const Index = () => {
   })
 
   useEffect(() => {
+    if (!isMetaMaskInstalled()) return
     if (window.ethereum.chainId === '0x999d4b') {
       address && getStaking()
       address && getPendingReward()
@@ -350,7 +351,9 @@ const Index = () => {
   return (
     <div className="main">
       <div className="banner">
-        <img src={banner} alt="" />
+        <a href="https://pizzap.io/" target="_blank" rel="noopener noreferrer">
+          <img src={banner} alt="" />
+        </a>
       </div>
       {userAddress ? (
         <>
