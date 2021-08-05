@@ -8,8 +8,10 @@ import { message } from 'antd'
 import { useSelector } from 'react-redux'
 import { numFormat } from '@/util'
 import Loading from '@/components/loading'
+import SmallModal from '@/components/SmallModal'
 
 import banner from '@/assets/images/banner.png'
+import pizza from '@/assets/images/pizza2.png'
 
 let web3
 if (typeof window.web3 !== 'undefined') {
@@ -29,6 +31,7 @@ const Index = () => {
   const [balance, setBalance] = useState(0) // 钱包余额
   const [extractAmount, setExtractAmount] = useState('') // 提取
   const [showLoading, setShowLoading] = useState(false)
+  const [showSwitch, setShowSwitch] = useState(false)
 
   const userAddress = useSelector(state => state.address)
   // 质押
@@ -85,6 +88,7 @@ const Index = () => {
       .call()
       .then(function (result) {
         setPendingReward(web3.utils.fromWei(result))
+        console.log('pending', web3.utils.fromWei(result))
       })
       .catch(err => message.error(err.message))
   }
@@ -189,6 +193,57 @@ const Index = () => {
     getBalance()
   }
 
+  const switchPlianChain = async type => {
+    const { ethereum } = window
+    try {
+      const flag = await ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: type === 'toChild' ? '0x999d4b' : '0xfe3005' }]
+      })
+      console.log(flag)
+      return flag
+    } catch (switchError) {
+      console.log(switchError)
+      message.error(switchError.message)
+      // This error code indicates that the chain has not been added to MetaMask.
+      if (switchError.code === 4902) {
+        // return false
+        try {
+          await ethereum.request({
+            method: 'wallet_addEthereumChain',
+            params: [
+              type === 'toChild'
+                ? {
+                    chainId: '0x999d4b',
+                    chainName: 'Plian-subchain1test',
+                    rpcUrls: ['https://testnet.plian.io/child_test'],
+                    blockExplorerUrls: ['https://testnet.plian.org/child_test'],
+                    nativeCurrency: {
+                      symbol: 'PI',
+                      decimals: 18
+                    }
+                  }
+                : {
+                    chainId: '0xfe3005',
+                    chainName: 'Plian-mainchaintest',
+                    rpcUrls: ['https://testnet.plian.io/testnet'],
+                    blockExplorerUrls: ['https://testnet.plian.org/testnet'],
+                    nativeCurrency: {
+                      symbol: 'PI',
+                      decimals: 18
+                    }
+                  }
+            ]
+          })
+        } catch (addError) {
+          // handle "add" error
+          message.error(addError.message)
+        }
+      }
+      // handle other "switch" errors
+    }
+  }
+
   const isMetaMaskInstalled = () => {
     //Have to check the ethereum binding on the window object to see if it's installed
     const { ethereum } = window
@@ -200,17 +255,24 @@ const Index = () => {
       message.error('need to install metamask')
       return
     }
-    setAddress(window.ethereum.selectedAddress ? window.ethereum.selectedAddress : '')
-    getTotalBalance()
-    address && getPendingReward()
-    getTotalSupply()
-    address && getStaking()
+    setAddress(window.ethereum.selectedAddress || '')
+    // getTotalBalance()
+    // address && getPendingReward()
+    // getTotalSupply()
+    // address && getStaking()
   })
 
-  // useEffect(() => {
-  //   console.log('aaa')
-  //   address && getStaking()
-  // }, [address])
+  useEffect(() => {
+    if (window.ethereum.chainId === '0x999d4b') {
+      address && getStaking()
+      address && getPendingReward()
+      getTotalBalance()
+      getTotalSupply()
+    } else {
+      address && message.error('wrong chain id')
+      setShowSwitch(true)
+    }
+  }, [address])
 
   const modal = (
     <div className="modal">
@@ -320,6 +382,13 @@ const Index = () => {
       )}
       {showModal ? modal : null}
       <Loading show={showLoading} />
+      <SmallModal show={showSwitch}>
+        <div className="switch-modal flex flex-col items-center">
+          <div className="title">Switch Network</div>
+          <div className="switch-btn flex items-center justify-center" onClick={()=>{switchPlianChain('toChild')}}><img src={pizza} alt="" /> Switch to Plian Child</div>
+          <div className="desc">Pizzap is running on Plian child chain, you should switch your current network to Plian child.</div>
+        </div>
+      </SmallModal>
     </div>
   )
 }

@@ -305,6 +305,7 @@ const Index = props => {
       return flag
     } catch (switchError) {
       console.log(switchError)
+      message.error(switchError.message)
       // This error code indicates that the chain has not been added to MetaMask.
       if (switchError.code === 4902) {
         // return false
@@ -317,13 +318,21 @@ const Index = props => {
                     chainId: '0x999d4b',
                     chainName: 'Plian-subchain1test',
                     rpcUrls: ['https://testnet.plian.io/child_test'],
-                    blockExplorerUrls: ['https://testnet.plian.org/child_test']
+                    blockExplorerUrls: ['https://testnet.plian.org/child_test'],
+                    nativeCurrency: {
+                      symbol: 'PI',
+                      decimals: 18
+                    }
                   }
                 : {
                     chainId: '0xfe3005',
                     chainName: 'Plian-mainchaintest',
                     rpcUrls: ['https://testnet.plian.io/testnet'],
-                    blockExplorerUrls: ['https://testnet.plian.org/testnet']
+                    blockExplorerUrls: ['https://testnet.plian.org/testnet'],
+                    nativeCurrency: {
+                      symbol: 'PI',
+                      decimals: 18
+                    }
                   }
             ]
           })
