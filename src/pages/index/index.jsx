@@ -60,6 +60,7 @@ const Index = () => {
         message.success('Swaped successfully, please check your balance!')
         setShowModal(false)
         setShowLoading(false)
+        getStaking()
       })
       .catch(error => {
         message.error(error.message)
@@ -118,6 +119,7 @@ const Index = () => {
         message.success('Swaped successfully, please check your balance!')
         setShowModal(false)
         setShowLoading(false)
+        getStaking()
       })
       .catch(error => {
         message.error(error.message)

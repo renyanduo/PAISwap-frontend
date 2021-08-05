@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Button from '@/components/Button'
 import Web3 from 'web3'
 import { crossChainABI, CROSS_CONTRACCT_ADDRESS, gasl2, gasPricel2 } from '@/util/abi'
-import { message, Modal } from 'antd'
+import { message, Modal, Spin } from 'antd'
 import { useSelector, useDispatch } from 'react-redux'
 import './index.scss'
 import request from '@/util/request'
@@ -171,7 +171,6 @@ const Index = props => {
                   .then(function (result) {
                     if (result === null) {
                       // setShowLoading(false)
-                      setShowWaiting(false)
                       dispatch(
                         setCrossChainData({
                           crossChainData: {
@@ -461,6 +460,7 @@ const Index = props => {
             <img src={arrow} className="arrow" alt="" />
             <img src={wallet} className="wallet" alt="" />
           </div>
+          <Spin size="large" />
           <div className="desc">Waiting For Confirmation</div>
           <div className="warn">Confirm this transaction in your wallet</div>
         </div>
