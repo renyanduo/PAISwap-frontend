@@ -61,6 +61,7 @@ const Index = () => {
         setShowModal(false)
         setShowLoading(false)
         getStaking()
+        getTotalBalance()
       })
       .catch(error => {
         message.error(error.message)
@@ -120,6 +121,7 @@ const Index = () => {
         setShowModal(false)
         setShowLoading(false)
         getStaking()
+        getTotalBalance()
       })
       .catch(error => {
         message.error(error.message)
@@ -157,7 +159,7 @@ const Index = () => {
   const getTotalBalance = () => {
     let MyContract = new web3.eth.Contract(ABI, PNFT_CONTRACT_ADDRESS)
     MyContract.methods
-      .balanceOf('0xbBeAB8d29458ac35Ac455669949A8907A2307787')
+      .balanceOf(PISTAKING_CONTRACT_ADDRESS)
       .call()
       .then(result => {
         setTotalBalance(web3.utils.fromWei(result))
