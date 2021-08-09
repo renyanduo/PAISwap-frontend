@@ -362,13 +362,13 @@ const Index = () => {
       {userAddress ? (
         <>
           <div className="content flex flex-wrap sm:flex-nowrap">
-            <div className="box mr-0 sm:mr-14 sm:w-1/2 w-full items-center">
+            <div className="box mr-0 sm:mr-14 sm:w-1/2 w-full items-center justify-evenly">
               <div className="box-title">Total staked</div>
               <div className="box-amount">{numFormat(totalSupply)} PI</div>
               <div className="box-highlight">PNFT mining reward (Total undistributed)</div>
               <div className="box-amount">{numFormat(totalBalance)}</div>
             </div>
-            <div className="box sm:w-1/2 w-full items-center">
+            <div className="box sm:w-1/2 w-full items-center justify-between">
               <div className="box-title">PI staked</div>
               <div className="box-amount">{numFormat(stakingAmount)}</div>
               <Button onClick={() => depositClick('deposit')} style={{ height: '42px' }}>
