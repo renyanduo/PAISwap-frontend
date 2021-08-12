@@ -642,10 +642,12 @@ export const PNFT_CONTRACT_ADDRESS = '0xD046766524c66B0b2a53B2A0c92b18B9593C7951
 
 export const CROSS_CONTRACCT_ADDRESS = '0x0000000000000000000000000000000000000065'
 
+// 跨链gas
 export const gasl2 = 42000
 
 export const gasPricel2 = 2000000000
 
+// 质押gas
 export const gas = 3000000
  
 export const gasPrice = 20000000000
