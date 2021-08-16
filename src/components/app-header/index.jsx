@@ -38,8 +38,8 @@ function Index(props) {
     })
 
   return (
-    <header className="header">
-      <div className="header-wrap flex justify-between items-center	">
+    <header className="header flex items-center">
+      <div className="header-wrap flex justify-between items-center flex-wrap sm:flex-nowrap">
         <img src={logo} alt="piswap" className="logo" />
         <div className="header-title">
           <span
@@ -57,7 +57,7 @@ function Index(props) {
             L2 WALLET
           </span>
         </div>
-        <div>
+        <div className="mt-4 sm:mt-0">
           <ConnectWallet>
             <Button>{userAddress ? userAddress : 'Connect Wallet'}</Button>
           </ConnectWallet>
