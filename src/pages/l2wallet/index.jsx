@@ -11,6 +11,7 @@ import { numFormat } from '@/util'
 import Loading from '@/components/loading'
 import SmallModal from '@/components/SmallModal'
 import { useHistory, useLocation } from 'react-router-dom'
+import { TESTNET_MAIN, TESTNET_CHILD, MAINNET_MAIN, MAINNET_CHILD } from '@/util/config'
 
 import piLogo from '@/assets/images/pi.png'
 import pizza from '@/assets/images/pizza.png'
@@ -312,27 +313,7 @@ const Index = props => {
           await ethereum.request({
             method: 'wallet_addEthereumChain',
             params: [
-              type === 'toChild'
-                ? {
-                    chainId: '0x999d4b',
-                    chainName: 'Plian-subchain1test',
-                    rpcUrls: ['https://testnet.plian.io/child_test'],
-                    blockExplorerUrls: ['https://testnet.plian.org/child_test'],
-                    nativeCurrency: {
-                      symbol: 'PI',
-                      decimals: 18
-                    }
-                  }
-                : {
-                    chainId: '0xfe3005',
-                    chainName: 'Plian-mainchaintest',
-                    rpcUrls: ['https://testnet.plian.io/testnet'],
-                    blockExplorerUrls: ['https://testnet.plian.org/testnet'],
-                    nativeCurrency: {
-                      symbol: 'PI',
-                      decimals: 18
-                    }
-                  }
+              type === 'toChild' ? MAINNET_CHILD : MAINNET_MAIN
             ]
           })
         } catch (addError) {
