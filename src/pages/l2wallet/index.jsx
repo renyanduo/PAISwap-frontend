@@ -466,8 +466,8 @@ const Index = props => {
             <img src={wallet} className="wallet" alt="" />
           </div>
           <Spin size="large" />
-          <div className="desc text-center">Waiting For Confirmation<br />Please note Metamask's signature!</div>
-          <div className="warn">Confirm this transaction in your wallet</div>
+          <div className="desc">Waiting For Confirmation</div>
+          <div className="warn text-center">Confirm this transaction in your wallet.<br />Please note Metamask's signature!</div>
         </div>
       </SmallModal>
       <SmallModal show={showError}>
