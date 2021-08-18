@@ -1,11 +1,18 @@
 // 本地测试API
-const devBaseURL = 'https://testnet.plian.org'
+const devBaseURL = 'https://api.pchain.org'
 
 // 已经部署到服务器上的API
-const proBaseURL = 'https://testnet.plian.org'
+const proBaseURL = 'https://api.pchain.org'
 export const BASE_URL = process.env.NODE_ENV === 'development' ? devBaseURL : proBaseURL
 
 export const TIMEOUT = 50000
+
+
+export const MAIN_CHAIN_ID = process.env.NODE_ENV === 'development' ?  'testnet' : 'pchain'
+export const CHILD_CHAIN_ID = process.env.NODE_ENV === 'development' ?  'child_test' : 'child_0'
+
+// export const MAIN_CHAIN = process.env.NODE_ENV === 'development' ?  TESTNET_MAIN : MAINNET_MAIN 
+// export const CHILD_CHAIN = process.env.NODE_ENV === 'development' ?  TESTNET_CHILD : MAINNET_CHILD 
 
 export const TESTNET_MAIN = {
   chainId: '0xfe3005',

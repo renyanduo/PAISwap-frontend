@@ -58,14 +58,14 @@ const Index = () => {
         value: web3.utils.toWei(balance_, 'ether')
       })
       .then(receipt => {
-        message.success('Swaped successfully, please check your balance!')
+        message.success('Success!')
         setShowModal(false)
         setShowLoading(false)
         getStaking()
         getTotalBalance()
       })
       .catch(error => {
-        message.error(error.message)
+        // message.error(error.message)
         setShowLoading(false)
       })
   }
@@ -81,7 +81,7 @@ const Index = () => {
         setExtractAmount(web3.utils.fromWei(result))
         console.log('staking', web3.utils.fromWei(result))
       })
-      .catch(err => message.error(err.message))
+      // .catch(err => message.error(err.message))
   }
 
   const getPendingReward = () => {
@@ -93,7 +93,7 @@ const Index = () => {
         setPendingReward(web3.utils.fromWei(result))
         console.log('pending', web3.utils.fromWei(result))
       })
-      .catch(err => message.error(err.message))
+      // .catch(err => message.error(err.message))
   }
 
   const withdraw = () => {
@@ -118,7 +118,7 @@ const Index = () => {
         gasPrice: gasPrice
       })
       .then(receipt => {
-        message.success('Swaped successfully, please check your balance!')
+        message.success('Success!')
         setShowModal(false)
         setShowLoading(false)
         getStaking()
@@ -140,7 +140,7 @@ const Index = () => {
         console.log(web3.utils.fromWei(result))
         setTotalSupply(web3.utils.fromWei(result))
       })
-      .catch(err => message.error(err.message))
+      // .catch(err => message.error(err.message))
   }
 
   // 挖矿赚取PNFT
@@ -153,7 +153,7 @@ const Index = () => {
         console.log(web3.utils.fromWei(result))
         setUserBalance(web3.utils.fromWei(result))
       })
-      .catch(err => message.error(err.message))
+      // .catch(err => message.error(err.message))
   }
 
   // 待挖取
@@ -164,8 +164,9 @@ const Index = () => {
       .call()
       .then(result => {
         setTotalBalance(web3.utils.fromWei(result))
+        console.log('total', web3.utils.fromWei(result))
       })
-      .catch(err => message.error(err.message))
+      // .catch(err => message.error(err.message))
   }
 
   // 钱包余额
@@ -203,13 +204,14 @@ const Index = () => {
     try {
       const flag = await ethereum.request({
         method: 'wallet_switchEthereumChain',
-        params: [{ chainId: type === 'toChild' ? '0x999d4b' : '0xfe3005' }]
+        // params: [{ chainId: type === 'toChild' ? '0x999d4b' : '0xfe3005' }]
+        params: [{ chainId: type === 'toChild' ? '0x7a3038' : '0x2007d4' }]
       })
       console.log(flag)
       return flag
     } catch (switchError) {
       console.log(switchError)
-      message.error(switchError.message)
+      // message.error(switchError.message)
       // This error code indicates that the chain has not been added to MetaMask.
       if (switchError.code === 4902) {
         // return false
@@ -235,6 +237,11 @@ const Index = () => {
     return Boolean(ethereum && ethereum.isMetaMask)
   }
 
+  const checkChainId = async() => {
+    const { ethereum } = window
+    return await ethereum.request({ method: 'eth_chainId' })
+  }
+
   useEffect(() => {
     if (!isMetaMaskInstalled()) {
       message.error('need to install metamask')
@@ -249,15 +256,27 @@ const Index = () => {
 
   useEffect(() => {
     if (!isMetaMaskInstalled()) return
-    if (window.ethereum.chainId === '0x999d4b') {
+    // if (window.ethereum.chainId === '0x999d4b') {
+    let timer
+    checkChainId().then(res => {
       address && getStaking()
-      address && getPendingReward()
-      getTotalBalance()
-      getTotalSupply()
-    } else {
-      address && message.error('wrong chain id')
-      setShowSwitch(true)
-    }
+      if (res === '0x7a3038') {
+        function init() {
+          address && getPendingReward()
+          getTotalBalance()
+          getTotalSupply()
+        }
+        init()
+        clearInterval(timer)
+        timer = setInterval(()=>{init()}, 5000)
+      } else {
+        address && message.error('wrong chain id')
+        setShowSwitch(true)
+      }
+    })
+    return () => {
+      clearInterval(timer)
+    };
   }, [address])
 
   const modal = (

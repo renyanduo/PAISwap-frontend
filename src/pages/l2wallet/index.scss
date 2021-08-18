@@ -28,6 +28,7 @@
       &.active {
         background: #fefbf9;
         box-shadow: inset 0px 3px 7px 0px rgba(221, 153, 81, 0.66);
+        pointer-events: none;
       }
     }
   }

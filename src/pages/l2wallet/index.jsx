@@ -52,7 +52,7 @@ const Index = props => {
       setBalance(web3.utils.fromWei(bal.toString(), 'ether'))
     } catch (error) {
       setBalance(0)
-      message.error(error.message.toString())
+      // message.error(error.message.toString())
     }
   }
 
@@ -62,7 +62,8 @@ const Index = props => {
       return
     }
 
-    if (window.ethereum.chainId !== '0xfe3005') {
+    // if (window.ethereum.chainId !== '0xfe3005') {
+    if (window.ethereum.chainId !== '0x2007d4') {
       Modal.confirm({
         content: 'switch chain？',
         okText: 'OK',
@@ -82,17 +83,17 @@ const Index = props => {
     console.log(depositbalance, web3.utils.toWei(depositbalance, 'ether'))
 
     MyContract.methods
-      .DepositInMainChain('child_test')
+      .DepositInMainChain('child_0')
       .send({
         from: address,
-        chainId: 'testnet',
+        chainId: 'pchain',
         value: web3.utils.toWei(depositbalance, 'ether'),
         gas: gasl2,
         gasPrice: gasPricel2
       })
       .then(receipt => {
         // receipt can also be a new contract instance, when coming from a "contract.deploy({...}).send()"
-        message.success('Swaped successfully, please check your balance!')
+        message.success('Success!')
         console.log(receipt)
         switchPlianChain('toChild').then(function (result) {
           if (result === null) {
@@ -111,7 +112,7 @@ const Index = props => {
         })
       })
       .catch(error => {
-        message.error(error.message)
+        // message.error(error.message)
         // setShowLoading(false)
         setShowError(true)
         setShowWaiting(false)
@@ -124,7 +125,8 @@ const Index = props => {
       return
     }
 
-    if (window.ethereum.chainId !== '0x999d4b') {
+    // if (window.ethereum.chainId !== '0x999d4b') {
+    if (window.ethereum.chainId !== '0x7a3038') {
       Modal.confirm({
         content: 'switch chain？',
         okText: 'OK',
@@ -143,16 +145,16 @@ const Index = props => {
     console.log(withdrawbalance, web3.utils.toWei(withdrawbalance, 'ether'))
 
     MyContract.methods
-      .WithdrawFromChildChain('child_test')
+      .WithdrawFromChildChain('child_0')
       .send({
         from: address,
-        chainId: 'child_test',
+        chainId: 'child_0',
         value: web3.utils.toWei(withdrawbalance, 'ether'),
         gas: gasl2,
         gasPrice: gasPricel2
       })
       .then(receipt => {
-        message.success('Swaped successfully, please check your balance!')
+        message.success('Success!')
         console.log(receipt)
         //调用 post https://testnet.plian.org/getChildTxInMainChain 返回sucess 执行下面步骤
         let timer = setInterval(() => {
@@ -189,7 +191,7 @@ const Index = props => {
                     }
                   })
                   .catch(err => {
-                    message.error(err.message)
+                    // message.error(err.message)
                     // setShowLoading(false)
                     setShowError(true)
                     setShowWaiting(false)
@@ -199,7 +201,7 @@ const Index = props => {
               }
             })
             .catch(err => {
-              message.error(err.message)
+              // message.error(err.message)
               // setShowLoading(false)
               setShowError(true)
               setShowWaiting(false)
@@ -208,7 +210,7 @@ const Index = props => {
         }, 5000)
       })
       .catch(error => {
-        message.error(error.message)
+        // message.error(error.message)
         // setShowLoading(false)
         setShowError(true)
         setShowWaiting(false)
@@ -225,16 +227,16 @@ const Index = props => {
     setShowWaiting(true)
     if (crossChainData.type === 'deposit') {
       MyContract.methods
-        .DepositInChildChain('child_test', crossChainData.transactionHash)
+        .DepositInChildChain('child_0', crossChainData.transactionHash)
         .send({
           from: userAddress,
-          chainId: 'child_test',
+          chainId: 'child_0',
           gas: gasl2,
           gasPrice: '0'
         })
         .then(receipt => {
           // receipt can also be a new contract instance, when coming from a "contract.deploy({...}).send()"
-          message.success('Swaped successfully, please check your balance!')
+          message.success('Success!')
           dispatch(
             setCrossChainData({
               crossChainData: {}
@@ -245,7 +247,7 @@ const Index = props => {
           setShowWaiting(false)
         })
         .catch(error => {
-          message.error(error.message)
+          // message.error(error.message)
           dispatch(
             setCrossChainData({
               crossChainData: {}
@@ -258,19 +260,19 @@ const Index = props => {
     } else if (crossChainData.type === 'withdraw') {
       MyContract.methods
         .WithdrawFromMainChain(
-          'child_test',
+          'child_0',
           web3.utils.toWei(crossChainData.balance, 'ether'),
           crossChainData.transactionHash
         )
         .send({
           from: userAddress,
-          chainId: 'testnet',
+          chainId: 'pchain',
           gas: gasl2,
           gasPrice: '0'
         })
         .then(receipt => {
           // receipt can also be a new contract instance, when coming from a "contract.deploy({...}).send()"
-          message.success('Swaped successfully, please check your balance!')
+          message.success('Success!')
           dispatch(
             setCrossChainData({
               crossChainData: {}
@@ -281,7 +283,7 @@ const Index = props => {
           setShowSuccess(true)
         })
         .catch(error => {
-          message.error(error.message)
+          // message.error(error.message)
           dispatch(
             setCrossChainData({
               crossChainData: {}
@@ -299,13 +301,14 @@ const Index = props => {
     try {
       const flag = await ethereum.request({
         method: 'wallet_switchEthereumChain',
-        params: [{ chainId: type === 'toChild' ? '0x999d4b' : '0xfe3005' }]
+        // params: [{ chainId: type === 'toChild' ? '0x999d4b' : '0xfe3005' }]
+        params: [{ chainId: type === 'toChild' ? '0x7a3038' : '0x2007d4' }]
       })
       console.log(flag)
       return flag
     } catch (switchError) {
       console.log(switchError)
-      message.error(switchError.message)
+      // message.error(switchError.message)
       // This error code indicates that the chain has not been added to MetaMask.
       if (switchError.code === 4902) {
         // return false
@@ -332,6 +335,27 @@ const Index = props => {
   }
 
   const switchTab = type => {
+    if (type === 'deposit' && window.ethereum.chainId !== '0x2007d4') {
+      Modal.confirm({
+        content: 'switch chain？',
+        okText: 'OK',
+        cancelText: 'Cancel',
+        onOk() {switchPlianChain()}
+      })
+      return
+    }
+
+    if (type === 'withdraw' && window.ethereum.chainId !== '0x7a3038') {
+      Modal.confirm({
+        content: 'switch chain？',
+        okText: 'OK',
+        cancelText: 'Cancel',
+        onOk() {switchPlianChain('toChild')}
+      })
+      return
+    }
+
+
     setActiveTab(type)
     history.replace({ pathname: '/l2wallet', search: type })
   }
@@ -442,7 +466,7 @@ const Index = props => {
             <img src={wallet} className="wallet" alt="" />
           </div>
           <Spin size="large" />
-          <div className="desc">Waiting For Confirmation</div>
+          <div className="desc text-center">Waiting For Confirmation<br />Please note Metamask's signature!</div>
           <div className="warn">Confirm this transaction in your wallet</div>
         </div>
       </SmallModal>

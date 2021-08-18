@@ -36,7 +36,7 @@ function Index(props) {
         })
       )
     } catch (error) {
-      message.error(error.message)
+      // message.error(error.message)
     }
   }
 
