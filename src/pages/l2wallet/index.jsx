@@ -248,11 +248,11 @@ const Index = props => {
         })
         .catch(error => {
           // message.error(error.message)
-          dispatch(
-            setCrossChainData({
-              crossChainData: {}
-            })
-          )
+          // dispatch(
+          //   setCrossChainData({
+          //     crossChainData: {}
+          //   })
+          // )
           // setShowLoading(false)
           setShowError(true)
           setShowWaiting(false)
