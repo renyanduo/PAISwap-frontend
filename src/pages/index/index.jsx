@@ -210,7 +210,7 @@ const Index = () => {
       return flag
     } catch (switchError) {
       console.log(switchError)
-      // message.error(switchError.message)
+      message.error(switchError.message)
       // This error code indicates that the chain has not been added to MetaMask.
       if (switchError.code === 4902) {
         // return false
