@@ -8,11 +8,10 @@ import { message } from 'antd'
 import { useSelector } from 'react-redux'
 import { numFormat } from '@/util'
 import Loading from '@/components/loading'
-import SmallModal from '@/components/SmallModal'
+import SwitchNetwork from '@/components/SwitchNetwork'
 import { TESTNET_MAIN, TESTNET_CHILD, MAINNET_MAIN, MAINNET_CHILD } from '@/util/config'
 
 import banner from '@/assets/images/banner.png'
-import pizza from '@/assets/images/pizza2.png'
 
 let web3
 if (typeof window.web3 !== 'undefined') {
@@ -389,13 +388,7 @@ const Index = () => {
       )}
       {showModal ? modal : null}
       <Loading show={showLoading} />
-      <SmallModal show={showSwitch}>
-        <div className="switch-modal flex flex-col items-center">
-          <div className="title">Switch Network</div>
-          <div className="switch-btn flex items-center justify-center" onClick={()=>{switchPlianChain('toChild')}}><img src={pizza} alt="" /> Switch to Plian Child</div>
-          <div className="desc">Pizzap is running on Plian child chain, you should switch your current network to Plian child.</div>
-        </div>
-      </SmallModal>
+      <SwitchNetwork show={showSwitch} onClick={()=>{switchPlianChain('toChild')}} text="Switch to Plian Child" desc="Pizzap is running on Plian child chain, you should switch your current network to Plian child."></SwitchNetwork>
     </div>
   )
 }

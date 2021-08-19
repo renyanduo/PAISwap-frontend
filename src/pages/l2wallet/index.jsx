@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Button from '@/components/Button'
 import Web3 from 'web3'
 import { crossChainABI, CROSS_CONTRACCT_ADDRESS, gasl2, gasPricel2 } from '@/util/abi'
-import { message, Modal, Spin } from 'antd'
+import { message, Spin } from 'antd'
 import { useSelector, useDispatch } from 'react-redux'
 import './index.scss'
 import request from '@/util/request'
@@ -10,6 +10,7 @@ import { setCrossChainData } from '@/store/action'
 import { numFormat } from '@/util'
 import Loading from '@/components/loading'
 import SmallModal from '@/components/SmallModal'
+import SwitchNetwork from '@/components/SwitchNetwork'
 import { useHistory, useLocation } from 'react-router-dom'
 import { TESTNET_MAIN, TESTNET_CHILD, MAINNET_MAIN, MAINNET_CHILD } from '@/util/config'
 
@@ -35,6 +36,7 @@ const Index = props => {
   const [showWaiting, setShowWaiting] = useState(false)
   const [showError, setShowError] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
+  const [showSwitch, setShowSwitch] = useState({show: false, onClick: null, text: ''})
   const userAddress = useSelector(state => state.address)
   const crossChainData = useSelector(state => state.crossChainData)
 
@@ -64,12 +66,14 @@ const Index = props => {
 
     // if (window.ethereum.chainId !== '0xfe3005') {
     if (window.ethereum.chainId !== '0x2007d4') {
-      Modal.confirm({
-        content: 'switch chain？',
-        okText: 'OK',
-        cancelText: 'Cancel',
-        onOk() {switchPlianChain()}
-      })
+      // setShowSwitch({show: true, onClick: () => {switchPlianChain()}, text: 'Switch to Plian-L1 Wallet'})
+      switchPlianChain()
+      // Modal.confirm({
+      //   content: 'switch chain？',
+      //   okText: 'OK',
+      //   cancelText: 'Cancel',
+      //   onOk() {switchPlianChain()}
+      // })
       return
     }
 
@@ -127,12 +131,14 @@ const Index = props => {
 
     // if (window.ethereum.chainId !== '0x999d4b') {
     if (window.ethereum.chainId !== '0x7a3038') {
-      Modal.confirm({
-        content: 'switch chain？',
-        okText: 'OK',
-        cancelText: 'Cancel',
-        onOk() {switchPlianChain('toChild')}
-      })
+      // setShowSwitch({show: true, onClick:  () => {switchPlianChain('toChild')}, text: 'Switch to Plian-L2 Wallet'})
+      switchPlianChain('toChild')
+      // Modal.confirm({
+      //   content: 'switch chain？',
+      //   okText: 'OK',
+      //   cancelText: 'Cancel',
+      //   onOk() {switchPlianChain('toChild')}
+      // })
       return
     }
 
@@ -336,22 +342,26 @@ const Index = props => {
 
   const switchTab = type => {
     if (type === 'deposit' && window.ethereum.chainId !== '0x2007d4') {
-      Modal.confirm({
-        content: 'switch chain？',
-        okText: 'OK',
-        cancelText: 'Cancel',
-        onOk() {switchPlianChain()}
-      })
+      // setShowSwitch({show: true, onClick:  () => {switchPlianChain()}, text: 'Switch to Plian-L1 Wallet'})
+      switchPlianChain()
+      // Modal.confirm({
+      //   content: 'switch chain？',
+      //   okText: 'OK',
+      //   cancelText: 'Cancel',
+      //   onOk() {switchPlianChain()}
+      // })
       return
     }
 
     if (type === 'withdraw' && window.ethereum.chainId !== '0x7a3038') {
-      Modal.confirm({
-        content: 'switch chain？',
-        okText: 'OK',
-        cancelText: 'Cancel',
-        onOk() {switchPlianChain('toChild')}
-      })
+      // setShowSwitch({show: true, onClick:  () => {switchPlianChain('toChild')}, text: 'Switch to Plian-L2 Wallet'})
+      switchPlianChain('toChild')
+      // Modal.confirm({
+      //   content: 'switch chain？',
+      //   okText: 'OK',
+      //   cancelText: 'Cancel',
+      //   onOk() {switchPlianChain('toChild')}
+      // })
       return
     }
 
@@ -457,6 +467,7 @@ const Index = props => {
         )}
       </div>
       <Loading show={showLoading} />
+      <SwitchNetwork show={showSwitch.show} onClick={showSwitch.onClick} text={showSwitch.text} onClose={() => {setShowSwitch({...showSwitch, show: false})}}></SwitchNetwork>
       <SmallModal show={showWaiting}>
         <div className="waiting-modal flex flex-col	items-center">
           <div className="title">Confirm Swap</div>
