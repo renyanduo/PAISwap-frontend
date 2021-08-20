@@ -68,12 +68,6 @@ const Index = props => {
     if (window.ethereum.chainId !== '0x2007d4') {
       // setShowSwitch({show: true, onClick: () => {switchPlianChain()}, text: 'Switch to Plian-L1 Wallet'})
       switchPlianChain()
-      // Modal.confirm({
-      //   content: 'switch chain？',
-      //   okText: 'OK',
-      //   cancelText: 'Cancel',
-      //   onOk() {switchPlianChain()}
-      // })
       return
     }
 
@@ -133,12 +127,6 @@ const Index = props => {
     if (window.ethereum.chainId !== '0x7a3038') {
       // setShowSwitch({show: true, onClick:  () => {switchPlianChain('toChild')}, text: 'Switch to Plian-L2 Wallet'})
       switchPlianChain('toChild')
-      // Modal.confirm({
-      //   content: 'switch chain？',
-      //   okText: 'OK',
-      //   cancelText: 'Cancel',
-      //   onOk() {switchPlianChain('toChild')}
-      // })
       return
     }
 
@@ -306,31 +294,14 @@ const Index = props => {
     const { ethereum } = window
     try {
       const flag = await ethereum.request({
-        method: 'wallet_switchEthereumChain',
-        // params: [{ chainId: type === 'toChild' ? '0x999d4b' : '0xfe3005' }]
-        params: [{ chainId: type === 'toChild' ? '0x7a3038' : '0x2007d4' }]
+        method: 'wallet_addEthereumChain',
+        params: [ type === 'toChild' ? MAINNET_CHILD : MAINNET_MAIN ]
       })
       console.log(flag)
       return flag
     } catch (switchError) {
       console.log(switchError)
-      // message.error(switchError.message)
-      // This error code indicates that the chain has not been added to MetaMask.
-      if (switchError.code === 4902) {
-        // return false
-        try {
-          await ethereum.request({
-            method: 'wallet_addEthereumChain',
-            params: [
-              type === 'toChild' ? MAINNET_CHILD : MAINNET_MAIN
-            ]
-          })
-        } catch (addError) {
-          // handle "add" error
-          message.error(addError.message)
-        }
-      }
-      // handle other "switch" errors
+      message.error(switchError.message)
     }
   }
 
@@ -344,24 +315,12 @@ const Index = props => {
     if (type === 'deposit' && window.ethereum.chainId !== '0x2007d4') {
       // setShowSwitch({show: true, onClick:  () => {switchPlianChain()}, text: 'Switch to Plian-L1 Wallet'})
       switchPlianChain()
-      // Modal.confirm({
-      //   content: 'switch chain？',
-      //   okText: 'OK',
-      //   cancelText: 'Cancel',
-      //   onOk() {switchPlianChain()}
-      // })
       return
     }
 
     if (type === 'withdraw' && window.ethereum.chainId !== '0x7a3038') {
       // setShowSwitch({show: true, onClick:  () => {switchPlianChain('toChild')}, text: 'Switch to Plian-L2 Wallet'})
       switchPlianChain('toChild')
-      // Modal.confirm({
-      //   content: 'switch chain？',
-      //   okText: 'OK',
-      //   cancelText: 'Cancel',
-      //   onOk() {switchPlianChain('toChild')}
-      // })
       return
     }
 

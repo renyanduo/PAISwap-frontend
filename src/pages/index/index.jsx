@@ -202,31 +202,14 @@ const Index = () => {
     const { ethereum } = window
     try {
       const flag = await ethereum.request({
-        method: 'wallet_switchEthereumChain',
-        // params: [{ chainId: type === 'toChild' ? '0x999d4b' : '0xfe3005' }]
-        params: [{ chainId: type === 'toChild' ? '0x7a3038' : '0x2007d4' }]
+        method: 'wallet_addEthereumChain',
+        params: [ type === 'toChild' ? MAINNET_CHILD : MAINNET_MAIN ]
       })
       console.log(flag)
       return flag
     } catch (switchError) {
       console.log(switchError)
       message.error(switchError.message)
-      // This error code indicates that the chain has not been added to MetaMask.
-      if (switchError.code === 4902) {
-        // return false
-        try {
-          await ethereum.request({
-            method: 'wallet_addEthereumChain',
-            params: [
-              type === 'toChild' ? MAINNET_CHILD : MAINNET_MAIN
-            ]
-          })
-        } catch (addError) {
-          // handle "add" error
-          message.error(addError.message)
-        }
-      }
-      // handle other "switch" errors
     }
   }
 
