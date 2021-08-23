@@ -96,7 +96,6 @@ const Index = props => {
         switchPlianChain('toChild').then(function (result) {
           if (result === null) {
             // setShowLoading(false)
-            setShowWaiting(false)
             dispatch(
               setCrossChainData({
                 crossChainData: {
@@ -112,6 +111,7 @@ const Index = props => {
       .catch(error => {
         // message.error(error.message)
         // setShowLoading(false)
+        console.log(error.message)
         setShowError(true)
         setShowWaiting(false)
       })
@@ -187,6 +187,7 @@ const Index = props => {
                   .catch(err => {
                     // message.error(err.message)
                     // setShowLoading(false)
+                    console.log(err.message)
                     setShowError(true)
                     setShowWaiting(false)
                   })
@@ -197,6 +198,7 @@ const Index = props => {
             .catch(err => {
               // message.error(err.message)
               // setShowLoading(false)
+              console.log(err.message)
               setShowError(true)
               setShowWaiting(false)
               clearInterval(timer)
@@ -206,6 +208,7 @@ const Index = props => {
       .catch(error => {
         // message.error(error.message)
         // setShowLoading(false)
+        console.log(error.message)
         setShowError(true)
         setShowWaiting(false)
       })
@@ -248,6 +251,7 @@ const Index = props => {
           //   })
           // )
           // setShowLoading(false)
+          console.log(error.message)
           setShowError(true)
           setShowWaiting(false)
         })
@@ -284,6 +288,7 @@ const Index = props => {
           //   })
           // )
           // setShowLoading(false)
+          console.log(error.message)
           setShowError(true)
           setShowWaiting(false)
         })
