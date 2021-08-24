@@ -6,6 +6,7 @@ import logo from '@/assets/images/logo.png'
 import { useSelector, useDispatch } from 'react-redux'
 import { useHistory, useLocation } from 'react-router-dom'
 import { setUserAddress } from '@/store/action'
+import { message } from 'antd'
 
 function Index(props) {
   const userAddress = useSelector(state => state.address)
@@ -13,17 +14,25 @@ function Index(props) {
   const location = useLocation()
   const dispatch = useDispatch()
 
+  const isMobile = () => {
+    return /(iphone|ipad|ipod|ios|android)/i.test(navigator.userAgent.toLowerCase())
+  }
+
   function jump(route) {
     history.push(route)
   }
 
-  // useEffect(() => {
-  //   dispatch(
-  //     setUserAddress({
-  //       address: window.ethereum.selectedAddress || ''
-  //     })
-  //   )
-  // }, [])
+  useEffect(() => {
+    // dispatch(
+    //   setUserAddress({
+    //     address: window.ethereum.selectedAddress || ''
+    //   })
+    // )
+    if (isMobile()) {
+      document.getElementById('root').style.display = 'none'
+      message.error('The mobile version is temporarily unavailable, please use the desktop version')
+    }
+  }, [])
 
   window.ethereum && window.ethereum.on('chainChanged', _chainId => window.location.reload())
 
@@ -52,7 +61,7 @@ function Index(props) {
           <span
             className={location.pathname === '/l2wallet' ? 'active' : ''}
             onClick={() => {
-              jump('/l2wallet?deposit')
+              jump('/l2wallet?withdraw')
             }}>
             L2 WALLET
           </span>

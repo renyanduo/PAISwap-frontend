@@ -348,7 +348,7 @@ const Index = props => {
     setActiveTab(
       location.search
         ? location.search.substr(1)
-        : history.replace({ pathname: '/l2wallet', search: 'deposit' })
+        : history.replace({ pathname: '/l2wallet', search: 'withdraw' })
     )
   }, [])
 
@@ -442,7 +442,7 @@ const Index = props => {
           </div>
           <Spin size="large" />
           <div className="desc">Waiting For Confirmation</div>
-          <div className="warn text-center">Confirm this transaction in your wallet.<br />Please note Metamask's signature!</div>
+          <div className="warn text-center">Confirm this transaction in your wallet.<br /><span className="red">Please note Metamask's signature!</span></div>
         </div>
       </SmallModal>
       <SmallModal show={showError}>

@@ -252,7 +252,7 @@ const Index = () => {
         clearInterval(timer)
         timer = setInterval(()=>{init()}, 5000)
       } else {
-        address && message.error('wrong chain id')
+        // address && message.error('wrong chain id')
         setShowSwitch(true)
       }
     })
