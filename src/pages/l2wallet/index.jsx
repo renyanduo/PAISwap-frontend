@@ -430,6 +430,9 @@ const Index = props => {
           </>
         )}
       </div>
+      <div className="l2-wallet-tip">
+        Tip: Please withdraw the assets of the L2 account to the L1 account first, and then transfer to the external exchange. If the assets of the L2 account are directly transferred to an external exchange, the assets may be lost, and the platform will not be responsible for such problems.
+      </div>
       <Loading show={showLoading} />
       <SwitchNetwork show={showSwitch.show} onClick={showSwitch.onClick} text={showSwitch.text} onClose={() => {setShowSwitch({...showSwitch, show: false})}}></SwitchNetwork>
       <SmallModal show={showWaiting}>
