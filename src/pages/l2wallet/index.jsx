@@ -8,7 +8,6 @@ import './index.scss'
 import request from '@/util/request'
 import { setCrossChainData } from '@/store/action'
 import { numFormat } from '@/util'
-import Loading from '@/components/loading'
 import SmallModal from '@/components/SmallModal'
 import SwitchNetwork from '@/components/SwitchNetwork'
 import { useHistory, useLocation } from 'react-router-dom'
@@ -32,7 +31,6 @@ const Index = props => {
   const [balance, setBalance] = useState(0)
   const [depositAmount, setDepositAmount] = useState('')
   const [withdrawAmount, setWithdrawAmount] = useState('')
-  const [showLoading, setShowLoading] = useState(false)
   const [showWaiting, setShowWaiting] = useState(false)
   const [showError, setShowError] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
@@ -216,12 +214,58 @@ const Index = props => {
 
   const checkTransaction = () => {
     console.log('check')
+    let timer, txId
+    // web3.eth.getTransactionReceipt('0xe693395ae3bfc9b79e94bb61e68cb139b544a735cf36bbca2f676fd8f8a28b6b').then(console.log)
+
     if (!Object.keys(crossChainData).length) return
+
+    if (crossChainData.type === 'withdraw' && window.ethereum.chainId !== '0x2007d4') {
+      switchPlianChain()
+      return
+    }
+
+    if (crossChainData.type === 'deposit' && window.ethereum.chainId !== '0x7a3038') {
+      switchPlianChain('toChild')
+      return
+    }
+
+    const pollingCheck = (txId) => {
+      timer = setInterval(() => {
+        web3.eth.getTransactionReceipt(txId ? txId : crossChainData.txId).then(res => {
+          console.log(res)
+          if (res && res.status) {
+            clearInterval(timer)
+            setShowWaiting(false)
+            setShowSuccess(true)
+            dispatch(
+              setCrossChainData({
+                crossChainData: {}
+              })
+            )
+          } else if ( res && !res.status) {
+            clearInterval(timer)
+            setShowWaiting(false)
+            setShowError(true)
+            dispatch(
+              setCrossChainData({
+                crossChainData: {}
+              })
+            )
+          }
+        })
+      }, 5000)
+    }
+
+    if (crossChainData.txId) {
+      setShowWaiting(true)
+      pollingCheck()
+      return
+    }
 
     let MyContract = new web3.eth.Contract(crossChainABI, CROSS_CONTRACCT_ADDRESS)
 
-    // setShowLoading(true)
     setShowWaiting(true)
+    
     if (crossChainData.type === 'deposit') {
       MyContract.methods
         .DepositInChildChain('child_0', crossChainData.transactionHash)
@@ -231,8 +275,20 @@ const Index = props => {
           gas: gasl2,
           gasPrice: '0'
         })
-        .then(receipt => {
-          // receipt can also be a new contract instance, when coming from a "contract.deploy({...}).send()"
+        .on('transactionHash', function(hash){
+          console.log(hash)
+          txId = hash
+          dispatch(
+            setCrossChainData({
+              crossChainData: {
+                ...crossChainData,
+                txId: hash
+              }
+            })
+          )
+        })
+        .on('receipt', function(receipt){
+          console.log(receipt)
           message.success('Success!')
           dispatch(
             setCrossChainData({
@@ -243,17 +299,19 @@ const Index = props => {
           setShowSuccess(true)
           setShowWaiting(false)
         })
-        .catch(error => {
-          // message.error(error.message)
-          // dispatch(
-          //   setCrossChainData({
-          //     crossChainData: {}
-          //   })
-          // )
-          // setShowLoading(false)
-          console.log(error.message)
-          setShowError(true)
-          setShowWaiting(false)
+        .on('confirmation', function(confirmationNumber, receipt){
+          console.log(confirmationNumber)
+        })
+        .on('error', function(error, receipt) {
+          console.log(error)
+          const successMsg = 'Transaction was not mined within 50 blocks, please make sure your transaction was properly sent. Be aware that it might still be mined!'
+          if (error.message === successMsg) {
+            // setShowSuccess(true)
+            pollingCheck(txId)
+          } else {
+            setShowError(true)
+            setShowWaiting(false)
+          }
         })
     } else if (crossChainData.type === 'withdraw') {
       MyContract.methods
@@ -268,8 +326,20 @@ const Index = props => {
           gas: gasl2,
           gasPrice: '0'
         })
-        .then(receipt => {
-          // receipt can also be a new contract instance, when coming from a "contract.deploy({...}).send()"
+        .on('transactionHash', function(hash){
+          console.log(hash)
+          txId = hash
+          dispatch(
+            setCrossChainData({
+              crossChainData: {
+                ...crossChainData,
+                txId: hash
+              }
+            })
+          )
+        })
+        .on('receipt', function(receipt){
+          console.log(receipt)
           message.success('Success!')
           dispatch(
             setCrossChainData({
@@ -277,20 +347,22 @@ const Index = props => {
             })
           )
           // setShowLoading(false)
-          setShowWaiting(false)
           setShowSuccess(true)
-        })
-        .catch(error => {
-          // message.error(error.message)
-          // dispatch(
-          //   setCrossChainData({
-          //     crossChainData: {}
-          //   })
-          // )
-          // setShowLoading(false)
-          console.log(error.message)
-          setShowError(true)
           setShowWaiting(false)
+        })
+        .on('confirmation', function(confirmationNumber, receipt){
+          console.log(confirmationNumber)
+        })
+        .on('error', function(error, receipt) {
+          console.log(error)
+          const successMsg = 'Transaction was not mined within 50 blocks, please make sure your transaction was properly sent. Be aware that it might still be mined!'
+          if (error.message === successMsg) {
+            // setShowSuccess(true)
+            pollingCheck(txId)
+          } else {
+            setShowError(true)
+            setShowWaiting(false)
+          }
         })
     }
   }
@@ -433,7 +505,6 @@ const Index = props => {
       <div className="l2-wallet-tip">
         Tip: Please withdraw the assets of the L2 account to the L1 account first, and then transfer to the external exchange. If the assets of the L2 account are directly transferred to an external exchange, the assets may be lost, and the platform will not be responsible for such problems.
       </div>
-      <Loading show={showLoading} />
       <SwitchNetwork show={showSwitch.show} onClick={showSwitch.onClick} text={showSwitch.text} onClose={() => {setShowSwitch({...showSwitch, show: false})}}></SwitchNetwork>
       <SmallModal show={showWaiting}>
         <div className="waiting-modal flex flex-col	items-center">
@@ -460,7 +531,7 @@ const Index = props => {
         <div className="success-modal flex flex-col	items-center">
           <div className="title">Confirm Swap</div>
           <img src={hand} alt="" className="img-hand" />
-          <div className="desc">Transaction Submitted</div>
+          <div className="desc text-center">Transaction Submitted<br /><span className="orange">The current transaction is submitted successfully, please wait patiently for the confirmation of the block. You can view the order details on the event page of Metamask.</span></div>
           <Button onClick={()=>setShowSuccess(false)}>Close</Button>
         </div>
       </SmallModal>
