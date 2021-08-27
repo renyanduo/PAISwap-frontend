@@ -11,7 +11,7 @@ import { numFormat } from '@/util'
 import SmallModal from '@/components/SmallModal'
 import SwitchNetwork from '@/components/SwitchNetwork'
 import { useHistory, useLocation } from 'react-router-dom'
-import { TESTNET_MAIN, TESTNET_CHILD, MAINNET_MAIN, MAINNET_CHILD } from '@/util/config'
+import { MAINNET_MAIN, MAINNET_CHILD } from '@/util/config'
 
 import piLogo from '@/assets/images/pi.png'
 import pizza from '@/assets/images/pizza.png'
@@ -531,7 +531,7 @@ const Index = props => {
         <div className="success-modal flex flex-col	items-center">
           <div className="title">Confirm Swap</div>
           <img src={hand} alt="" className="img-hand" />
-          <div className="desc text-center">Transaction Submitted<br /><span className="orange">The current transaction is submitted successfully, please wait patiently for the confirmation of the block. You can view the order details on the event page of Metamask.</span></div>
+          <div className="desc text-center">Transaction Submitted</div>
           <Button onClick={()=>setShowSuccess(false)}>Close</Button>
         </div>
       </SmallModal>

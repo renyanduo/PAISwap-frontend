@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux'
 import { numFormat } from '@/util'
 import Loading from '@/components/loading'
 import SwitchNetwork from '@/components/SwitchNetwork'
-import { TESTNET_MAIN, TESTNET_CHILD, MAINNET_MAIN, MAINNET_CHILD } from '@/util/config'
+import { MAINNET_MAIN, MAINNET_CHILD } from '@/util/config'
 
 import banner from '@/assets/images/banner.png'
 
@@ -25,7 +25,6 @@ const Index = () => {
   const [depositAmount, setDepositAmount] = useState('')
   const [totalBalance, setTotalBalance] = useState(0)
   const [totalSupply, setTotalSupply] = useState(0)
-  const [userBalance, setUserBalance] = useState(0) // 挖矿赚取PNFT
   const [stakingAmount, setStakingAmount] = useState(0)
   const [pendingReward, setPendingReward] = useState(0) // 挖矿赚取
   const [balance, setBalance] = useState(0) // 钱包余额
@@ -138,19 +137,6 @@ const Index = () => {
       .then(function (result) {
         console.log(web3.utils.fromWei(result))
         setTotalSupply(web3.utils.fromWei(result))
-      })
-      // .catch(err => message.error(err.message))
-  }
-
-  // 挖矿赚取PNFT
-  const getUserBalance = () => {
-    let MyContract = new web3.eth.Contract(ABI, PNFT_CONTRACT_ADDRESS)
-    MyContract.methods
-      .balanceOf(address)
-      .call()
-      .then(function (result) {
-        console.log(web3.utils.fromWei(result))
-        setUserBalance(web3.utils.fromWei(result))
       })
       // .catch(err => message.error(err.message))
   }

@@ -8,6 +8,8 @@ import { useHistory, useLocation } from 'react-router-dom'
 import { setUserAddress } from '@/store/action'
 import { message } from 'antd'
 
+import burger from '@/assets/images/burger.png'
+
 function Index(props) {
   const userAddress = useSelector(state => state.address)
   const history = useHistory()
@@ -28,10 +30,10 @@ function Index(props) {
     //     address: window.ethereum.selectedAddress || ''
     //   })
     // )
-    if (isMobile()) {
-      document.getElementById('root').style.display = 'none'
-      message.error('The mobile version is temporarily unavailable, please use the desktop version')
-    }
+    // if (isMobile()) {
+    //   document.getElementById('root').style.display = 'none'
+    //   message.error('The mobile version is temporarily unavailable, please use the desktop version')
+    // }
   }, [])
 
   window.ethereum && window.ethereum.on('chainChanged', _chainId => window.location.reload())
@@ -48,9 +50,10 @@ function Index(props) {
 
   return (
     <header className="header flex items-center">
-      <div className="header-wrap flex justify-between items-center flex-wrap sm:flex-nowrap">
+      <div className="header-wrap flex justify-between items-center flex-nowrap">
         <img src={logo} alt="piswap" className="logo" />
-        <div className="header-title">
+        <>
+        <div className="header-title hidden sm:block">
           <span
             className={location.pathname === '/' ? 'active' : ''}
             onClick={() => {
@@ -66,11 +69,22 @@ function Index(props) {
             L2 WALLET
           </span>
         </div>
-        <div className="mt-4 sm:mt-0">
+        <div className="header-title block sm:hidden">
+          {
+            location.pathname === '/l2wallet' ? 'L2 WALLET' : 'HOME'
+          }
+        </div>
+        </>
+        <>
+        <div className="mt-4 hidden sm:mt-0 sm:block">
           <ConnectWallet>
             <Button>{userAddress ? userAddress : 'Connect Wallet'}</Button>
           </ConnectWallet>
         </div>
+        <div className="burger block sm:hidden">
+          <img src={burger} alt="" />
+        </div>
+        </>
       </div>
     </header>
   )
