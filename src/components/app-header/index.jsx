@@ -56,6 +56,20 @@ function Index(props) {
             }}>
             L2 WALLET
           </span>
+          <span
+            className={location.pathname === '/swap' ? 'active' : ''}
+            onClick={() => {
+              jump('/swap')
+            }}>
+            SWAP
+          </span>
+          <span
+            className={location.pathname === '/pool' ? 'active' : ''}
+            onClick={() => {
+              jump('/pool')
+            }}>
+            POOL
+          </span>
         </div>
         <div className="mt-4 sm:mt-0">
           <ConnectWallet>
