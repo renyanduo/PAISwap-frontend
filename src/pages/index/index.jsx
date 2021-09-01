@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux'
 import { numFormat } from '@/util'
 import Loading from '@/components/loading'
 import SwitchNetwork from '@/components/SwitchNetwork'
-import { TESTNET_MAIN, TESTNET_CHILD, MAINNET_MAIN, MAINNET_CHILD } from '@/util/config'
+import { MAINNET_MAIN, MAINNET_CHILD } from '@/util/config'
 
 import banner from '@/assets/images/banner.png'
 
@@ -25,7 +25,6 @@ const Index = () => {
   const [depositAmount, setDepositAmount] = useState('')
   const [totalBalance, setTotalBalance] = useState(0)
   const [totalSupply, setTotalSupply] = useState(0)
-  const [userBalance, setUserBalance] = useState(0) // 挖矿赚取PNFT
   const [stakingAmount, setStakingAmount] = useState(0)
   const [pendingReward, setPendingReward] = useState(0) // 挖矿赚取
   const [balance, setBalance] = useState(0) // 钱包余额
@@ -142,19 +141,6 @@ const Index = () => {
       // .catch(err => message.error(err.message))
   }
 
-  // 挖矿赚取PNFT
-  const getUserBalance = () => {
-    let MyContract = new web3.eth.Contract(ABI, PNFT_CONTRACT_ADDRESS)
-    MyContract.methods
-      .balanceOf(address)
-      .call()
-      .then(function (result) {
-        console.log(web3.utils.fromWei(result))
-        setUserBalance(web3.utils.fromWei(result))
-      })
-      // .catch(err => message.error(err.message))
-  }
-
   // 待挖取
   const getTotalBalance = () => {
     let MyContract = new web3.eth.Contract(ABI, PNFT_CONTRACT_ADDRESS)
@@ -202,31 +188,14 @@ const Index = () => {
     const { ethereum } = window
     try {
       const flag = await ethereum.request({
-        method: 'wallet_switchEthereumChain',
-        // params: [{ chainId: type === 'toChild' ? '0x999d4b' : '0xfe3005' }]
-        params: [{ chainId: type === 'toChild' ? '0x7a3038' : '0x2007d4' }]
+        method: 'wallet_addEthereumChain',
+        params: [ type === 'toChild' ? MAINNET_CHILD : MAINNET_MAIN ]
       })
       console.log(flag)
       return flag
     } catch (switchError) {
       console.log(switchError)
-      // message.error(switchError.message)
-      // This error code indicates that the chain has not been added to MetaMask.
-      if (switchError.code === 4902) {
-        // return false
-        try {
-          await ethereum.request({
-            method: 'wallet_addEthereumChain',
-            params: [
-              type === 'toChild' ? MAINNET_CHILD : MAINNET_MAIN
-            ]
-          })
-        } catch (addError) {
-          // handle "add" error
-          message.error(addError.message)
-        }
-      }
-      // handle other "switch" errors
+      message.error(switchError.message)
     }
   }
 
@@ -269,7 +238,7 @@ const Index = () => {
         clearInterval(timer)
         timer = setInterval(()=>{init()}, 5000)
       } else {
-        address && message.error('wrong chain id')
+        // address && message.error('wrong chain id')
         setShowSwitch(true)
       }
     })
