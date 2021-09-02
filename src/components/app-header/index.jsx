@@ -48,6 +48,13 @@ function Index(props) {
       )
     })
 
+    const nameList = {
+      '/l2wallet': 'L2 WALLET',
+      '/': 'HOME',
+      '/swap': 'SWAP',
+      '/pool': 'POOL'
+    }
+
   return (
     <header className="header flex items-center">
       <div className="header-wrap flex justify-between items-center flex-nowrap">
@@ -85,7 +92,7 @@ function Index(props) {
         </div>
         <div className="header-title block sm:hidden">
           {
-            location.pathname === '/l2wallet' ? 'L2 WALLET' : 'HOME'
+            nameList[location.pathname]
           }
         </div>
         </>
