@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { message } from 'antd'
-
 import { Row, Col } from 'antd'
 import { useSelector } from 'react-redux'
+import { getUserEpoch, getCurrentEpoch } from '../../util/pool';
 import Switch from "@/components/Switch";
 import Pi from '../../components/Pool/Pi';
-import PropTypes from 'prop-types';
 
 import './index.scss'
 
@@ -14,10 +13,7 @@ function Pool(props) {
     const [isChecked, setIsChecked] = useState(false);
 
     useEffect(() => {
-        if (!isMetaMaskInstalled()) {
-            message.error('need to install metamask')
-            return
-        }
+        userAddress && initialize(userAddress)
         return () => {
             // cleanup
         }
@@ -29,16 +25,31 @@ function Pool(props) {
         return Boolean(ethereum && ethereum.isMetaMask)
     }
     useEffect(() => {
-        if (!window.ethereum.chainId === 0x999d4b) {
+        if (!isMetaMaskInstalled()) {
+            message.error('need to install metamask')
+            return
+        }
+        const { chainId } = window.ethereum;
+        if (chainId !== 0x999d4b) {
             switchPlianChain(true)
         }
 
         return () => {
         }
-    }, [window.ethereum.chainId])
+    }, [])
 
-
-
+    const initialize = (address) => {
+        getUserEpoch(address).then(res => {
+            console.log(Number(res));
+        }).catch(e => {
+            console.log(e)
+        })
+        getCurrentEpoch().then(res => {
+            console.log(Number(res));
+        }).catch(e => {
+            console.log(e)
+        })
+    }
 
     const switchPlianChain = async type => {
         const { ethereum } = window
@@ -65,7 +76,7 @@ function Pool(props) {
 
     return (
         <div className="main">
-            
+
             <div className="pool-content">
                 <div className="switch">
                     <Switch
@@ -289,10 +300,5 @@ function Pool(props) {
         </div >
     )
 }
-
-Pool.propTypes = {
-
-}
-
 export default Pool
 
