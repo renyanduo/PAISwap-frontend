@@ -248,8 +248,8 @@ const Index = () => {
   }, [address])
 
   const modal = (
-    <div className="modal">
-      <div className="modal-close" onClick={() => setShowModal(false)}>
+    <div className="modals">
+      <div className="modals-close" onClick={() => setShowModal(false)}>
         &times;
       </div>
       <div className="tab">
@@ -266,11 +266,11 @@ const Index = () => {
       </div>
       {activeTab === 'deposit' ? (
         <>
-          <div className="modal-cell">
-            <div className="modal-title">Stake amount</div>
+          <div className="modals-cell">
+            <div className="modals-title">Stake amount</div>
           </div>
-          <div className="modal-input">
-            <div className="modal-input-max" onClick={() => setDepositAmount(balance.toString())}>
+          <div className="modals-input">
+            <div className="modals-input-max" onClick={() => setDepositAmount(balance.toString())}>
               MAX
             </div>
             <input
@@ -281,9 +281,9 @@ const Index = () => {
             />
             <div>PI</div>
           </div>
-          <div className="modal-cell">
-            <div className="modal-title">Balance available</div>
-            <div className="modal-amount">{numFormat(balance)} PI</div>
+          <div className="modals-cell">
+            <div className="modals-title">Balance available</div>
+            <div className="modals-amount">{numFormat(balance)} PI</div>
           </div>
           <Button className="submit" onClick={deposit}>
             Stake
@@ -293,10 +293,10 @@ const Index = () => {
 
       {activeTab === 'extract' ? (
         <>
-          <div className="modal-cell">
-            <div className="modal-title">Staked</div>
+          <div className="modals-cell">
+            <div className="modals-title">Staked</div>
           </div>
-          <div className="modal-input">
+          <div className="modals-input">
             <input
               type="number"
               value={extractAmount}
@@ -305,10 +305,10 @@ const Index = () => {
             />
             <div>PI</div>
           </div>
-          <div className="modal-cell">
-            <div className="modal-title">Earned</div>
+          <div className="modals-cell">
+            <div className="modals-title">Earned</div>
           </div>
-          <div className="modal-input">
+          <div className="modals-input">
             <input value={pendingReward} readOnly />
             <div>PNFT</div>
           </div>
@@ -329,14 +329,14 @@ const Index = () => {
       </div>
       {userAddress ? (
         <>
-          <div className="content flex flex-wrap sm:flex-nowrap">
-            <div className="box mr-0 sm:mr-14 sm:w-1/2 w-full items-center justify-evenly">
+          <div className="flex flex-wrap content sm:flex-nowrap">
+            <div className="items-center w-full mr-0 box sm:mr-14 sm:w-1/2 justify-evenly">
               <div className="box-title">Total staked</div>
               <div className="box-amount">{numFormat(totalSupply)} PI</div>
               <div className="box-highlight">PNFT mining reward (Total undistributed)</div>
               <div className="box-amount">{numFormat(totalBalance)}</div>
             </div>
-            <div className="box sm:w-1/2 w-full items-center justify-between">
+            <div className="items-center justify-between w-full box sm:w-1/2">
               <div className="box-title">PI staked</div>
               <div className="box-amount">{numFormat(stakingAmount)}</div>
               <Button onClick={() => depositClick('deposit')} style={{ height: '42px' }}>

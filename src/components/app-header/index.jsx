@@ -49,17 +49,24 @@ function Index(props) {
     })
 
   return (
-    <header className="header flex items-center">
-      <div className="header-wrap flex justify-between items-center flex-nowrap">
+    <header className="flex items-center header">
+      <div className="flex items-center justify-between header-wrap flex-nowrap">
         <img src={logo} alt="piswap" className="logo" />
         <>
-        <div className="header-title hidden sm:block">
+        <div className="hidden header-title sm:block">
           <span
             className={location.pathname === '/' ? 'active' : ''}
             onClick={() => {
               jump('/')
             }}>
             HOME
+          </span>
+          <span
+            className={location.pathname === '/pool' ? 'active' : ''}
+            onClick={() => {
+              jump('/pool')
+            }}>
+            POOL
           </span>
           <span
             className={location.pathname === '/l2wallet' ? 'active' : ''}
@@ -69,19 +76,19 @@ function Index(props) {
             L2 WALLET
           </span>
         </div>
-        <div className="header-title block sm:hidden">
+        <div className="block header-title sm:hidden">
           {
             location.pathname === '/l2wallet' ? 'L2 WALLET' : 'HOME'
           }
         </div>
         </>
         <>
-        <div className="mt-4 hidden sm:mt-0 sm:block">
+        <div className="hidden mt-4 sm:mt-0 sm:block">
           <ConnectWallet>
             <Button>{userAddress ? userAddress : 'Connect Wallet'}</Button>
           </ConnectWallet>
         </div>
-        <div className="burger block sm:hidden">
+        <div className="block burger sm:hidden">
           <img src={burger} alt="" />
         </div>
         </>
