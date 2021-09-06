@@ -1,0 +1,6 @@
+{
+  "network": "https://bsc-dataseed.binance.org/",
+  "testNetWork": "https://testnet.plian.io/child_test",
+  "STAKING-ERC20": "0x0ac21AFA69f5559F41168D4De6077F62EACd2aa5",
+  "symbol": "PI"
+}

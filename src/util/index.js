@@ -1,3 +1,5 @@
+import { notification } from 'antd';
+
 export function numFormat(num) {
   num = num.toString().split('.') // 分隔小数点
   var arr = num[0].split('').reverse() // 转换成字符数组并且倒序排列
@@ -17,3 +19,18 @@ export function numFormat(num) {
   }
   return res
 }
+
+
+export const openNotificationWithIcon = (type, msg, close = false) => {
+  console.log(close);
+  notification[type]({
+      message: type.toUpperCase(),
+      description: msg,
+      duration: close ? 2000 : null
+  });
+  if (close) {
+    setTimeout(() => {
+      notification.destroy()
+    }, 2000);
+  }
+};
