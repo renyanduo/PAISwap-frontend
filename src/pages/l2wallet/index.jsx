@@ -97,6 +97,7 @@ const Index = props => {
             dispatch(
               setCrossChainData({
                 crossChainData: {
+                  address,
                   type: 'deposit',
                   balance: depositbalance,
                   transactionHash: receipt.transactionHash
@@ -169,6 +170,7 @@ const Index = props => {
                       dispatch(
                         setCrossChainData({
                           crossChainData: {
+                            address,
                             type: 'withdraw',
                             balance: withdrawbalance,
                             transactionHash: receipt.transactionHash
@@ -226,6 +228,11 @@ const Index = props => {
 
     if (crossChainData.type === 'deposit' && window.ethereum.chainId !== '0x7a3038') {
       switchPlianChain('toChild')
+      return
+    }
+
+    if (crossChainData.address !== userAddress) {
+      console.log('not previous address')
       return
     }
 

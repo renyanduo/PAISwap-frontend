@@ -48,6 +48,13 @@ function Index(props) {
       )
     })
 
+    const nameList = {
+      '/l2wallet': 'L2 WALLET',
+      '/': 'HOME',
+      '/swap': 'SWAP',
+      '/pool': 'POOL'
+    }
+
   return (
     <header className="flex items-center header">
       <div className="flex items-center justify-between header-wrap flex-nowrap">
@@ -62,23 +69,30 @@ function Index(props) {
             HOME
           </span>
           <span
-            className={location.pathname === '/pool' ? 'active' : ''}
-            onClick={() => {
-              jump('/pool')
-            }}>
-            POOL
-          </span>
-          <span
             className={location.pathname === '/l2wallet' ? 'active' : ''}
             onClick={() => {
               jump('/l2wallet?withdraw')
             }}>
             L2 WALLET
           </span>
+          <span
+            className={location.pathname === '/swap' ? 'active' : ''}
+            onClick={() => {
+              jump('/swap')
+            }}>
+            SWAP
+          </span>
+          <span
+            className={location.pathname === '/pool' ? 'active' : ''}
+            onClick={() => {
+              jump('/pool')
+            }}>
+            POOL
+          </span>
         </div>
         <div className="block header-title sm:hidden">
           {
-            location.pathname === '/l2wallet' ? 'L2 WALLET' : 'HOME'
+            nameList[location.pathname]
           }
         </div>
         </>
