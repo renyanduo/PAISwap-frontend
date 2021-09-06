@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import OldPortal from './oldPortal';
+import OldPortal from '../oldPortal';
 import PropTypes from 'prop-types';
 import './index.scss';
 import Close from '@/assets/images/close.png'

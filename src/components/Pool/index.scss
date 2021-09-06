@@ -26,7 +26,7 @@
             border-radius: .5rem;
             border: .0625rem solid #FA9124;
             padding: .3125rem;
-            flex: 0.85;
+            flex: 0.95;
 
             .warp-icon {
                 flex: 1;
@@ -58,7 +58,8 @@
                     -webkit-appearance: none !important;
                     margin: 0;
                 }
-                &[type="number"]{
+
+                &[type="number"] {
                     -moz-appearance: textfield;
                 }
             }
@@ -95,17 +96,30 @@
             flex-direction: row;
             justify-content: space-between;
 
-            img {
+            .coin_logo {
                 width: 1.75rem;
                 height: 1.75rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: #FFFFFF;
+                border: 1px solid #FA9124;
+                border-radius: 50%;
+
+                font-size: 14px;
+                font-family: DINAlternate-Bold, DINAlternate;
+                font-weight: bold;
+                color: #FA9124;
             }
 
             .info_coin {
                 display: flex;
                 flex-direction: column;
                 justify-content: flex-end;
+
                 span {
                     text-align: end;
+
                     &:first-child {
                         font-size: 14px;
                         font-family: DINAlternate-Bold, DINAlternate;
@@ -113,6 +127,7 @@
                         color: #3C3C3C;
                         line-height: 16px;
                     }
+
                     &:last-child {
                         font-size: 12px;
                         font-family: DINAlternate-Bold, DINAlternate;
@@ -300,7 +315,7 @@
                     }
                 }
 
-                .sub {
+                .add {
                     margin-left: .75rem;
                 }
             }

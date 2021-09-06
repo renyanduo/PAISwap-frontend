@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, lazy } from 'react'
 import { message } from 'antd'
 
 import { Row, Col } from 'antd'
 import { useSelector } from 'react-redux'
 import Switch from "@/components/Switch";
-import Pi from '../../components/Pool/Pi';
 import PropTypes from 'prop-types';
+import './index.scss';
 
-import './index.scss'
+const Pi = lazy(() => import(/* webpackChunkName: "Pool" */ '@/components/Pool/Pi'))
+
 
 function Pool(props) {
     const userAddress = useSelector(state => state.address)
@@ -15,13 +16,14 @@ function Pool(props) {
 
     useEffect(() => {
         if (!isMetaMaskInstalled()) {
+            console.log('need to install metamask');
             message.error('need to install metamask')
             return
         }
         return () => {
             // cleanup
         }
-    }, [userAddress])
+    }, [])
 
     const isMetaMaskInstalled = () => {
         //Have to check the ethereum binding on the window object to see if it's installed
@@ -29,13 +31,16 @@ function Pool(props) {
         return Boolean(ethereum && ethereum.isMetaMask)
     }
     useEffect(() => {
-        if (!window.ethereum.chainId === 0x999d4b) {
-            switchPlianChain(true)
-        }
+        if (window.ethereum) {
+            const { chainId } = window.ethereum
+            if (!chainId === 0x999d4b) {
+                switchPlianChain(true)
+            }
 
+        }
         return () => {
         }
-    }, [window.ethereum.chainId])
+    }, [window.ethereum])
 
 
 
@@ -65,7 +70,7 @@ function Pool(props) {
 
     return (
         <div className="main">
-            
+
             <div className="pool-content">
                 <div className="switch">
                     <Switch

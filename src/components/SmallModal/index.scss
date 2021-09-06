@@ -20,3 +20,10 @@
   transform: translate(-50%, -50%);
   z-index: 99;
 }
+
+
+@media screen and (max-width: 901px) {
+  .small-modal {
+    width: 90%;
+  }
+}
