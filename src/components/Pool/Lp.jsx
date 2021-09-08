@@ -4,7 +4,7 @@ import { getStaking, getBalance, deposit, Approve, getAllowance, getTotalSupply,
 import { openNotificationWithIcon, toFixed } from '../../util/index';
 import Button from '@/components/Button';
 import ConnectWallet from '@/components/ConnectWallet';
-import TransactionModal from '../TransactionModals';
+import TransactionModal from '../TransactionModal';
 import Modal from '@/components/Modal';
 import HOT from '@/assets/images/hot.png';
 import Max from '@/assets/images/max.png';
