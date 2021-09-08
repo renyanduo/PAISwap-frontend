@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
+import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { getStaking, getBalance, deposit, getTotalSupply, getBalanceOf, getPendingReward, getRedemption } from '../../util/pool/Pi';
 import { openNotificationWithIcon, toFixed } from '../../util/index';
@@ -8,6 +9,7 @@ import TransactionModal from '../TransactionModal';
 import Modal from '@/components/Modal';
 import HOT from '@/assets/images/hot.png';
 import Max from '@/assets/images/max.png';
+import PI from '@/assets/images/pi.jpg';
 import './index.scss'
 
 function Pi(props) {
@@ -170,7 +172,7 @@ function Pi(props) {
                 confirm={confirm}
                 onClose={closeModal}
                 confirmDisable={confirmDisable}
-                target="http://www.baidu.com"
+                target={<Link to="/swap">Get PI</Link>}
             >
                 <>
                     <div className="title-warp">
@@ -229,7 +231,7 @@ function Pi(props) {
                 <img className="hot_icon" src={HOT} alt="hot" />
                 <div className="item_warp">
                     <div className="warp_info">
-                        <div className="coin_logo">PI</div>
+                        <img className="coin_logo" src={PI} alt="PI" />
                         <div className="info_coin">
                             <span>PI</span>
                             <span>APY: --</span>

@@ -83,11 +83,11 @@ function Pool(props) {
                                 <Lp userAddress={userAddress} />
                             </Col> */}
 
-                            <Col xs={24} sm={24} md={12} lg={8} xl={8}>
+                            <Col xs={24} sm={24} md={12} lg={8} xl={6}>
                                 <Lp userAddress={userAddress} />
                             </Col>
 
-                            <Col xs={24} sm={24} md={12} lg={8} xl={8}>
+                            <Col xs={24} sm={24} md={12} lg={8} xl={6}>
                                 <Pi userAddress={userAddress} />
                             </Col>
                         </Row>

@@ -69,7 +69,7 @@ function Modal(props) {
 
           {props.target && (
             <div className="target">
-              <a href={props.target} target="_blank" rel="noopener noreferrer">Get ETH-USDT LP</a>
+              {props.target}
               <img src={Share} alt="share" />
             </div>
           )}

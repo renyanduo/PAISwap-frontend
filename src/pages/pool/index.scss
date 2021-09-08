@@ -1,4 +1,5 @@
 .pool-content {
+    width: 80%;
     margin: 0 auto;
     padding: 13px 28px 50px;
 
@@ -18,3 +19,9 @@
         margin-top: 30px;
     }
 }
+
+@media screen and (max-width: 767px) {
+    .pool-content {
+      width: unset;
+    }
+  }

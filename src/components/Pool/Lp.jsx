@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
+import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { getStaking, getBalance, deposit, Approve, getAllowance, getTotalSupply, getBalanceOf, getPendingReward, getRedemption } from '../../util/pool/Lp';
 import { openNotificationWithIcon, toFixed } from '../../util/index';
@@ -8,8 +9,8 @@ import TransactionModal from '../TransactionModal';
 import Modal from '@/components/Modal';
 import HOT from '@/assets/images/hot.png';
 import Max from '@/assets/images/max.png';
-import ETH from '@/assets/images/ethereum.png';
-import USDT from '@/assets/images/usdt.png';
+import PNFT from '@/assets/images/pnft.jpg';
+import PI from '@/assets/images/pi.jpg';
 
 import './index.scss'
 
@@ -111,7 +112,6 @@ function Lp(props) {
 
         getBalance(address).then(e => {
             setBalance(e)
-            console.log(balance);
         }).catch(e => {
             setBalance('0')
             console.log(e);
@@ -195,7 +195,7 @@ function Lp(props) {
                 confirm={confirm}
                 onClose={closeModal}
                 confirmDisable={confirmDisable}
-                target="http://www.baidu.com"
+                target={<Link to="/swap">Get PNFT-PI LP</Link>}
                 approve={Boolean(allowance <= 0)}
                 onApprove={onApprove}
             >
@@ -215,7 +215,7 @@ function Lp(props) {
                             />
                         </div>
                         <span className="warp-desc">
-                            ETH-USDT LP
+                            PNFT-PI LP
                         </span>
 
                     </div>
@@ -246,7 +246,7 @@ function Lp(props) {
                             />
                         </div>
                         <span className="warp-desc">
-                            ETH-USDT LP
+                            PNFT-PI LP
                         </span>
 
                     </div>
@@ -257,8 +257,8 @@ function Lp(props) {
                 <div className="item_warp">
                     <div className="warp_info">
                         <div className="coin_imgs">
-                            <img src={ETH} alt="ethereum" />
-                            <img src={USDT} alt="usdt" />
+                            <img src={PNFT} alt="PNFT" />
+                            <img src={PI} alt="PI" />
                         </div>
                         <div className="info_coin">
                             <span>PNFT/PI LP</span>

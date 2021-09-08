@@ -99,17 +99,8 @@
             .coin_logo {
                 width: 1.75rem;
                 height: 1.75rem;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                background: #FFFFFF;
-                border: 1px solid #FA9124;
                 border-radius: 50%;
-
-                font-size: 14px;
-                font-family: DINAlternate-Bold, DINAlternate;
-                font-weight: bold;
-                color: #FA9124;
+                border: 1px solid #ccc;
             }
             .coin_imgs {
                 display: flex;
@@ -117,7 +108,9 @@
                 position: relative;
                 img {
                     width: 1.75rem;
-                    height: 1.625rem;
+                    height: 1.75rem;
+                    border-radius: 50%;
+                    border: 1px solid #ccc;
                     &:last-child {
                         position: absolute;
                         left: 1.4375rem;
