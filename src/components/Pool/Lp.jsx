@@ -142,11 +142,11 @@ function Lp(props) {
         deposit(inputValue).then(e => {
             openNotificationWithIcon('info', 'Submitted on the chain, please wait for confirmation on the chain.')
             e.wait().then(w => {
-                openNotificationWithIcon('success', 'success')
+                openNotificationWithIcon('success', 'Successful transaction!')
                 userAddress && initialize(userAddress)
-                console.log(w);
+            }).catch(e => {
+                openNotificationWithIcon('error', 'transaction failed!')
             })
-            console.log(e);
         }).catch(e => {
             const { message } = e;
             openNotificationWithIcon('error', message)
