@@ -38,6 +38,7 @@ function Modal(props) {
   const onApprove = () => {
     const { onApprove } = props
     onApprove && onApprove()
+    setVisibles(false)
   }
 
 

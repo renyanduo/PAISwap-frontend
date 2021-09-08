@@ -18,19 +18,20 @@ function Lp(props) {
     const [visible, setVisible] = useState(false)
     const [unVisible, setUnVisible] = useState(false)
     const [balance, setBalance] = useState('0')
-    const [staking, setStaking] = useState()
+    const [staking, setStaking] = useState('0')
     const [harvest, setHarvest] = useState(0)
     const [totalStaking, setTotalStaking] = useState(0)
     const [pendingReward, setPendingReward] = useState(0)
     const [allowance, setAllowance] = useState(0)
     const [inputValue, setInputValue] = useState('')
     const [unInputValue, setUnInputValue] = useState('')
-    const [confirmDisable, setConfirmDisable] = useState(false)
-    const [unConfirmDisable, setUnConfirmDisable] = useState(false)
+    const [confirmDisable, setConfirmDisable] = useState(true)
+    const [unConfirmDisable, setUnConfirmDisable] = useState(true)
     const [transactionStatus, setTransactionStatus] = useState(null)
     const [showLoading, setShowLoading] = useState(false)
 
     useEffect(() => {
+        userAddress && initialize(userAddress)
         const initializeInterval = setInterval(() => {
             userAddress && initialize(userAddress)
         }, 1000 * 10);
@@ -72,7 +73,7 @@ function Lp(props) {
             userAddress && initialize(userAddress)
         }).catch(e => {
             console.log(e);
-        })
+        }).finally (setVisible(false))
     }
 
     const showModal = () => {
@@ -85,10 +86,14 @@ function Lp(props) {
 
     const closeModal = () => {
         setVisible(false)
+        setInputValue('')
+        setConfirmDisable(true)
         console.log('我是onClose回调')
     }
     const unCloseModal = () => {
         setUnVisible(false)
+        setUnInputValue('')
+        setUnConfirmDisable(true)
         console.log('我是onClose回调')
     }
     const closeTranModal = () => {
@@ -131,10 +136,10 @@ function Lp(props) {
         });
 
         getStaking(address).then(e => {
-            setStaking(Number(e))
+            setStaking(e)
         }).catch(e => {
             console.log(e);
-            setStaking(0)
+            setStaking('0')
         });
     }
     const confirm = () => {
@@ -197,7 +202,7 @@ function Lp(props) {
                 <>
                     <div className="title-warp">
                         <span>Unstake: </span>
-                        <span>Balance: {balance ? toFixed(balance) : '-'}</span>
+                        <span>Balance: {toFixed(balance)}</span>
                     </div>
                     <div className="content-warp">
                         <div className="input-warp">
@@ -265,7 +270,7 @@ function Lp(props) {
                             <div className="warp_text">
                                 <div className="text_item">
                                     <div>Can dig up:</div>
-                                    <div>{toFixed(pendingReward, 6)}</div>
+                                    <div>{toFixed(pendingReward)}</div>
                                 </div>
                                 <div className="text_item">
                                     <div>
@@ -276,14 +281,14 @@ function Lp(props) {
                                 </div>
                                 <div className="text_item">
                                     <div>Total Liquidity:</div>
-                                    <div>{toFixed(totalStaking, 6)}</div>
+                                    <div>{toFixed(totalStaking)}</div>
                                 </div>
                             </div>
                             <div className="warp_mapi">
                                 <span>PI EARNED:</span>
                             </div>
                             <div className="warp_input">
-                                <span>{harvest}</span>
+                                <span>{toFixed(harvest)}</span>
                                 <div className={staking > 0 ? "showBtn" : "btn"} onClick={() => staking > 0 && redemption(staking)}>Harvest</div>
                             </div>
 
@@ -300,7 +305,7 @@ function Lp(props) {
                             <div className="warp_text">
                                 <div className="text_item">
                                     <div>Can dig up:</div>
-                                    <div>{toFixed(pendingReward, 6)}</div>
+                                    <div>{toFixed(pendingReward)}</div>
                                 </div>
                                 <div className="text_item">
                                     <div>
@@ -311,7 +316,7 @@ function Lp(props) {
                                 </div>
                                 <div className="text_item">
                                     <div>Total Liquidity:</div>
-                                    <div>{toFixed(totalStaking, 6)}</div>
+                                    <div>{toFixed(totalStaking)}</div>
                                 </div>
                             </div>
                         </>

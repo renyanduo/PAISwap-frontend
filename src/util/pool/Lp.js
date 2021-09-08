@@ -2,47 +2,15 @@ import { Contract } from '@ethersproject/contracts'
 import { Web3Provider, getDefaultProvider } from '@ethersproject/providers'
 import { formatEther, parseEther } from '@ethersproject/units'
 import CONFIG from './config.json';
-import LP_ABI from './StakingWithEpoch.json'; //质押挖矿合约
+// import LP_ABI from './StakingWithEpoch.json'; //质押挖矿合约
+import LP_ABI from './MasterChef.json'; //质押挖矿合约
 import PNFT_ABI from './PnftStaking.json'; //质押奖励
 import UNI_ABI from './UniswapV2Pair.json'; //质押输入
 
-const LP_STAKING = new Contract(CONFIG["lpContractAddress"], LP_ABI.abi, getDefaultProvider(CONFIG["testNetWork"]));
+const LP_STAKING = new Contract(CONFIG["lpContractAddress"], LP_ABI, getDefaultProvider(CONFIG["testNetWork"]));
 
 const PNFT_STAKING = new Contract(CONFIG["pNftContractAddress"], PNFT_ABI, getDefaultProvider(CONFIG["testNetWork"]));
 const UNISWAP_STAKING = new Contract(CONFIG["uniswapContractAddress"], UNI_ABI.abi, getDefaultProvider(CONFIG["testNetWork"]));
-
-
-/**
- * 查询用户参与的期数
- * @param {*} 用户地址 _user
- * @returns 
- */
-export function getUserEpoch(_user) {
-    return new Promise(async (resolve, reject) => {
-        try {
-            const list = await LP_STAKING.getUserEpoch(_user)
-            resolve(list)
-        } catch (error) {
-            reject(error)
-        }
-    })
-}
-
-/**
- * 查询最新的期数
- * @param {*} 用户地址 _user
- * @returns 
- */
-export function getCurrentEpoch() {
-    return new Promise(async (resolve, reject) => {
-        try {
-            const list = await LP_STAKING.getCurrentEpoch()
-            resolve(list)
-        } catch (error) {
-            reject(error)
-        }
-    })
-}
 
 /**
  * 余额
@@ -65,7 +33,7 @@ export function getBalance(userAddress) {
  * @param {} 用户地址 
  * @returns 
  */
- export function Approve() {
+export function Approve() {
     return new Promise(async (resolve, reject) => {
         try {
             const UNISWAP_STAKING = new Contract(CONFIG["uniswapContractAddress"], UNI_ABI.abi, new Web3Provider(window.web3.currentProvider).getSigner());
@@ -81,7 +49,7 @@ export function getBalance(userAddress) {
  * 查询账户授权额度
  * @returns {当前地址} userAddress
  */
- export function getAllowance(userAddress) {
+export function getAllowance(userAddress) {
     return new Promise(async (resolve, reject) => {
         try {
             const UNISWAP_STAKING = new Contract(CONFIG["uniswapContractAddress"], UNI_ABI.abi, new Web3Provider(window.web3.currentProvider).getSigner());
@@ -101,8 +69,8 @@ export function getBalance(userAddress) {
 export function deposit(value) {
     return new Promise(async (resolve, reject) => {
         try {
-            const LP_STAKING = new Contract(CONFIG["lpContractAddress"], LP_ABI.abi, new Web3Provider(window.web3.currentProvider).getSigner());
-            const list = await LP_STAKING.deposit(parseEther(value))
+            const LP_STAKING = new Contract(CONFIG["lpContractAddress"], LP_ABI, new Web3Provider(window.web3.currentProvider).getSigner());
+            const list = await LP_STAKING.deposit(0, parseEther(value))
             resolve(list)
         } catch (error) {
             reject(error)
@@ -118,7 +86,7 @@ export function deposit(value) {
 export function getStaking(_user) {
     return new Promise(async (resolve, reject) => {
         try {
-            const list = await LP_STAKING.getStaking(_user);
+            const list = await LP_STAKING.getStaking(0, _user);
             resolve(formatEther(list))
         } catch (error) {
             reject(error)
@@ -133,7 +101,7 @@ export function getStaking(_user) {
 export function getTotalSupply() {
     return new Promise(async (resolve, reject) => {
         try {
-            const list = await LP_STAKING.getTotalSupply();
+            const list = await LP_STAKING.getTotalSupply(0);
             resolve(formatEther(list))
         } catch (error) {
             reject(error)
@@ -149,7 +117,7 @@ export function getTotalSupply() {
 export function getPendingReward(_user) {
     return new Promise(async (resolve, reject) => {
         try {
-            const list = await LP_STAKING.pendingReward(_user);
+            const list = await LP_STAKING.pendingReward(0, _user);
             resolve(formatEther(list))
         } catch (error) {
             reject(error)
@@ -166,8 +134,8 @@ export function getPendingReward(_user) {
 export function getRedemption(_amount) {
     return new Promise(async (resolve, reject) => {
         try {
-            const LP_STAKING = new Contract(CONFIG["lpContractAddress"], LP_ABI.abi, new Web3Provider(window.web3.currentProvider).getSigner());
-            const list = await LP_STAKING.withdraw(parseEther(_amount.toString()));
+            const LP_STAKING = new Contract(CONFIG["lpContractAddress"], LP_ABI, new Web3Provider(window.web3.currentProvider).getSigner());
+            const list = await LP_STAKING.withdraw(0, parseEther(_amount));
             resolve(list)
         } catch (error) {
             reject(error)

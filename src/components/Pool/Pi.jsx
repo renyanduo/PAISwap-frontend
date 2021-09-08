@@ -14,19 +14,20 @@ function Pi(props) {
     const { userAddress } = props;
     const [visible, setVisible] = useState(false)
     const [unVisible, setUnVisible] = useState(false)
-    const [balance, setBalance] = useState(0)
-    const [staking, setStaking] = useState(0)
+    const [balance, setBalance] = useState("0")
+    const [staking, setStaking] = useState("0")
     const [harvest, setHarvest] = useState(0)
     const [totalStaking, setTotalStaking] = useState(0)
     const [pendingReward, setPendingReward] = useState(0)
     const [inputValue, setInputValue] = useState('')
     const [unInputValue, setUnInputValue] = useState('')
-    const [confirmDisable, setConfirmDisable] = useState(false)
-    const [unConfirmDisable, setUnConfirmDisable] = useState(false)
+    const [confirmDisable, setConfirmDisable] = useState(true)
+    const [unConfirmDisable, setUnConfirmDisable] = useState(true)
     const [transactionStatus, setTransactionStatus] = useState(null)
     const [showLoading, setShowLoading] = useState(false)
 
     useEffect(() => {
+        userAddress && initialize(userAddress)
         const initializeInterval = setInterval(() => {
             userAddress && initialize(userAddress)
         }, 1000 * 10);
@@ -34,21 +35,6 @@ function Pi(props) {
             clearInterval(initializeInterval)
         }
     }, [userAddress])
-
-    useEffect(() => {
-        if (visible && userAddress) {
-            getBalance(userAddress).then(e => {
-                setBalance(e)
-            }).catch(e => {
-                setBalance(0)
-                console.log(e);
-            })
-        } else {
-            setInputValue('')
-        }
-        return () => {
-        }
-    }, [visible, userAddress])
     
     const inputValueChange = useCallback(
         (e) => {
@@ -70,7 +56,6 @@ function Pi(props) {
             if (Number(e.target.value) > 0 && Number(e.target.value) <= Number(staking)) {
                 setUnConfirmDisable(false)
             } else {
-                console.log(true);
                 setUnConfirmDisable(true)
             }
         },
@@ -87,10 +72,14 @@ function Pi(props) {
 
     const closeModal = () => {
         setVisible(false)
+        setInputValue('')
+        setConfirmDisable(true)
         console.log('我是onClose回调')
     }
     const unCloseModal = () => {
         setUnVisible(false)
+        setUnInputValue('')
+        setUnConfirmDisable(true)
         console.log('我是onClose回调')
     }
     const closeTranModal = () => {
@@ -118,15 +107,15 @@ function Pi(props) {
         });
 
         getStaking(address).then(e => {
-            setStaking(Number(e))
+            setStaking(e)
         }).catch(e => {
             console.log(e);
-            setStaking(0)
+            setStaking('0')
         });
         getBalance(address).then(e => {
             setBalance(e)
         }).catch(e => {
-            setBalance(0)
+            setBalance('0')
             console.log(e);
         })
     }
@@ -251,7 +240,7 @@ function Pi(props) {
                             <div className="warp_text">
                                 <div className="text_item">
                                     <div>Can dig up:</div>
-                                    <div>{toFixed(pendingReward, 6)}</div>
+                                    <div>{toFixed(pendingReward)}</div>
                                 </div>
                                 <div className="text_item">
                                     <div>
@@ -262,14 +251,14 @@ function Pi(props) {
                                 </div>
                                 <div className="text_item">
                                     <div>Total Liquidity:</div>
-                                    <div>{toFixed(totalStaking, 6)}</div>
+                                    <div>{toFixed(totalStaking)}</div>
                                 </div>
                             </div>
                             <div className="warp_mapi">
                                 <span>PNFT EARNED:</span>
                             </div>
                             <div className="warp_input">
-                                <span>{harvest}</span>
+                                <span>{toFixed(harvest)}</span>
                                 <div className={staking > 0 ? "showBtn" : "btn"} onClick={() => staking > 0 && redemption(staking)}>Harvest</div>
                             </div>
 
@@ -280,13 +269,13 @@ function Pi(props) {
                                 <span>PNFT EARNED:</span>
                             </div>
                             <div className="warp_input">
-                                <span>{harvest}</span>
+                                <span>{toFixed(harvest)}</span>
                                 <div className="btn" disabled>Harvest</div>
                             </div>
                             <div className="warp_text">
                                 <div className="text_item">
                                     <div>Can dig up:</div>
-                                    <div>{toFixed(pendingReward, 6)}</div>
+                                    <div>{toFixed(pendingReward)}</div>
                                 </div>
                                 <div className="text_item">
                                     <div>
@@ -297,7 +286,7 @@ function Pi(props) {
                                 </div>
                                 <div className="text_item">
                                     <div>Total Liquidity:</div>
-                                    <div>{toFixed(totalStaking, 6)}</div>
+                                    <div>{toFixed(totalStaking)}</div>
                                 </div>
                             </div>
                         </>
@@ -311,7 +300,7 @@ function Pi(props) {
                     </div>
                     {userAddress ? (
                         <div className="warp_option">
-                            <span className="option_number">{toFixed(staking, 6)}</span>
+                            <span className="option_number">{toFixed(staking)}</span>
                             {staking > 0 ? (
                                 <div className="option_btns">
                                     <div className="sub" onClick={showUnModal}>-</div>
