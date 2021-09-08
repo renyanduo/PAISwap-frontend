@@ -321,7 +321,7 @@ const Index = () => {
   )
 
   return (
-    <div className="main">
+    <div className="main container lg mx-auto">
       <div className="banner">
         <a href="https://pizzap.io/" target="_blank" rel="noopener noreferrer">
           <img src={banner} alt="" />
