@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
+import Loading from '@/components/loading'
 
 export default function Index() {
   const [iFrameHeight, setIFrameHeight] = useState('0px')
+  const [showLoading, setShowLoading] = useState(true)
   let timer
 
   useEffect(()=> {
@@ -16,16 +18,17 @@ export default function Index() {
         id="iframe"
         style={{ width: '100%', height: iFrameHeight, overflow: 'visible' }}
         onLoad={() => {
+          setShowLoading(false)
           const obj = document.getElementById('iframe')
           timer = setInterval(() => {
             setIFrameHeight(obj.contentWindow.document.body.scrollHeight + 'px')
-          }, 1000)
+          }, 200)
         }}
         title="swap"
         src="/liquidity"
         frameBorder="0"
-        width="100%"
-        height={iFrameHeight}></iframe>
+        width="100%"></iframe>
+      <Loading show={showLoading} />
     </div>
   )
 }
