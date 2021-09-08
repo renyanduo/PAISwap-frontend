@@ -35,6 +35,11 @@ function Modal(props) {
     setVisibles(false)
   }
 
+  const onApprove = () => {
+    const { onApprove } = props
+    onApprove && onApprove()
+  }
+
 
   return (
     <OldPortal visible={visibles}>
@@ -48,12 +53,22 @@ function Modal(props) {
           {/* 这里的content使用父组件的children*/}
           <div className="modal-content">{children}</div>
           <div className="modal-operator">
-            <button className="modal-operator-close" onClick={closeModal}>Cancel</button>
-            <button className="modal-operator-confirm" onClick={confirm} disabled={confirmDisable}>Confirm</button>
+            {props.approve ?
+              (
+                <>
+                  <button className="modal-operator-approve" onClick={onApprove}>Approve</button>
+                </>
+              ) : (
+                <>
+                  <button className="modal-operator-close" onClick={closeModal}>Cancel</button>
+                  <button className="modal-operator-confirm" onClick={confirm} disabled={confirmDisable}>Confirm</button>
+                </>
+              )}
           </div>
+
           {props.target && (
             <div className="target">
-              <a href={props.target} target="_blank">Get ETH-USDT LP</a>
+              <a href={props.target} target="_blank" rel="noopener noreferrer">Get ETH-USDT LP</a>
               <img src={Share} alt="share" />
             </div>
           )}
@@ -69,6 +84,10 @@ Modal.propTypes = {
   children: PropTypes.node,
   confirmDisable: PropTypes.bool,
   onClose: PropTypes.func.isRequired,
-  confirm: PropTypes.func.isRequired
+  confirm: PropTypes.func.isRequired,
+  approve: PropTypes.bool,
 }
+// Modal.defaultProps = {
+//   approve: false
+// }
 export default Modal;

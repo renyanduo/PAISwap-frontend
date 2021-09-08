@@ -5,7 +5,6 @@ import Button from '@/components/Button'
 import SmallModal from '@/components/SmallModal'
 import { Spin } from 'antd'
 
-
 import { LoadingOutlined } from '@ant-design/icons';
 import pizza from '@/assets/images/pizza.png'
 import wallet from '@/assets/images/wallet.png'

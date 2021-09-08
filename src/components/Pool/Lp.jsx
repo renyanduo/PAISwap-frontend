@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
-import { getStaking, getBalance, deposit, getTotalSupply, getBalanceOf, getPendingReward, getRedemption } from '../../util/pool/Pi';
+import { getStaking, getBalance, deposit, Approve, getAllowance, getTotalSupply, getBalanceOf, getPendingReward, getRedemption } from '../../util/pool/Lp';
 import { openNotificationWithIcon, toFixed } from '../../util/index';
 import Button from '@/components/Button';
 import ConnectWallet from '@/components/ConnectWallet';
@@ -8,17 +8,21 @@ import TransactionModal from '../TransactionModal';
 import Modal from '@/components/Modal';
 import HOT from '@/assets/images/hot.png';
 import Max from '@/assets/images/max.png';
+import ETH from '@/assets/images/ethereum.png';
+import USDT from '@/assets/images/usdt.png';
+
 import './index.scss'
 
-function Pi(props) {
+function Lp(props) {
     const { userAddress } = props;
     const [visible, setVisible] = useState(false)
     const [unVisible, setUnVisible] = useState(false)
-    const [balance, setBalance] = useState(0)
-    const [staking, setStaking] = useState(0)
+    const [balance, setBalance] = useState('0')
+    const [staking, setStaking] = useState()
     const [harvest, setHarvest] = useState(0)
     const [totalStaking, setTotalStaking] = useState(0)
     const [pendingReward, setPendingReward] = useState(0)
+    const [allowance, setAllowance] = useState(0)
     const [inputValue, setInputValue] = useState('')
     const [unInputValue, setUnInputValue] = useState('')
     const [confirmDisable, setConfirmDisable] = useState(false)
@@ -35,34 +39,19 @@ function Pi(props) {
         }
     }, [userAddress])
 
-    useEffect(() => {
-        if (visible && userAddress) {
-            getBalance(userAddress).then(e => {
-                setBalance(e)
-            }).catch(e => {
-                setBalance(0)
-                console.log(e);
-            })
+    const inputValueChange = (e) => {
+        let value = e.target.value;
+        setInputValue(value);
+        // console.log('Number(value) > 0', Number(value) > 0);
+        // console.log('Number(value) <= Number(balance)', Number(value) <= Number(balance));
+        // console.log(Number(value));
+        // console.log(Number(balance));
+        if (Number(value) > 0 && Number(value) <= Number(balance)) {
+            setConfirmDisable(false)
         } else {
-            setInputValue('')
+            setConfirmDisable(true)
         }
-        return () => {
-        }
-    }, [visible, userAddress])
-    
-    const inputValueChange = useCallback(
-        (e) => {
-            setInputValue(e.target.value)
-            if (Number(e.target.value) > 0 && Number(e.target.value) <= Number(balance)) {
-                console.log(false);
-                setConfirmDisable(false)
-            } else {
-                console.log(true);
-                setConfirmDisable(true)
-            }
-        },
-        [inputValue],
-    )
+    }
 
     const unInputValueChange = useCallback(
         (e) => {
@@ -76,6 +65,15 @@ function Pi(props) {
         },
         [unInputValue],
     )
+
+    const onApprove = () => {
+        Approve(userAddress).then(v => {
+            openNotificationWithIcon('success', 'Approve succeeded!')
+            userAddress && initialize(userAddress)
+        }).catch(e => {
+            console.log(e);
+        })
+    }
 
     const showModal = () => {
         setVisible(true)
@@ -99,6 +97,20 @@ function Pi(props) {
     }
 
     const initialize = (address) => {
+        getAllowance(userAddress).then(e => {
+            setAllowance(Number(e))
+        }).catch(e => {
+            setAllowance(0)
+            console.log(e);
+        })
+
+        getBalance(address).then(e => {
+            setBalance(e)
+            console.log(balance);
+        }).catch(e => {
+            setBalance('0')
+            console.log(e);
+        })
         getPendingReward(address).then(e => {
             setHarvest(e)
         }).catch(e => {
@@ -111,8 +123,9 @@ function Pi(props) {
             setTotalStaking(0)
         });
         getBalanceOf().then(e => {
-            setPendingReward(Number(e))
+            setPendingReward(e)
         }).catch(e => {
+            console.log('Error', e);
             console.log(e);
             setPendingReward(0)
         });
@@ -123,25 +136,20 @@ function Pi(props) {
             console.log(e);
             setStaking(0)
         });
-        getBalance(address).then(e => {
-            setBalance(e)
-        }).catch(e => {
-            setBalance(0)
-            console.log(e);
-        })
     }
     const confirm = () => {
+        console.log(inputValue);
         deposit(inputValue).then(e => {
             openNotificationWithIcon('info', 'Submitted on the chain, please wait for confirmation on the chain.')
             e.wait().then(w => {
                 openNotificationWithIcon('success', 'success')
                 userAddress && initialize(userAddress)
-
                 console.log(w);
             })
             console.log(e);
         }).catch(e => {
-            console.log(e)
+            const { message } = e;
+            openNotificationWithIcon('error', message)
         })
         setVisible(false)
     }
@@ -174,20 +182,22 @@ function Pi(props) {
     }
     return (
         <>
-            <TransactionModal visible={showLoading} status={transactionStatus} onTclose={closeTranModal}/>
+            <TransactionModal visible={showLoading} status={transactionStatus} onTclose={closeTranModal} />
             <Modal
                 className="modal"
                 visible={visible}
-                title="Stake PI tokens"
+                title="Stake LP tokens"
                 confirm={confirm}
                 onClose={closeModal}
                 confirmDisable={confirmDisable}
                 target="http://www.baidu.com"
+                approve={Boolean(allowance <= 0)}
+                onApprove={onApprove}
             >
                 <>
                     <div className="title-warp">
                         <span>Unstake: </span>
-                        <span>Balance: {toFixed(balance)}</span>
+                        <span>Balance: {balance ? toFixed(balance) : '-'}</span>
                     </div>
                     <div className="content-warp">
                         <div className="input-warp">
@@ -200,7 +210,7 @@ function Pi(props) {
                             />
                         </div>
                         <span className="warp-desc">
-                            PI
+                            ETH-USDT LP
                         </span>
 
                     </div>
@@ -210,7 +220,7 @@ function Pi(props) {
             <Modal
                 className="modal"
                 visible={unVisible}
-                title="Unstake PI tokens"
+                title="Unstake LP tokens"
                 confirm={unConfirm}
                 onClose={unCloseModal}
                 confirmDisable={unConfirmDisable}
@@ -218,7 +228,7 @@ function Pi(props) {
                 <>
                     <div className="title-warp">
                         <span>Unstake: </span>
-                        <span>Balance: {toFixed(staking)}</span>
+                        <span>Balance: {staking ? toFixed(staking) : '-'}</span>
                     </div>
                     <div className="content-warp">
                         <div className="input-warp">
@@ -241,9 +251,12 @@ function Pi(props) {
                 <img className="hot_icon" src={HOT} alt="hot" />
                 <div className="item_warp">
                     <div className="warp_info">
-                        <div className="coin_logo">PI</div>
+                        <div className="coin_imgs">
+                            <img src={ETH} alt="ethereum" />
+                            <img src={USDT} alt="usdt" />
+                        </div>
                         <div className="info_coin">
-                            <span>PI</span>
+                            <span>PNFT/PI LP</span>
                             <span>APY: --</span>
                         </div>
                     </div>
@@ -259,7 +272,7 @@ function Pi(props) {
                                         <span className="">5.9 Double </span>
                                         Earn:
                                     </div>
-                                    <span>PNFT</span>
+                                    <span>PI</span>
                                 </div>
                                 <div className="text_item">
                                     <div>Total Liquidity:</div>
@@ -267,7 +280,7 @@ function Pi(props) {
                                 </div>
                             </div>
                             <div className="warp_mapi">
-                                <span>PNFT EARNED:</span>
+                                <span>PI EARNED:</span>
                             </div>
                             <div className="warp_input">
                                 <span>{harvest}</span>
@@ -278,10 +291,10 @@ function Pi(props) {
                     ) : (
                         <>
                             <div className="warp_mapi">
-                                <span>PNFT EARNED:</span>
+                                <span>PI EARNED:</span>
                             </div>
                             <div className="warp_input">
-                                <span>{harvest}</span>
+                                <span>{toFixed(harvest)}</span>
                                 <div className="btn" disabled>Harvest</div>
                             </div>
                             <div className="warp_text">
@@ -294,7 +307,7 @@ function Pi(props) {
                                         <span className="">5.9 Double </span>
                                         Earn:
                                     </div>
-                                    <span>PNFT</span>
+                                    <span>PI</span>
                                 </div>
                                 <div className="text_item">
                                     <div>Total Liquidity:</div>
@@ -307,12 +320,12 @@ function Pi(props) {
 
 
                     <div className="warp_desc">
-                        <span> Pi </span>
+                        <span> PNFT-PI LP </span>
                         STAKED
                     </div>
                     {userAddress ? (
                         <div className="warp_option">
-                            <span className="option_number">{toFixed(staking, 6)}</span>
+                            <span className="option_number">{toFixed(staking)}</span>
                             {staking > 0 ? (
                                 <div className="option_btns">
                                     <div className="sub" onClick={showUnModal}>-</div>
@@ -334,8 +347,8 @@ function Pi(props) {
     )
 }
 
-Pi.propTypes = {
+Lp.propTypes = {
 
 }
 
-export default Pi
+export default Lp

@@ -21,16 +21,13 @@ export function numFormat(num) {
 }
 
 
-export const openNotificationWithIcon = (type, msg, close = false) => {
-  console.log(close);
+export const openNotificationWithIcon = (type, msg) => {
   notification[type]({
       message: type.toUpperCase(),
-      description: msg,
-      duration: close ? 2000 : null
+      description: msg
   });
-  if (close) {
-    setTimeout(() => {
-      notification.destroy()
-    }, 2000);
-  }
 };
+
+export const toFixed = ( dight, bits = 4 ) => {
+  return (Math.round( dight * Math.pow( 10, bits ) ) / Math.pow( 10, bits )).toString()
+}

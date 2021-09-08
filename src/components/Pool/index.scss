@@ -111,6 +111,19 @@
                 font-weight: bold;
                 color: #FA9124;
             }
+            .coin_imgs {
+                display: flex;
+                align-items: center;
+                position: relative;
+                img {
+                    width: 1.75rem;
+                    height: 1.625rem;
+                    &:last-child {
+                        position: absolute;
+                        left: 1.4375rem;
+                    }
+                }
+            }
 
             .info_coin {
                 display: flex;
@@ -297,7 +310,8 @@
 
                 .add,
                 .sub {
-                    padding: .125rem .75rem;
+                    width: 2.125rem;
+                    padding: .125rem 0rem;
                     background: rgba(248, 242, 242, 0.93);
                     border-radius: 5px;
                     border: 1px solid #FA9124;

@@ -4,9 +4,9 @@ import { formatEther, parseEther } from '@ethersproject/units'
 import PI_ABI from './PiStakingEpoch.json'
 import PNFT_ABI from './PnftStaking.json'
 import CONFIG from './config.json';
-const PI_STAKING = new Contract(CONFIG["piContractAddress"], PI_ABI.abi, new Web3Provider(window.web3.currentProvider).getSigner());
+const PI_STAKING = new Contract(CONFIG["piContractAddress"], PI_ABI.abi, getDefaultProvider(CONFIG["testNetWork"]));
 
-const PNFT_STAKING = new Contract(CONFIG["pNftContractAddress"], PNFT_ABI, new Web3Provider(window.web3.currentProvider).getSigner());
+const PNFT_STAKING = new Contract(CONFIG["pNftContractAddress"], PNFT_ABI, getDefaultProvider(CONFIG["testNetWork"]));
 
 
 /**
@@ -70,8 +70,7 @@ export function getBalance(userAddress) {
 export function deposit(value) {
     return new Promise(async (resolve, reject) => {
         try {
-            console.log(value);
-            console.log(parseEther(value));
+            const PI_STAKING = new Contract(CONFIG["piContractAddress"], PI_ABI.abi, new Web3Provider(window.web3.currentProvider).getSigner());
             const list = await PI_STAKING.deposit({ value: parseEther(value) })
             resolve(list)
         } catch (error) {
@@ -136,6 +135,7 @@ export function getPendingReward(_user) {
 export function getRedemption(_amount) {
     return new Promise(async (resolve, reject) => {
         try {
+            const PI_STAKING = new Contract(CONFIG["piContractAddress"], PI_ABI.abi, new Web3Provider(window.web3.currentProvider).getSigner());
             const list = await PI_STAKING.withdraw(parseEther(_amount.toString()));
             resolve(list)
         } catch (error) {
