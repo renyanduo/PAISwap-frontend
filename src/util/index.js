@@ -28,6 +28,26 @@ export const openNotificationWithIcon = (type, msg) => {
   });
 };
 
+/**
+ * 保留小数位
+ * @param {*} dight 小数
+ * @param {*} bits 位数默认4
+ * @returns 
+ */
 export const toFixed = ( dight, bits = 4 ) => {
   return (Math.round( dight * Math.pow( 10, bits ) ) / Math.pow( 10, bits )).toString()
+}
+
+/**
+ * 分割省略 aa...bb
+ * @param {*} text 字符串
+ * @param {*} start 开始保留几位
+ * @param {*} end 结束保留几位
+ * @returns {*} text
+ */
+ export function subSplit(text, start, end) {
+  if (text && text !== " ") {
+    return text.substr(0, start) + '....' + text.substr(text.length - end, text.length);
+  }
+  return null
 }

@@ -19,7 +19,7 @@ const LazyLoad = () => {
 
 const RouterView = () => (
   <BrowserRouter>
-    <AppHeader></AppHeader>
+    <AppHeader/>
     <Suspense fallback={<LazyLoad />}>
       <Switch>
         {routes.map((route, index) => (

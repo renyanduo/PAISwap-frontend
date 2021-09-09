@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { getStaking, getBalance, deposit, getTotalSupply, getBalanceOf, getPendingReward, getRedemption } from '../../util/pool/Pi';
@@ -30,39 +30,36 @@ function Pi(props) {
 
     useEffect(() => {
         userAddress && initialize(userAddress)
-        const initializeInterval = setInterval(() => {
-            userAddress && initialize(userAddress)
-        }, 1000 * 10);
+        let initializeInterval = setInterval(() => {
+        userAddress && initialize(userAddress)}, 1000 * 1);
         return () => {
             clearInterval(initializeInterval)
+            initializeInterval = null
         }
     }, [userAddress])
-    
-    const inputValueChange = useCallback(
-        (e) => {
-            setInputValue(e.target.value)
-            if (Number(e.target.value) > 0 && Number(e.target.value) <= Number(balance)) {
-                console.log(false);
-                setConfirmDisable(false)
-            } else {
-                console.log(true);
-                setConfirmDisable(true)
-            }
-        },
-        [inputValue],
-    )
 
-    const unInputValueChange = useCallback(
-        (e) => {
-            setUnInputValue(e.target.value)
-            if (Number(e.target.value) > 0 && Number(e.target.value) <= Number(staking)) {
-                setUnConfirmDisable(false)
-            } else {
-                setUnConfirmDisable(true)
-            }
-        },
-        [unInputValue],
-    )
+    const inputValueChange = (value) => {
+        setInputValue(value);
+        // console.log('Number(value) > 0', Number(value) > 0);
+        // console.log('Number(value) <= Number(balance)', Number(value) <= Number(balance));
+        // console.log(Number(value));
+        // console.log(Number(balance));
+        if (Number(value) > 0 && Number(value) <= Number(balance)) {
+            setConfirmDisable(false)
+        } else {
+            setConfirmDisable(true)
+        }
+    }
+
+
+    const unInputValueChange = (value) => {
+        setUnInputValue(value)
+        if (Number(value) > 0 && Number(value) <= Number(staking)) {
+            setUnConfirmDisable(false)
+        } else {
+            setUnConfirmDisable(true)
+        }
+    }
 
     const showModal = () => {
         setVisible(true)
@@ -123,6 +120,7 @@ function Pi(props) {
     }
     const confirm = () => {
         deposit(inputValue).then(e => {
+            console.log(e);
             openNotificationWithIcon('info', 'Submitted on the chain, please wait for confirmation on the chain.')
             e.wait().then(w => {
                 openNotificationWithIcon('success', 'Successful transaction!')
@@ -157,14 +155,15 @@ function Pi(props) {
     }
 
     const maxClick = () => {
-        setInputValue(balance)
+        console.log('maxClick');
+        inputValueChange(balance)
     }
     const unMaxClick = () => {
-        setUnInputValue(staking)
+        unInputValueChange(staking)
     }
     return (
         <>
-            <TransactionModal visible={showLoading} status={transactionStatus} onTclose={closeTranModal}/>
+            <TransactionModal visible={showLoading} status={transactionStatus} onTclose={closeTranModal} />
             <Modal
                 className="modal"
                 visible={visible}
@@ -176,7 +175,7 @@ function Pi(props) {
             >
                 <>
                     <div className="title-warp">
-                        <span>Unstake: </span>
+                        <span>Stake: </span>
                         <span>Balance: {toFixed(balance)}</span>
                     </div>
                     <div className="content-warp">
@@ -184,7 +183,7 @@ function Pi(props) {
                             <img src={Max} className="warp-icon" alt="max" onClick={maxClick} />
                             <input
                                 type="number"
-                                onChange={e => inputValueChange(e)}
+                                onChange={e => inputValueChange(e.target.value)}
                                 value={inputValue}
                                 placeholder="0.0"
                             />
@@ -215,7 +214,7 @@ function Pi(props) {
                             <img src={Max} className="warp-icon" alt="max" onClick={unMaxClick} />
                             <input
                                 type="number"
-                                onChange={e => unInputValueChange(e)}
+                                onChange={e => unInputValueChange(e.target.value)}
                                 value={unInputValue}
                                 placeholder="0.0"
                             />

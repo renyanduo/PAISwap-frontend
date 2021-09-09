@@ -15,8 +15,16 @@ body {
   .main {
     margin-top: 128px;
   }
+  .ant-dropdown {
+    top: 90px !important;
+    &>ul {
+      border-radius: .625rem;
+    }
+
+  }
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
+
