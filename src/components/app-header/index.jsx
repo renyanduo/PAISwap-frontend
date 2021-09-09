@@ -120,7 +120,7 @@ function Index(props) {
           <div className="block header-title sm:hidden">{nameList[location.pathname]}</div>
         </>
         <>
-          <div className="hidden mt-4 sm:mt-0 sm:block">
+          <div className="hidden mt-4 sm:mt-0 sm:block" style={{visibility: location.pathname === '/swap' ? 'hidden' : 'visible'}}>
             <ConnectWallet>
               {userAddress ? 
               // (
