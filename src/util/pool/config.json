@@ -5,5 +5,6 @@
   "lpContractAddress": "0x75b69C47279F7eB9801c86A582aE9968232CD317",
   "uniswapContractAddress": "0xcD8346AD25B920aDA552e732450FD17C8f77bBee",
   "pNftContractAddress": "0xD046766524c66B0b2a53B2A0c92b18B9593C7951",
+  "BalanceContractAddres": "0xEffE5A00f42f0f7adFE5716d0743E19E1B177fa3",
   "symbol": "PI"
 }

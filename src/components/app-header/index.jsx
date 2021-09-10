@@ -2,20 +2,19 @@ import React, { useEffect, useState } from 'react'
 import './index.scss'
 import Button from '@/components/ConnectButton'
 import ConnectWallet from '@/components/ConnectWallet'
+import WalletOption from '@/components/WalletOption'
 import logo from '@/assets/images/logo.png'
 import { useSelector, useDispatch } from 'react-redux'
 import { useHistory, useLocation } from 'react-router-dom'
 import { setUserAddress } from '@/store/action'
 import { subSplit } from '@/util'
 import { Menu, Dropdown } from 'antd'
-
+import { WalletOutlined } from '@ant-design/icons';
 import burger from '@/assets/images/burger.png'
 
 
 
 function Index(props) {
-
-  console.log(window.ethereum);
   const userAddress = useSelector(state => state.address)
   const history = useHistory()
   const location = useLocation()
@@ -120,23 +119,23 @@ function Index(props) {
           <div className="block header-title sm:hidden">{nameList[location.pathname]}</div>
         </>
         <>
-          <div className="hidden mt-4 sm:mt-0 sm:block" style={{visibility: location.pathname === '/swap' ? 'hidden' : 'visible'}}>
-            <ConnectWallet>
-              {userAddress ? 
-              // (
-              //   <Dropdown overlay={menu} trigger={['click']} destroyPopupOnHide>
-              //     <Button onClick={e => e.preventDefault()}>{subSplit(userAddress, 6, 4)}</Button>
-              //   </Dropdown>
-              // ) : 
-              
-              <Button onClick={e => e.preventDefault()}>{subSplit(userAddress, 6, 4)}</Button>
-            : 
-            <Button>Connect Wallet</Button>}
-
-            </ConnectWallet>
+          
+          <div className="hidden mt-4 sm:mt-0 sm:block" id="header-right" style={{ visibility: location.pathname === '/swap' ? 'hidden' : 'visible' }}>
+            <WalletOption useAddress={userAddress} >
+              <a>钱包</a>
+            </WalletOption>
+            {userAddress ? (
+              <Dropdown overlay={menu} trigger={['click']} getPopupContainer={() => document.getElementById('header-right') }>
+                <Button>{subSplit(userAddress, 6, 4)}</Button>
+              </Dropdown>
+            ) :
+              <ConnectWallet>
+                <Button>Connect Wallet</Button>
+              </ConnectWallet>
+            }
           </div>
           <div className="block burger sm:hidden" onClick={() => setShowMenu(true)}>
-            <img src={burger} alt="" />
+            <img src={burger} alt="memu" />
           </div>
         </>
       </div>

@@ -296,7 +296,7 @@ function Pi(props) {
 
 
                     <div className="warp_desc">
-                        <span> Pi </span>
+                        <span> PI </span>
                         STAKED
                     </div>
                     {userAddress ? (

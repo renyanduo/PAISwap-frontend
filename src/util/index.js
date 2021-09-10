@@ -47,7 +47,7 @@ export const toFixed = ( dight, bits = 4 ) => {
  */
  export function subSplit(text, start, end) {
   if (text && text !== " ") {
-    return text.substr(0, start) + '....' + text.substr(text.length - end, text.length);
+    return text.substr(0, start) + '...' + text.substr(text.length - end, text.length);
   }
   return null
 }
