@@ -3,7 +3,9 @@ import { message } from 'antd'
 
 import { Row, Col } from 'antd'
 import { useSelector } from 'react-redux'
-import Switch from "@/components/Switch";
+// import Switch from "@/components/Switch";
+
+import { TESTNET_CHILD } from '@/util/config'
 import PropTypes from 'prop-types';
 import './index.scss';
 
@@ -13,7 +15,7 @@ const Lp = lazy(() => import(/* webpackChunkName: "Pool" */ '@/components/Pool/L
 
 function Pool(props) {
     const userAddress = useSelector(state => state.address)
-    const [isChecked, setIsChecked] = useState(false);
+    // const [isChecked, setIsChecked] = useState(false);
 
     useEffect(() => {
         if (!isMetaMaskInstalled()) {
@@ -44,16 +46,7 @@ function Pool(props) {
         try {
             const flag = await ethereum.request({
                 method: 'wallet_addEthereumChain',
-                params: [type && {
-                    chainId: '0x999d4b',
-                    chainName: 'Plian-subchain1test',
-                    rpcUrls: ['https://testnet.plian.io/child_test'],
-                    blockExplorerUrls: ['https://testnet.plian.org/child_test'],
-                    nativeCurrency: {
-                        symbol: 'PI',
-                        decimals: 18
-                    }
-                }]
+                params: [type && TESTNET_CHILD]
             })
             return flag
         } catch (switchError) {
@@ -66,7 +59,7 @@ function Pool(props) {
         <div className="main">
 
             <div className="pool-content">
-                <div className="switch">
+                {/* <div className="switch">
                     <Switch
                         checked={isChecked}
                         onChange={(checked) => {
@@ -74,9 +67,9 @@ function Pool(props) {
                         }}
                     />
                     <span>Staked only</span>
-                </div>
-                {isChecked ? undefined :
-                    (
+                </div> */}
+                {/* {isChecked ? undefined : 
+                    (*/}
                         <Row gutter={[16, 22]} className="cards">
                             <Col xs={24} sm={24} md={12} lg={8} xl={6}>
                                 <Lp userAddress={userAddress} />
@@ -86,8 +79,8 @@ function Pool(props) {
                                 <Pi userAddress={userAddress} />
                             </Col>
                         </Row>
-                    )
-                }
+                   {/*  )
+                } */}
 
             </div >
         </div >

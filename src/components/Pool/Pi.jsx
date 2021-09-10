@@ -31,7 +31,7 @@ function Pi(props) {
     useEffect(() => {
         userAddress && initialize(userAddress)
         let initializeInterval = setInterval(() => {
-        userAddress && initialize(userAddress)}, 1000 * 1);
+        userAddress && initialize(userAddress)}, 1000 * 10);
         return () => {
             clearInterval(initializeInterval)
             initializeInterval = null

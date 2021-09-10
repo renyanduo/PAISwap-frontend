@@ -4,8 +4,8 @@ import { formatEther, parseEther } from '@ethersproject/units'
 import PI_ABI from './PiStakingEpoch.json'
 import PNFT_ABI from './PnftStaking.json'
 import CONFIG from './config.json';
-const PI_STAKING = new Contract(CONFIG["piContractAddress"], PI_ABI, new Web3Provider(window.web3.currentProvider).getSigner());
-const PNFT_STAKING = new Contract(CONFIG["pNftContractAddress"], PNFT_ABI, new Web3Provider(window.web3.currentProvider).getSigner());
+const PI_STAKING = new Contract(CONFIG["piContractAddress"], PI_ABI, getDefaultProvider(CONFIG['testNetWork']));
+const PNFT_STAKING = new Contract(CONFIG["pNftContractAddress"], PNFT_ABI, getDefaultProvider(CONFIG["testNetWork"]));
 
 
 /**
