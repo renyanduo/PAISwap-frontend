@@ -4,7 +4,7 @@ import Button from '@/components/Button'
 import ConnectWallet from '@/components/ConnectWallet'
 import Web3 from 'web3'
 import { ABI, PNFT_CONTRACT_ADDRESS, PISTAKING_CONTRACT_ADDRESS, gas, gasPrice } from '@/util/abi'
-import { message } from 'antd'
+import { message, Carousel } from 'antd'
 import { useSelector } from 'react-redux'
 import { numFormat } from '@/util'
 import Loading from '@/components/loading'
@@ -12,6 +12,7 @@ import SwitchNetwork from '@/components/SwitchNetwork'
 import { MAINNET_MAIN, MAINNET_CHILD } from '@/util/config'
 
 import banner from '@/assets/images/banner.png'
+import banner2 from '@/assets/images/banner2.jpg'
 
 let web3
 if (typeof window.web3 !== 'undefined') {
@@ -323,9 +324,14 @@ const Index = () => {
   return (
     <div className="main">
       <div className="banner">
+      <Carousel autoplay effect="fade">
         <a href="https://pizzap.io/" target="_blank" rel="noopener noreferrer">
           <img src={banner} alt="" />
         </a>
+        <a href="#" rel="noopener noreferrer">
+          <img src={banner2} alt="" />
+        </a>
+      </Carousel>
       </div>
       {userAddress ? (
         <>
