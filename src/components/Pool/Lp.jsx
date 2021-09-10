@@ -280,7 +280,7 @@ function Lp(props) {
                                 </div>
                             </div>
                             <div className="warp_mapi">
-                                <span>PI EARNED:</span>
+                                <span>MAPI EARNED:</span>
                             </div>
                             <div className="warp_input">
                                 <span>{toFixed(harvest)}</span>
@@ -291,7 +291,7 @@ function Lp(props) {
                     ) : (
                         <>
                             <div className="warp_mapi">
-                                <span>PI EARNED:</span>
+                                <span>MAPI EARNED:</span>
                             </div>
                             <div className="warp_input">
                                 <span>{toFixed(harvest)}</span>

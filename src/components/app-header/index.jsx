@@ -120,10 +120,8 @@ function Index(props) {
         </>
         <>
           
-          <div className="hidden mt-4 sm:mt-0 sm:flex items-center" id="header-right">
-            <WalletOption useAddress={userAddress} >
-              <a>钱包</a>
-            </WalletOption>
+          <div className="items-center hidden mt-4 sm:mt-0 sm:flex" id="header-right">
+            <WalletOption useAddress={userAddress ? userAddress : undefined} />
             {userAddress ? (
               <Dropdown overlay={menu} trigger={['click']} getPopupContainer={() => document.getElementById('header-right') }>
                 <Button>{subSplit(userAddress, 6, 4)}</Button>
