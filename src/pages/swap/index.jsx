@@ -21,7 +21,11 @@ export default function Index() {
           setShowLoading(false)
           const obj = document.getElementById('iframe')
           timer = setInterval(() => {
-            setIFrameHeight(obj.contentWindow.document.body.scrollHeight + 'px')
+            if (!obj || !obj.contentWindow) {
+              clearInterval(timer)
+            } else {
+              setIFrameHeight(obj.contentWindow.document.body.scrollHeight + 'px')
+            }
           }, 200)
         }}
         title="swap"
