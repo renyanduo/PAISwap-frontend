@@ -35,6 +35,8 @@ function Index(props) {
           address: accounts[0]
         })
       )
+      const iframe = document.getElementById('iframe')
+      iframe && iframe.contentWindow.location.reload()
     } catch (error) {
       // message.error(error.message)
     }
