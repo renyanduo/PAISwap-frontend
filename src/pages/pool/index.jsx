@@ -78,11 +78,6 @@ function Pool(props) {
                 {isChecked ? undefined :
                     (
                         <Row gutter={[16, 22]} className="cards">
-
-                            {/* <Col xs={24} sm={24} md={12} lg={8} xl={8}>
-                                <Lp userAddress={userAddress} />
-                            </Col> */}
-
                             <Col xs={24} sm={24} md={12} lg={8} xl={6}>
                                 <Lp userAddress={userAddress} />
                             </Col>

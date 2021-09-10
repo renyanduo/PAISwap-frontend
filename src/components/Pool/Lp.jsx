@@ -41,8 +41,7 @@ function Lp(props) {
         }
     }, [userAddress])
 
-    const inputValueChange = (e) => {
-        let value = e.target.value;
+    const inputValueChange = (value) => {
         setInputValue(value);
         // console.log('Number(value) > 0', Number(value) > 0);
         // console.log('Number(value) <= Number(balance)', Number(value) <= Number(balance));
@@ -55,18 +54,14 @@ function Lp(props) {
         }
     }
 
-    const unInputValueChange = useCallback(
-        (e) => {
-            setUnInputValue(e.target.value)
-            if (Number(e.target.value) > 0 && Number(e.target.value) <= Number(staking)) {
-                setUnConfirmDisable(false)
-            } else {
-                console.log(true);
-                setUnConfirmDisable(true)
-            }
-        },
-        [unInputValue],
-    )
+    const unInputValueChange = (value) => {
+        setUnInputValue(value)
+        if (Number(value) > 0 && Number(value) <= Number(staking)) {
+            setUnConfirmDisable(false)
+        } else {
+            setUnConfirmDisable(true)
+        }
+    }
 
     const onApprove = () => {
         Approve(userAddress).then(v => {
@@ -201,7 +196,7 @@ function Lp(props) {
             >
                 <>
                     <div className="title-warp">
-                        <span>Unstake: </span>
+                        <span>Stake: </span>
                         <span>Balance: {toFixed(balance)}</span>
                     </div>
                     <div className="content-warp">
@@ -209,7 +204,7 @@ function Lp(props) {
                             <img src={Max} className="warp-icon" alt="max" onClick={maxClick} />
                             <input
                                 type="number"
-                                onChange={e => inputValueChange(e)}
+                                onChange={e => inputValueChange(e.target.value)}
                                 value={inputValue}
                                 placeholder="0.0"
                             />
@@ -240,7 +235,7 @@ function Lp(props) {
                             <img src={Max} className="warp-icon" alt="max" onClick={unMaxClick} />
                             <input
                                 type="number"
-                                onChange={e => unInputValueChange(e)}
+                                onChange={e => unInputValueChange(e.target.value)}
                                 value={unInputValue}
                                 placeholder="0.0"
                             />
@@ -277,7 +272,7 @@ function Lp(props) {
                                         <span className="">5.9 Double </span>
                                         Earn:
                                     </div>
-                                    <span>PI</span>
+                                    <span>MAPI</span>
                                 </div>
                                 <div className="text_item">
                                     <div>Total Liquidity:</div>

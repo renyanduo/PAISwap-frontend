@@ -6,11 +6,16 @@ import logo from '@/assets/images/logo.png'
 import { useSelector, useDispatch } from 'react-redux'
 import { useHistory, useLocation } from 'react-router-dom'
 import { setUserAddress } from '@/store/action'
-import { message } from 'antd'
+import { subSplit } from '@/util'
+import { Menu, Dropdown } from 'antd'
 
 import burger from '@/assets/images/burger.png'
 
+
+
 function Index(props) {
+
+  console.log(window.ethereum);
   const userAddress = useSelector(state => state.address)
   const history = useHistory()
   const location = useLocation()
@@ -57,6 +62,26 @@ function Index(props) {
     '/pool': 'POOL'
   }
 
+
+  const onClick = ({ key }) => {
+    if (key == "logout") {
+      if (window.ethereum) {
+        window.ethereum['_state'] = []
+        dispatch(
+          setUserAddress({
+            address: ''
+          })
+        )
+
+      }
+    }
+  };
+
+  const menu = (
+    <Menu onClick={onClick}>
+      <Menu.Item key="logout">Disconnect Wallet</Menu.Item>
+    </Menu>
+  );
   return (
     <header className="flex items-center header">
       <div className="flex items-center justify-between header-wrap flex-nowrap">
@@ -97,7 +122,17 @@ function Index(props) {
         <>
           <div className="hidden mt-4 sm:mt-0 sm:block">
             <ConnectWallet>
-              <Button>{userAddress ? userAddress : 'Connect Wallet'}</Button>
+              {userAddress ? 
+              // (
+              //   <Dropdown overlay={menu} trigger={['click']} destroyPopupOnHide>
+              //     <Button onClick={e => e.preventDefault()}>{subSplit(userAddress, 6, 4)}</Button>
+              //   </Dropdown>
+              // ) : 
+              
+              <Button onClick={e => e.preventDefault()}>{subSplit(userAddress, 6, 4)}</Button>
+            : 
+            <Button>Connect Wallet</Button>}
+
             </ConnectWallet>
           </div>
           <div className="block burger sm:hidden" onClick={() => setShowMenu(true)}>
@@ -107,7 +142,7 @@ function Index(props) {
       </div>
 
       {showMenu && (
-        <div className="open-menu block sm:hidden">
+        <div className="block open-menu sm:hidden">
           <div className="flex items-center justify-between">
             <img src={logo} alt="piswap" className="logo" />
             <span className="close" onClick={() => setShowMenu(false)}>
