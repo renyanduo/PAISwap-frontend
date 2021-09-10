@@ -120,7 +120,7 @@ function Index(props) {
         </>
         <>
           
-          <div className="hidden mt-4 sm:mt-0 sm:block" id="header-right" style={{ visibility: location.pathname === '/swap' ? 'hidden' : 'visible' }}>
+          <div className="hidden mt-4 sm:mt-0 sm:flex items-center" id="header-right">
             <WalletOption useAddress={userAddress} >
               <a>钱包</a>
             </WalletOption>
