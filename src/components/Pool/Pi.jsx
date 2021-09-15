@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import { getStaking, getBalance, deposit, getTotalSupply, getBalanceOf, getPendingReward, getRedemption } from '../../util/pool/Pi';
-import { openNotificationWithIcon, toFixed } from '../../util/index';
+import { formatEther } from '@ethersproject/units'
+import { getStaking, getBalance, deposit, getTotalSupply, getPendingReward, getRedemption, getApy } from '../../util/pool/Pi';
+import { getBalanceOf } from '../../util/pool/Pnft';
+import CONFIG from '../../util/pool/config.json';
+import { openNotificationWithIcon, toFixed, paiChainBlockToDay, toPercent } from '../../util/index';
 import Button from '@/components/Button';
 import ConnectWallet from '@/components/ConnectWallet';
 import TransactionModal from '../TransactionModal';
@@ -13,7 +16,7 @@ import PI from '@/assets/images/pi.jpg';
 import './index.scss'
 
 function Pi(props) {
-    const { userAddress } = props;
+    const { userAddress, piUsdt } = props;
     const [visible, setVisible] = useState(false)
     const [unVisible, setUnVisible] = useState(false)
     const [balance, setBalance] = useState("0")
@@ -23,6 +26,7 @@ function Pi(props) {
     const [pendingReward, setPendingReward] = useState(0)
     const [inputValue, setInputValue] = useState('')
     const [unInputValue, setUnInputValue] = useState('')
+    const [apyValve, setApyValve] = useState(null)
     const [confirmDisable, setConfirmDisable] = useState(true)
     const [unConfirmDisable, setUnConfirmDisable] = useState(true)
     const [transactionStatus, setTransactionStatus] = useState(null)
@@ -37,6 +41,21 @@ function Pi(props) {
             initializeInterval = null
         }
     }, [userAddress])
+
+
+    useEffect(() => {
+        if (userAddress && piUsdt) {
+             setTimeout(() => {
+                getYield()
+            }, 1000 * 5);
+            const apyInterval = setInterval(() => {
+                userAddress && getYield()
+            }, (1000 * 60));
+            return () => {
+                clearInterval(apyInterval)
+            }
+        }
+    }, [userAddress, piUsdt])
 
     const inputValueChange = (value) => {
         setInputValue(value);
@@ -98,7 +117,7 @@ function Pi(props) {
             console.log(e);
             setTotalStaking(0)
         });
-        getBalanceOf().then(e => {
+        getBalanceOf(CONFIG['piContractAddress']).then(e => {
             setPendingReward(Number(e))
         }).catch(e => {
             console.log(e);
@@ -117,6 +136,29 @@ function Pi(props) {
             setBalance('0')
             console.log(e);
         })
+    }
+
+    const getYield = () => {
+        getApy().then(async(e) => {
+            let pnft_pi = Number(formatEther(e.reserves._reserve1)) / Number(formatEther(e.reserves._reserve0));
+            let pi_pnft = Number(formatEther(e.reserves._reserve0)) / Number(formatEther(e.reserves._reserve1))
+            let totalStaking = await getTotalSupply()
+            // console.log('pnft_pi', pnft_pi);
+            // console.log('pi_pnft', pi_pnft);
+            // console.log(formatEther(e.reserves._reserve0));
+            // console.log(formatEther(e.reserves._reserve1));
+            // console.log(e.token0);
+            // console.log(e.token1);
+            // console.log(Number(totalStaking));
+            // console.log('共质押',totalStaking, '一天有多少块', paiChainBlockToDay, '每个块的收益(pnft)',e.totalReward);
+            // console.log('每日总块收益（pnft）:', ((paiChainBlockToDay * (Number(e.totalReward)) * pnft_pi) * Number(piUsdt)) + '$');
+            // console.log('共质押*币种价格:', (Number(totalStaking) * Number(piUsdt)) + '$');
+            let apy = toPercent((((paiChainBlockToDay * (Number(e.totalReward)) * pnft_pi) * Number(piUsdt)) / (Number(totalStaking) * Number(piUsdt))) * 365)
+            setApyValve(apy)
+            console.log();
+        }).catch(e => {
+            console.log(e);
+        });
     }
     const confirm = () => {
         deposit(inputValue).then(e => {
@@ -233,7 +275,7 @@ function Pi(props) {
                         <img className="coin_logo" src={PI} alt="PI" />
                         <div className="info_coin">
                             <span>PI</span>
-                            <span>APY: --</span>
+                            <span>APY: {apyValve ? apyValve : '--'}</span>
                         </div>
                     </div>
                     {userAddress ? (
@@ -252,14 +294,14 @@ function Pi(props) {
                                 </div>
                                 <div className="text_item">
                                     <div>Total Liquidity:</div>
-                                    <div>{toFixed(totalStaking)}</div>
+                                    <div title={totalStaking}>{toFixed(totalStaking)}</div>
                                 </div>
                             </div>
                             <div className="warp_mapi">
                                 <span>PNFT EARNED:</span>
                             </div>
                             <div className="warp_input">
-                                <span>{toFixed(harvest)}</span>
+                                <span title={harvest}>{toFixed(harvest)}</span>
                                 <div className={staking > 0 ? "showBtn" : "btn"} onClick={() => staking > 0 && redemption(staking)}>Harvest</div>
                             </div>
 
@@ -301,7 +343,7 @@ function Pi(props) {
                     </div>
                     {userAddress ? (
                         <div className="warp_option">
-                            <span className="option_number">{toFixed(staking)}</span>
+                            <span className="option_number" title={staking}>{toFixed(staking)}</span>
                             {staking > 0 ? (
                                 <div className="option_btns">
                                     <div className="sub" onClick={showUnModal}>-</div>
@@ -324,7 +366,8 @@ function Pi(props) {
 }
 
 Pi.propTypes = {
-
+    userAddress: PropTypes.string.isRequired,
+    piUsdt: PropTypes.string.isRequired
 }
 
 export default Pi

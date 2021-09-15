@@ -51,3 +51,24 @@ export const toFixed = ( dight, bits = 4 ) => {
   }
   return null
 }
+
+/**
+ * pai链一天出块数
+ */
+ export const paiChainBlockToDay = 86400
+
+
+ /**
+ * 小数转百分比
+ * @param {*} point 小数
+ * @returns 
+ */
+export function toPercent(point) {
+  const formated = Number(point * 100);
+  const y = String(formated).indexOf(".") + 1;//获取小数点的位置
+  if (y > 0) {
+    return `${formated.toFixed(2)}%`
+  } else {
+    return `${formated}%`
+  }
+}

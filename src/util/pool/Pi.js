@@ -1,45 +1,12 @@
 import { Contract } from '@ethersproject/contracts'
 import { Web3Provider, getDefaultProvider } from '@ethersproject/providers'
 import { formatEther, parseEther } from '@ethersproject/units'
-import PI_ABI from './PiStakingEpoch.json'
-import PNFT_ABI from './PnftStaking.json'
+import PI_ABI from './abis/PiStakingEpoch.json'
+import UNI_ABI from './abis/UniswapV2Pair.json' //质押输入
 import CONFIG from './config.json';
 const PI_STAKING = new Contract(CONFIG["piContractAddress"], PI_ABI, getDefaultProvider(CONFIG['testNetWork']));
-const PNFT_STAKING = new Contract(CONFIG["pNftContractAddress"], PNFT_ABI, getDefaultProvider(CONFIG["testNetWork"]));
 
-
-/**
- * 查询用户参与的期数
- * @param {*} 用户地址 _user
- * @returns 
- */
-// export function getUserEpoch(_user) {
-//     return new Promise(async (resolve, reject) => {
-//         try {
-//             const list = await PI_STAKING.getUserEpoch(_user)
-//             resolve(list)
-//         } catch (error) {
-//             reject(error)
-//         }
-//     })
-// }
-
-/**
- * 查询最新的期数
- * @param {*} 用户地址 _user
- * @returns 
- */
-// export function getCurrentEpoch() {
-//     return new Promise(async (resolve, reject) => {
-//         try {
-//             const list = await PI_STAKING.getCurrentEpoch()
-//             resolve(list)
-//         } catch (error) {
-//             reject(error)
-//         }
-//     })
-// }
-
+const UNISWAP_STAKING = new Contract(CONFIG["uniswapContractAddress"], UNI_ABI.abi, getDefaultProvider(CONFIG["testNetWork"]));
 /**
  * 平台币余额
  * @param {userAddress} 用户地址 
@@ -143,23 +110,31 @@ export function getRedemption(_amount) {
     })
 }
 
+
 /**
- * 待挖取PNFT的数量
- * @returns {amount} 待挖取PNFT的数量
+ * 计算APY
+ * @returns {*} _reserve0 _reserve1
  */
-export function getBalanceOf() {
+ export function getApy() {
     return new Promise(async (resolve, reject) => {
         try {
-            const list = await PNFT_STAKING.balanceOf(PI_STAKING.address);
-            resolve(formatEther(list))
+            // 币种价格
+            const reserves = await UNISWAP_STAKING.getReserves();
+            // 币种0的合约地址
+            const token0 = await UNISWAP_STAKING.token0();
+            // 币种1的合约地址
+            const token1 = await UNISWAP_STAKING.token1();
+            // 每个块的奖励
+            const totalReward = await PI_STAKING.rewardPerBlock();
+            let list = {
+                reserves,
+                token0,
+                token1,
+                totalReward: formatEther(totalReward)
+            }
+            resolve(list)
         } catch (error) {
             reject(error)
         }
     })
-}
-
-
-export {
-    formatEther,
-    parseEther,
 }

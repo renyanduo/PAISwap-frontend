@@ -1,7 +1,8 @@
 // 根据业务设置默认数据
 const defaultState = {
   address: '',
-  crossChainData: {}
+  crossChainData: {},
+  piUsdt: ''
 }
 /**
  *
@@ -16,6 +17,11 @@ export default function reducer(state = defaultState, action) {
         ...action.value
       }
     case 'SET_CROSS_CHAIN_DATA':
+      return {
+        ...state,
+        ...action.value
+      }
+    case 'SET_PI_USDT':
       return {
         ...state,
         ...action.value

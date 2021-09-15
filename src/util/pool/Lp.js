@@ -1,15 +1,13 @@
 import { Contract } from '@ethersproject/contracts'
 import { Web3Provider, getDefaultProvider } from '@ethersproject/providers'
-import { formatEther, parseEther } from '@ethersproject/units'
+import { formatEther, parseEther, formatUnits } from '@ethersproject/units'
 import CONFIG from './config.json';
 // import LP_ABI from './StakingWithEpoch.json'; //质押挖矿合约
-import LP_ABI from './MasterChef.json'; //质押挖矿合约
-import PNFT_ABI from './PnftStaking.json'; //质押奖励
-import UNI_ABI from './UniswapV2Pair.json'; //质押输入
+import LP_ABI from './abis/MasterChef.json'; //质押挖矿合约
+import UNI_ABI from './abis/UniswapV2Pair.json'; //质押输入
 
 const LP_STAKING = new Contract(CONFIG["lpContractAddress"], LP_ABI, getDefaultProvider(CONFIG["testNetWork"]));
 
-const PNFT_STAKING = new Contract(CONFIG["pNftContractAddress"], PNFT_ABI, getDefaultProvider(CONFIG["testNetWork"]));
 const UNISWAP_STAKING = new Contract(CONFIG["uniswapContractAddress"], UNI_ABI.abi, getDefaultProvider(CONFIG["testNetWork"]));
 
 /**
@@ -53,7 +51,7 @@ export function getAllowance(userAddress) {
     return new Promise(async (resolve, reject) => {
         try {
             const UNISWAP_STAKING = new Contract(CONFIG["uniswapContractAddress"], UNI_ABI.abi, new Web3Provider(window.web3.currentProvider).getSigner());
-            const list = await UNISWAP_STAKING.allowance(userAddress, CONFIG["lpContractAddress"])
+            const list = await UNISWAP_STAKING.allowance(userAddress, LP_STAKING.address)
             resolve(formatEther(list))
         } catch (error) {
             reject(error)
@@ -144,22 +142,29 @@ export function getRedemption(_amount) {
 }
 
 /**
- * 待挖取 MAPI 的数量
- * @returns {amount} 待挖取PNFT的数量
+ * 计算APY
+ * @returns {*} _reserve0 _reserve1
  */
-export function getBalanceOf() {
+export function getApy() {
     return new Promise(async (resolve, reject) => {
         try {
-            const list = await PNFT_STAKING.balanceOf(LP_STAKING.address);
-            resolve(formatEther(list))
+            // 币种价格
+            const reserves = await UNISWAP_STAKING.getReserves();
+            // 币种0的合约地址
+            const token0 = await UNISWAP_STAKING.token0();
+            // 币种1的合约地址
+            const token1 = await UNISWAP_STAKING.token1();
+            // 每个块的奖励
+            const totalReward = await LP_STAKING.rewardPerBlock();
+            let list = {
+                reserves,
+                token0,
+                token1,
+                totalReward: formatEther(totalReward)
+            }
+            resolve(list)
         } catch (error) {
             reject(error)
         }
     })
-}
-
-
-export {
-    formatEther,
-    parseEther,
 }

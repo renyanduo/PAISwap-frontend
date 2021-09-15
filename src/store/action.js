@@ -11,3 +11,10 @@ export const setCrossChainData = (address) => {
     value: address
   }
 }
+
+export const setPiUsdt = (value) => {
+  return {
+    type: 'SET_PI_USDT',
+    value
+  }
+}

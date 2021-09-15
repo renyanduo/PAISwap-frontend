@@ -3,7 +3,7 @@ import { getDefaultProvider } from '@ethersproject/providers'
 import { formatEther } from '@ethersproject/units'
 import CONFIG from './config.json';
 
-import BALANCE_ABI from './BalanceOf.json'; //币种余额
+import BALANCE_ABI from './abis/BalanceOf.json'; //币种余额
 
 const BALANCE_OF = new Contract(CONFIG["BalanceContractAddres"], BALANCE_ABI, getDefaultProvider(CONFIG["testNetWork"]));
 

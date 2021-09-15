@@ -1,8 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import { getStaking, getBalance, deposit, Approve, getAllowance, getTotalSupply, getBalanceOf, getPendingReward, getRedemption } from '../../util/pool/Lp';
-import { openNotificationWithIcon, toFixed } from '../../util/index';
+import { useSelector } from 'react-redux'
+import { formatEther } from '@ethersproject/units'
+import { getStaking, getBalance, deposit, Approve, getAllowance, getTotalSupply, getPendingReward, getRedemption, getApy } from '../../util/pool/Lp';
+import { getBalanceOf } from '../../util/pool/Pnft';
+import CONFIG from '../../util/pool/config.json';
+
+import { openNotificationWithIcon, toFixed, paiChainBlockToDay } from '../../util/index';
 import Button from '@/components/Button';
 import ConnectWallet from '@/components/ConnectWallet';
 import TransactionModal from '../TransactionModal';
@@ -15,7 +20,8 @@ import PI from '@/assets/images/pi.jpg';
 import './index.scss'
 
 function Lp(props) {
-    const { userAddress } = props;
+    const { userAddress } = props
+    const piUsdt = useSelector(state => state.piUsdt)
     const [visible, setVisible] = useState(false)
     const [unVisible, setUnVisible] = useState(false)
     const [balance, setBalance] = useState('0')
@@ -40,6 +46,20 @@ function Lp(props) {
             clearInterval(initializeInterval)
         }
     }, [userAddress])
+
+    // useEffect(() => {
+    //     if (userAddress && piUsdt) {
+    //          setTimeout(() => {
+    //             getYield()
+    //         }, 1000 * 5);
+    //         const apyInterval = setInterval(() => {
+    //             userAddress && getYield()
+    //         }, (1000 * 60) * 5);
+    //         return () => {
+    //             clearInterval(apyInterval)
+    //         }
+    //     }
+    // }, [userAddress, piUsdt])
 
     const inputValueChange = (value) => {
         setInputValue(value);
@@ -79,7 +99,6 @@ function Lp(props) {
         setUnVisible(true)
     }
 
-
     const closeModal = () => {
         setVisible(false)
         setInputValue('')
@@ -95,6 +114,29 @@ function Lp(props) {
     const closeTranModal = () => {
         setShowLoading(false)
         setTransactionStatus(null)
+    }
+
+    const getYield = () => {
+        getApy().then(async(e) => {
+            let pnft_pi = Number(formatEther(e.reserves._reserve1)) / Number(formatEther(e.reserves._reserve0));
+            let pi_pnft = Number(formatEther(e.reserves._reserve0)) / Number(formatEther(e.reserves._reserve1))
+            let totalStaking = await getTotalSupply()
+            console.log('pnft_pi', pnft_pi);
+            console.log('pi_pnft', pi_pnft);
+            console.log(formatEther(e.reserves._reserve0));
+            console.log(formatEther(e.reserves._reserve1));
+            console.log(e.token0);
+            console.log(e.token1);
+            console.log(Number(totalStaking));
+            console.log('共质押',totalStaking, '一天有多少块', paiChainBlockToDay, '每个块的收益(pnft)',e.totalReward, '待挖取总量',pendingReward);
+
+            console.log('每日总块收益（pnft）:', ((paiChainBlockToDay * (Number(e.totalReward)) * pnft_pi) * Number(piUsdt)) + '$');
+            console.log('共质押*币种价格:', (Number(totalStaking) * Number(piUsdt)) + '$');
+            // https://data.gateapi.io/api2/1/ticker/pi_usdt
+            console.log((((paiChainBlockToDay * (Number(e.totalReward)) * pnft_pi) * Number(piUsdt)) / (Number(totalStaking) * Number(piUsdt))) * 1);
+        }).catch(e => {
+            console.log(e);
+        });
     }
 
     const initialize = (address) => {
@@ -116,20 +158,19 @@ function Lp(props) {
         }).catch(e => {
             console.log(e);
         });
-        getTotalSupply().then(e => {
-            setTotalStaking(Number(e))
-        }).catch(e => {
-            console.log(e);
-            setTotalStaking(0)
-        });
-        getBalanceOf().then(e => {
+        getBalanceOf(CONFIG['lpContractAddress']).then(e => {
             setPendingReward(e)
         }).catch(e => {
             console.log('Error', e);
             console.log(e);
             setPendingReward(0)
         });
-
+        getTotalSupply().then(e => {
+            setTotalStaking(Number(e))
+        }).catch(e => {
+            console.log(e);
+            setTotalStaking(0)
+        });
         getStaking(address).then(e => {
             setStaking(e)
         }).catch(e => {
@@ -348,7 +389,7 @@ function Lp(props) {
 }
 
 Lp.propTypes = {
-
+    userAddress: PropTypes.string.isRequired
 }
 
 export default Lp
