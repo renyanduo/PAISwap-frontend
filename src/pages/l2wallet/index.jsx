@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Button from '@/components/Button'
+import ConnectWallet from '@/components/ConnectWallet'
 import Web3 from 'web3'
 import { crossChainABI, CROSS_CONTRACCT_ADDRESS, gasl2, gasPricel2 } from '@/util/abi'
 import { message, Spin } from 'antd'
@@ -475,9 +476,15 @@ const Index = props => {
               </div>
             </div>
             <div className="balance">Balance: {numFormat(balance)} PI</div>
-            <Button style={{ margin: '0 auto' }} onClick={mainToChind}>
-              Submit
-            </Button>
+            { userAddress ? (
+              <Button style={{ margin: '0 auto' }} onClick={mainToChind}>
+                Submit
+              </Button>
+            ) : (
+              <ConnectWallet>
+                <Button style={{ margin: '0 auto' }} className="connect-btn">Unlock Wallet</Button>
+              </ConnectWallet>
+            )}
           </>
         ) : (
           <>
@@ -503,9 +510,15 @@ const Index = props => {
               </div>
             </div>
             <div className="balance">Balance: {numFormat(balance)} PI</div>
-            <Button style={{ margin: '0 auto' }} onClick={childToMain}>
-              Submit
-            </Button>
+            { userAddress ? (
+              <Button style={{ margin: '0 auto' }} onClick={childToMain}>
+                Submit
+              </Button>
+            ) : (
+              <ConnectWallet>
+                <Button style={{ margin: '0 auto' }} className="connect-btn">Unlock Wallet</Button>
+              </ConnectWallet>
+            ) }
           </>
         )}
       </div>
