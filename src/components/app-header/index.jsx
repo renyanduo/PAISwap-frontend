@@ -20,26 +20,10 @@ function Index(props) {
   const dispatch = useDispatch()
   const [showMenu, setShowMenu] = useState(false)
 
-  const isMobile = () => {
-    return /(iphone|ipad|ipod|ios|android)/i.test(navigator.userAgent.toLowerCase())
-  }
-
   function jump(route) {
     history.push(route)
     setShowMenu(false)
   }
-
-  useEffect(() => {
-    // dispatch(
-    //   setUserAddress({
-    //     address: window.ethereum.selectedAddress || ''
-    //   })
-    // )
-    // if (isMobile()) {
-    //   document.getElementById('root').style.display = 'none'
-    //   message.error('The mobile version is temporarily unavailable, please use the desktop version')
-    // }
-  }, [])
 
   window.ethereum && window.ethereum.on('chainChanged', _chainId => window.location.reload())
 
@@ -56,7 +40,6 @@ function Index(props) {
   const nameList = {
     '/': 'HOME',
     '/l2wallet': 'L2 WALLET',
-    '/swap': 'SWAP',
     '/pool': 'POOL'
   }
 
@@ -100,6 +83,9 @@ function Index(props) {
                 )
               })
             }
+            <span>
+              <a href="/liquidity">SWAP</a>
+            </span>
           </div>
           <div className="block header-title sm:hidden">{nameList[location.pathname]}</div>
         </>
@@ -146,6 +132,7 @@ function Index(props) {
                 )
               })
             }
+            <li><a href="/liquidity">SWAP</a></li>
           </ul>
         </div>
       )}
