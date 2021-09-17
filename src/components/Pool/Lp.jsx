@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
@@ -89,7 +89,7 @@ function Lp(props) {
             userAddress && initialize(userAddress)
         }).catch(e => {
             console.log(e);
-        }).finally (setVisible(false))
+        }).finally(setVisible(false))
     }
 
     const showModal = () => {
@@ -117,7 +117,7 @@ function Lp(props) {
     }
 
     const getYield = () => {
-        getApy().then(async(e) => {
+        getApy().then(async (e) => {
             let pnft_pi = Number(formatEther(e.reserves._reserve1)) / Number(formatEther(e.reserves._reserve0));
             let pi_pnft = Number(formatEther(e.reserves._reserve0)) / Number(formatEther(e.reserves._reserve1))
             let totalStaking = await getTotalSupply()
@@ -128,7 +128,7 @@ function Lp(props) {
             console.log(e.token0);
             console.log(e.token1);
             console.log(Number(totalStaking));
-            console.log('共质押',totalStaking, '一天有多少块', paiChainBlockToDay, '每个块的收益(pnft)',e.totalReward, '待挖取总量',pendingReward);
+            console.log('共质押', totalStaking, '一天有多少块', paiChainBlockToDay, '每个块的收益(pnft)', e.totalReward, '待挖取总量', pendingReward);
 
             console.log('每日总块收益（pnft）:', ((paiChainBlockToDay * (Number(e.totalReward)) * pnft_pi) * Number(piUsdt)) + '$');
             console.log('共质押*币种价格:', (Number(totalStaking) * Number(piUsdt)) + '$');

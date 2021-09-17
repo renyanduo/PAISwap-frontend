@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { getStaking, getBalance, deposit, getTotalSupply, getPendingReward, getRedemption, getApy } from '../../util/pool/Pi';
-import { getBalanceOf } from '../../util/pool/Pnft';
-import CONFIG from '../../util/pool/config.json';
-import { openNotificationWithIcon, toFixed, paiChainBlockToDay } from '../../util/index';
+import { getStaking, getPendingReward, getRedemption } from '../../util/pool/Pi';
+import { openNotificationWithIcon, toFixed } from '../../util/index';
 import Button from '@/components/Button';
 import ConnectWallet from '@/components/ConnectWallet';
 import TransactionModal from '../TransactionModal';
@@ -12,15 +10,8 @@ import './end.scss'
 
 function End(props) {
     const { userAddress } = props;
-    const [balance, setBalance] = useState("0")
     const [staking, setStaking] = useState("0")
     const [harvest, setHarvest] = useState(0)
-    const [totalStaking, setTotalStaking] = useState(0)
-    const [pendingReward, setPendingReward] = useState(0)
-    const [inputValue, setInputValue] = useState('')
-    const [unInputValue, setUnInputValue] = useState('')
-    const [confirmDisable, setConfirmDisable] = useState(true)
-    const [unConfirmDisable, setUnConfirmDisable] = useState(true)
     const [transactionStatus, setTransactionStatus] = useState(null)
     const [showLoading, setShowLoading] = useState(false)
 
@@ -42,34 +33,16 @@ function End(props) {
         }).catch(e => {
             console.log(e);
         });
-        getTotalSupply().then(e => {
-            setTotalStaking(Number(e))
-        }).catch(e => {
-            console.log(e);
-            setTotalStaking(0)
-        });
-        getBalanceOf(CONFIG['piContractAddress']).then(e => {
-            setPendingReward(Number(e))
-        }).catch(e => {
-            console.log(e);
-            setPendingReward(0)
-        });
-
         getStaking(address).then(e => {
             setStaking(e)
         }).catch(e => {
             console.log(e);
             setStaking('0')
         });
-        getBalance(address).then(e => {
-            setBalance(e)
-        }).catch(e => {
-            setBalance('0')
-            console.log(e);
-        })
     }
 
     const redemption = (amount) => {
+        console.log(amount);
         setShowLoading(true)
         getRedemption(amount).then(res => {
             setTransactionStatus('success')
@@ -91,13 +64,13 @@ function End(props) {
     return (
         <>
             <TransactionModal visible={showLoading} status={transactionStatus} onTclose={closeTranModal} />
-            <div className="card_item">
-                <div className="item_warp">
+            <div className="card_item" style={{ height: 323 }} >
+                <div className="end_item_warp">
                     <div className="warp_info">
                         <img className="coin_logo" src={PI} alt="PI" />
                         <div className="info_coin">
                             <span>PI</span>
-                            <span>第一期</span>
+                            <span>Lssue 1</span>
                         </div>
                     </div>
                     <div className="warp_descs">
@@ -110,7 +83,7 @@ function End(props) {
                         </div>
                         <span className="warp_mapi_value">{toFixed(harvest)}</span>
                     </div>
-                    
+
                     {userAddress ? (
                         <div className="warp_input">
                             <div className={staking > 0 ? "harvestBtn" : "disBtn"} onClick={() => staking > 0 && redemption(staking)}>Harvest</div>
