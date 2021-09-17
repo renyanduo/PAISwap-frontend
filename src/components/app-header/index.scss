@@ -31,6 +31,7 @@
       &.active {
         font-weight: bold;
         position: relative;
+        pointer-events: none;
 
         &::after {
           content: '';

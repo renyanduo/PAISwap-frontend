@@ -9,7 +9,6 @@ import { useHistory, useLocation } from 'react-router-dom'
 import { setUserAddress } from '@/store/action'
 import { subSplit } from '@/util'
 import { Menu, Dropdown } from 'antd'
-import { WalletOutlined } from '@ant-design/icons';
 import burger from '@/assets/images/burger.png'
 
 
@@ -21,26 +20,10 @@ function Index(props) {
   const dispatch = useDispatch()
   const [showMenu, setShowMenu] = useState(false)
 
-  const isMobile = () => {
-    return /(iphone|ipad|ipod|ios|android)/i.test(navigator.userAgent.toLowerCase())
-  }
-
   function jump(route) {
     history.push(route)
     setShowMenu(false)
   }
-
-  useEffect(() => {
-    // dispatch(
-    //   setUserAddress({
-    //     address: window.ethereum.selectedAddress || ''
-    //   })
-    // )
-    // if (isMobile()) {
-    //   document.getElementById('root').style.display = 'none'
-    //   message.error('The mobile version is temporarily unavailable, please use the desktop version')
-    // }
-  }, [])
 
   window.ethereum && window.ethereum.on('chainChanged', _chainId => window.location.reload())
 
@@ -55,9 +38,8 @@ function Index(props) {
     })
 
   const nameList = {
-    '/l2wallet': 'L2 WALLET',
     '/': 'HOME',
-    '/swap': 'SWAP',
+    '/l2wallet': 'L2 WALLET',
     '/pool': 'POOL'
   }
 
@@ -87,33 +69,22 @@ function Index(props) {
         <img src={logo} alt="piswap" className="logo" />
         <>
           <div className="hidden header-title sm:block">
-            <span
-              className={location.pathname === '/' ? 'active' : ''}
-              onClick={() => {
-                jump('/')
-              }}>
-              HOME
-            </span>
-            <span
-              className={location.pathname === '/l2wallet' ? 'active' : ''}
-              onClick={() => {
-                jump('/l2wallet?withdraw')
-              }}>
-              L2 WALLET
-            </span>
-            <span
-              className={location.pathname === '/swap' ? 'active' : ''}
-              onClick={() => {
-                jump('/swap')
-              }}>
-              SWAP
-            </span>
-            <span
-              className={location.pathname === '/pool' ? 'active' : ''}
-              onClick={() => {
-                jump('/pool')
-              }}>
-              POOL
+            {
+              Object.keys(nameList).map(name => {
+                return (
+                  <span
+                    className={location.pathname === name ? 'active' : ''}
+                    onClick={() => {
+                      jump(name === '/l2wallet' ? '/l2wallet?withdraw' : name)
+                    }}
+                    key={name}>
+                    {nameList[name]}
+                  </span>
+                )
+              })
+            }
+            <span>
+              <a href="/liquidity">SWAP</a>
             </span>
           </div>
           <div className="block header-title sm:hidden">{nameList[location.pathname]}</div>
@@ -147,34 +118,21 @@ function Index(props) {
             </span>
           </div>
           <ul className="cell-list">
-            <li
-              className={location.pathname === '/' ? 'active' : ''}
-              onClick={() => {
-                jump('/')
-              }}>
-              HOME
-            </li>
-            <li
-              className={location.pathname === '/l2wallet' ? 'active' : ''}
-              onClick={() => {
-                jump('/l2wallet?withdraw')
-              }}>
-              L2 WALLET
-            </li>
-            <li
-              className={location.pathname === '/swap' ? 'active' : ''}
-              onClick={() => {
-                jump('/swap')
-              }}>
-              SWAP
-            </li>
-            <li
-              className={location.pathname === '/pool' ? 'active' : ''}
-              onClick={() => {
-                jump('/pool')
-              }}>
-              POOL
-            </li>
+            {
+              Object.keys(nameList).map(name => {
+                return (
+                  <li
+                    className={location.pathname === name ? 'active' : ''}
+                    onClick={() => {
+                      jump(name === '/l2wallet' ? '/l2wallet?withdraw' : name)
+                    }}
+                    key={name}>
+                    {nameList[name]}
+                  </li>
+                )
+              })
+            }
+            <li><a href="/liquidity">SWAP</a></li>
           </ul>
         </div>
       )}
