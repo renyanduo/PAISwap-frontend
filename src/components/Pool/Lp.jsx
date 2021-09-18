@@ -169,8 +169,6 @@ function Lp(props) {
         })
 
         getBalance(address).then(e => {
-
-            console.log(e, address);
             setBalance(e)
         }).catch(e => {
             setBalance('0')
@@ -346,7 +344,7 @@ function Lp(props) {
                                 <span>MAPI EARNED:</span>
                             </div>
                             <div className="warp_input">
-                                {harvest !== '' ? <span title={harvest} >{toFixed(harvest)}</span> : <Skeleton.Button style={{ width: '100%' }} active size="small" />}
+                                <span title={harvest} >{toFixed(harvest)}</span>
                                 <div className="btn" disabled>Harvest</div>
                             </div>
                             <div className="warp_text">
