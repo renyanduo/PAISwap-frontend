@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import { Skeleton } from 'antd';
 import { formatEther } from '@ethersproject/units'
 import { getStaking, getBalance, deposit, getTotalSupply, getPendingReward, getRedemption, getApy } from '../../util/pool/Pi';
 import { getBalanceOf } from '../../util/pool/Pnft';
@@ -19,11 +20,11 @@ function Pi(props) {
     const { userAddress, piUsdt } = props;
     const [visible, setVisible] = useState(false)
     const [unVisible, setUnVisible] = useState(false)
-    const [balance, setBalance] = useState("0")
-    const [staking, setStaking] = useState("0")
-    const [harvest, setHarvest] = useState(0)
-    const [totalStaking, setTotalStaking] = useState(0)
-    const [pendingReward, setPendingReward] = useState(0)
+    const [balance, setBalance] = useState('')
+    const [staking, setStaking] = useState('')
+    const [harvest, setHarvest] = useState('')
+    const [totalStaking, setTotalStaking] = useState('')
+    const [pendingReward, setPendingReward] = useState('')
     const [inputValue, setInputValue] = useState('')
     const [unInputValue, setUnInputValue] = useState('')
     const [apyValve, setApyValve] = useState(null)
@@ -33,9 +34,14 @@ function Pi(props) {
     const [showLoading, setShowLoading] = useState(false)
 
     useEffect(() => {
+        notAddress()
+    }, [])
+
+    useEffect(() => {
         userAddress && initialize(userAddress)
         let initializeInterval = setInterval(() => {
-        userAddress && initialize(userAddress)}, 1000 * 10);
+            userAddress && initialize(userAddress)
+        }, 1000 * 10);
         return () => {
             clearInterval(initializeInterval)
             initializeInterval = null
@@ -45,7 +51,7 @@ function Pi(props) {
 
     useEffect(() => {
         if (userAddress && piUsdt) {
-             setTimeout(() => {
+            setTimeout(() => {
                 getYield()
             }, 1000 * 5);
             const apyInterval = setInterval(() => {
@@ -105,12 +111,7 @@ function Pi(props) {
         setTransactionStatus(null)
     }
 
-    const initialize = (address) => {
-        getPendingReward(address).then(e => {
-            setHarvest(e)
-        }).catch(e => {
-            console.log(e);
-        });
+    const notAddress = () => {
         getTotalSupply().then(e => {
             setTotalStaking(Number(e))
         }).catch(e => {
@@ -122,6 +123,14 @@ function Pi(props) {
         }).catch(e => {
             console.log(e);
             setPendingReward(0)
+        });
+    }
+
+    const initialize = (address) => {
+        getPendingReward(address).then(e => {
+            setHarvest(e)
+        }).catch(e => {
+            console.log(e);
         });
 
         getStaking(address).then(e => {
@@ -139,7 +148,7 @@ function Pi(props) {
     }
 
     const getYield = () => {
-        getApy().then(async(e) => {
+        getApy().then(async (e) => {
             let pnft_pi = Number(formatEther(e.reserves._reserve1)) / Number(formatEther(e.reserves._reserve0));
             let pi_pnft = Number(formatEther(e.reserves._reserve0)) / Number(formatEther(e.reserves._reserve1))
             let totalStaking = await getTotalSupply()
@@ -283,7 +292,7 @@ function Pi(props) {
                             <div className="warp_text">
                                 <div className="text_item">
                                     <div>Can dig up:</div>
-                                    <div>{toFixed(pendingReward)}</div>
+                                    {pendingReward !== '' ? <div title={pendingReward}>{toFixed(pendingReward)}</div> : <Skeleton.Button style={{ height: 14 }} active size="small" />}
                                 </div>
                                 <div className="text_item">
                                     <div>
@@ -294,14 +303,14 @@ function Pi(props) {
                                 </div>
                                 <div className="text_item">
                                     <div>Total Liquidity:</div>
-                                    <div title={totalStaking}>{toFixed(totalStaking)}</div>
+                                    {totalStaking !== '' ? <div title={totalStaking}>{toFixed(totalStaking)}</div> : <Skeleton.Button style={{ height: 14 }} active size="small" />}
                                 </div>
                             </div>
                             <div className="warp_mapi">
                                 <span>PNFT EARNED:</span>
                             </div>
                             <div className="warp_input">
-                                <span title={harvest}>{toFixed(harvest)}</span>
+                                {harvest !== '' ? <span title={harvest} >{toFixed(harvest)}</span> : <Skeleton.Button style={{ width: '100%' }} active size="small" />}
                                 <div className={staking > 0 ? "showBtn" : "btn"} onClick={() => staking > 0 && redemption(staking)}>Harvest</div>
                             </div>
 
@@ -318,7 +327,7 @@ function Pi(props) {
                             <div className="warp_text">
                                 <div className="text_item">
                                     <div>Can dig up:</div>
-                                    <div>{toFixed(pendingReward)}</div>
+                                    {pendingReward !== '' ? <div title={pendingReward}>{toFixed(pendingReward)}</div> : <Skeleton.Button style={{ height: 14 }} active size="small" />}
                                 </div>
                                 <div className="text_item">
                                     <div>
@@ -329,7 +338,7 @@ function Pi(props) {
                                 </div>
                                 <div className="text_item">
                                     <div>Total Liquidity:</div>
-                                    <div>{toFixed(totalStaking)}</div>
+                                    {totalStaking !== '' ? <div title={totalStaking}>{toFixed(totalStaking)}</div> : <Skeleton.Button style={{ height: 14 }} active size="small" />}
                                 </div>
                             </div>
                         </>
@@ -343,7 +352,7 @@ function Pi(props) {
                     </div>
                     {userAddress ? (
                         <div className="warp_option">
-                            <span className="option_number" title={staking}>{toFixed(staking)}</span>
+                            {staking !== '' ? <span className="option_number" title={staking}>{toFixed(staking)}</span> : <Skeleton.Button style={{ width: '100%' }} active size="small" />}
                             {staking > 0 ? (
                                 <div className="option_btns">
                                     <div className="sub" onClick={showUnModal}>-</div>

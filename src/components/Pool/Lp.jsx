@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import { Skeleton } from 'antd';
 import { useSelector } from 'react-redux'
 import { formatEther } from '@ethersproject/units'
 import { getStaking, getBalance, deposit, Approve, getAllowance, getTotalSupply, getPendingReward, getRedemption, getApy } from '../../util/pool/Lp';
@@ -24,18 +25,22 @@ function Lp(props) {
     const piUsdt = useSelector(state => state.piUsdt)
     const [visible, setVisible] = useState(false)
     const [unVisible, setUnVisible] = useState(false)
-    const [balance, setBalance] = useState('0')
-    const [staking, setStaking] = useState('0')
-    const [harvest, setHarvest] = useState(0)
-    const [totalStaking, setTotalStaking] = useState(0)
-    const [pendingReward, setPendingReward] = useState(0)
-    const [allowance, setAllowance] = useState(0)
+    const [balance, setBalance] = useState('')
+    const [staking, setStaking] = useState('')
+    const [harvest, setHarvest] = useState('')
+    const [totalStaking, setTotalStaking] = useState('')
+    const [pendingReward, setPendingReward] = useState('')
+    const [allowance, setAllowance] = useState('')
     const [inputValue, setInputValue] = useState('')
     const [unInputValue, setUnInputValue] = useState('')
     const [confirmDisable, setConfirmDisable] = useState(true)
     const [unConfirmDisable, setUnConfirmDisable] = useState(true)
     const [transactionStatus, setTransactionStatus] = useState(null)
     const [showLoading, setShowLoading] = useState(false)
+
+    useEffect(() => {
+        notAddress()
+    }, [])
 
     useEffect(() => {
         userAddress && initialize(userAddress)
@@ -139,25 +144,7 @@ function Lp(props) {
         });
     }
 
-    const initialize = (address) => {
-        getAllowance(userAddress).then(e => {
-            setAllowance(Number(e))
-        }).catch(e => {
-            setAllowance(0)
-            console.log(e);
-        })
-
-        getBalance(address).then(e => {
-            setBalance(e)
-        }).catch(e => {
-            setBalance('0')
-            console.log(e);
-        })
-        getPendingReward(address).then(e => {
-            setHarvest(e)
-        }).catch(e => {
-            console.log(e);
-        });
+    const notAddress = () => {
         getBalanceOf(CONFIG['lpContractAddress']).then(e => {
             setPendingReward(e)
         }).catch(e => {
@@ -171,6 +158,30 @@ function Lp(props) {
             console.log(e);
             setTotalStaking(0)
         });
+    }
+
+    const initialize = (address) => {
+        getAllowance(userAddress).then(e => {
+            setAllowance(Number(e))
+        }).catch(e => {
+            setAllowance(0)
+            console.log(e);
+        })
+
+        getBalance(address).then(e => {
+
+            console.log(e, address);
+            setBalance(e)
+        }).catch(e => {
+            setBalance('0')
+            console.log(e);
+        })
+        getPendingReward(address).then(e => {
+            setHarvest(e)
+        }).catch(e => {
+            console.log(e);
+        });
+
         getStaking(address).then(e => {
             setStaking(e)
         }).catch(e => {
@@ -306,7 +317,7 @@ function Lp(props) {
                             <div className="warp_text">
                                 <div className="text_item">
                                     <div>Can dig up:</div>
-                                    <div>{toFixed(pendingReward)}</div>
+                                    {pendingReward !== '' ? <div title={pendingReward}>{toFixed(pendingReward)}</div> : <Skeleton.Button style={{ height: 14 }} active size="small" />}
                                 </div>
                                 <div className="text_item">
                                     <div>
@@ -317,14 +328,14 @@ function Lp(props) {
                                 </div>
                                 <div className="text_item">
                                     <div>Total Liquidity:</div>
-                                    <div>{toFixed(totalStaking)}</div>
+                                    {totalStaking !== '' ? <div title={totalStaking}>{toFixed(totalStaking)}</div> : <Skeleton.Button style={{ height: 14 }} active size="small" />}
                                 </div>
                             </div>
                             <div className="warp_mapi">
                                 <span>MAPI EARNED:</span>
                             </div>
                             <div className="warp_input">
-                                <span>{toFixed(harvest)}</span>
+                                {harvest !== '' ? <span title={harvest} >{toFixed(harvest)}</span> : <Skeleton.Button style={{ width: '100%' }} active size="small" />}
                                 <div className={staking > 0 ? "showBtn" : "btn"} onClick={() => staking > 0 && redemption(staking)}>Harvest</div>
                             </div>
 
@@ -335,13 +346,13 @@ function Lp(props) {
                                 <span>MAPI EARNED:</span>
                             </div>
                             <div className="warp_input">
-                                <span>{toFixed(harvest)}</span>
+                                {harvest !== '' ? <span title={harvest} >{toFixed(harvest)}</span> : <Skeleton.Button style={{ width: '100%' }} active size="small" />}
                                 <div className="btn" disabled>Harvest</div>
                             </div>
                             <div className="warp_text">
                                 <div className="text_item">
                                     <div>Can dig up:</div>
-                                    <div>{toFixed(pendingReward)}</div>
+                                    {pendingReward !== '' ? <div title={pendingReward}>{toFixed(pendingReward)}</div> : <Skeleton.Button style={{ height: 14 }} active size="small" />}
                                 </div>
                                 <div className="text_item">
                                     <div>
@@ -352,7 +363,7 @@ function Lp(props) {
                                 </div>
                                 <div className="text_item">
                                     <div>Total Liquidity:</div>
-                                    <div>{toFixed(totalStaking)}</div>
+                                    {totalStaking !== '' ? <div title={totalStaking}>{toFixed(totalStaking)}</div> : <Skeleton.Button style={{ height: 14 }} active size="small" />}
                                 </div>
                             </div>
                         </>
@@ -366,7 +377,7 @@ function Lp(props) {
                     </div>
                     {userAddress ? (
                         <div className="warp_option">
-                            <span className="option_number">{toFixed(staking)}</span>
+                            {staking !== '' ? <span className="option_number" title={staking}>{toFixed(staking)}</span> : <Skeleton.Button style={{ width: '100%' }} active size="small" />}
                             {staking > 0 ? (
                                 <div className="option_btns">
                                     <div className="sub" onClick={showUnModal}>-</div>
