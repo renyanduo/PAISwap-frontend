@@ -4,6 +4,9 @@
   "private": true,
   "dependencies": {
     "@craco/craco": "^6.1.2",
+    "@ethersproject/contracts": "^5.4.1",
+    "@ethersproject/providers": "^5.1.2",
+    "@ethersproject/units": "^5.1.0",
     "@pancakeswap-libs/sdk": "^1.0.1",
     "@pancakeswap-libs/uikit": "^0.29.4",
     "@tailwindcss/postcss7-compat": "^2.1.2",

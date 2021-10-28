@@ -1,0 +1,309 @@
+.modal {
+    .title-warp {
+        display: flex;
+        justify-content: space-between;
+
+        span {
+            font-size: 12px;
+            font-family: MicrosoftYaHei;
+            color: #3C3C3C;
+            line-height: 16px;
+
+        }
+    }
+
+    .content-warp {
+        flex: 1;
+        margin-top: .625rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .input-warp {
+            display: flex;
+            align-items: center;
+            background: rgba(248, 242, 242, 0.93);
+            border-radius: .5rem;
+            border: .0625rem solid #FA9124;
+            padding: .3125rem;
+            flex: 0.85;
+
+            .warp-icon {
+                flex: 1;
+                width: 1.8125rem;
+                height: 1.8125rem;
+                cursor: pointer;
+                position: relative;
+
+                &:active {
+                    top: -0.0625rem;
+                }
+            }
+
+            input {
+                padding-left: .3125rem;
+                width: 100%;
+                height: 100%;
+                background: transparent;
+                outline: none;
+
+                font-size: 16px;
+                font-family: DINAlternate-Bold, DINAlternate;
+                font-weight: bold;
+                color: #303030;
+                line-height: 19px;
+
+                &::-webkit-outer-spin-button,
+                &::-webkit-inner-spin-button {
+                    -webkit-appearance: none !important;
+                    margin: 0;
+                }
+                &[type="number"]{
+                    -moz-appearance: textfield;
+                }
+            }
+        }
+
+        .warp-desc {
+            font-size: 12px;
+            font-family: MicrosoftYaHei;
+            color: #3C3C3C;
+            line-height: 16px;
+        }
+    }
+}
+
+.card_item {
+    position: relative;
+    background: #FFFFFF;
+    box-shadow: 0px 6px 14px 4px rgba(0, 0, 0, 0.14);
+    border-radius: 1.375rem;
+
+    .hot_icon {
+        position: absolute;
+        top: -1rem;
+        left: 0;
+        width: 1.4375rem;
+        height: 1.75rem;
+    }
+
+    .item_warp {
+        padding: 1.0625rem 1.0625rem 1.6875rem 1.0625rem;
+
+        .warp_info {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+
+            img {
+                width: 1.75rem;
+                height: 1.75rem;
+            }
+
+            .info_coin {
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-end;
+                span {
+                    text-align: end;
+                    &:first-child {
+                        font-size: 14px;
+                        font-family: DINAlternate-Bold, DINAlternate;
+                        font-weight: bold;
+                        color: #3C3C3C;
+                        line-height: 16px;
+                    }
+                    &:last-child {
+                        font-size: 12px;
+                        font-family: DINAlternate-Bold, DINAlternate;
+                        font-weight: bold;
+                        color: #FA9124;
+                        line-height: 14px;
+                    }
+                }
+            }
+        }
+
+        .warp_mapi {
+            margin: .75rem 0;
+
+            span {
+                font-size: 12px;
+                font-family: DINAlternate-Bold, DINAlternate;
+                font-weight: bold;
+                color: #3C3C3C;
+                line-height: 14px;
+            }
+        }
+
+        .warp_input {
+            display: flex;
+            justify-content: space-between;
+
+            span {
+                font-size: 18px;
+                font-family: DINAlternate-Bold, DINAlternate;
+                font-weight: bold;
+                color: #3C3C3C;
+                line-height: 21px;
+            }
+
+            .showBtn {
+                background: linear-gradient(180deg, #FA9124 0%, #F9B06C 100%);
+                box-shadow: 0px -1px 8px 0px rgba(187, 96, 1, 0.3);
+                border-radius: .3125rem;
+                padding: .375rem 0rem;
+                width: 5.625rem;
+
+                font-size: 12px;
+                font-family: MicrosoftYaHei;
+                color: #FFFFFF;
+                line-height: 16px;
+                cursor: pointer;
+                text-align: center;
+
+                &:hover {
+                    box-shadow: 0px -1px 8px 0px rgba(187, 96, 1, 0.5);
+                }
+
+                &:active {
+                    background: #FA9124;
+                }
+
+            }
+
+            .btn {
+                background: #FFFFFF;
+                box-shadow: 0px -1px 8px 0px rgba(187, 96, 1, 0.3);
+                border-radius: .3125rem;
+                padding: .375rem 1.5rem;
+
+                font-size: 12px;
+                font-family: MicrosoftYaHei;
+                color: #C3AA90;
+                line-height: 16px;
+                cursor: not-allowed;
+            }
+        }
+
+        .warp_text {
+            margin-top: 1.25rem;
+
+            .text_item {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+
+                div {
+                    span {
+                        font-size: 12px;
+                        font-family: MicrosoftYaHei;
+                        color: #FA9124;
+                        line-height: 16px;
+                    }
+
+                    &:first-child {
+                        font-size: 12px;
+                        font-family: MicrosoftYaHei;
+                        color: #979797;
+                        line-height: 16px;
+                    }
+
+                    &:last-child {
+                        font-size: 12px;
+                        font-family: DINAlternate-Bold, DINAlternate;
+                        font-weight: bold;
+                        color: #3C3C3C;
+                        line-height: 14px;
+                    }
+                }
+            }
+        }
+
+        .warp_desc {
+            font-size: 14px;
+            font-family: MicrosoftYaHei-Bold, MicrosoftYaHei;
+            font-weight: bold;
+            color: #3C3C3C;
+            line-height: 19px;
+            margin-top: 1.5rem;
+
+            span {
+                color: #FA9124;
+            }
+        }
+
+        .button {
+            margin-top: .625rem !important;
+            width: 100%;
+            font-weight: bold;
+        }
+
+        .warp_option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.0625rem 0;
+
+            .option_number {
+                font-size: 18px;
+                font-family: DINAlternate-Bold, DINAlternate;
+                font-weight: bold;
+                color: #3C3C3C;
+                line-height: 21px;
+            }
+
+            .showBtn {
+                background: linear-gradient(180deg, #FA9124 0%, #F9B06C 100%);
+                box-shadow: 0px -1px 8px 0px rgba(187, 96, 1, 0.3);
+                border-radius: .3125rem;
+                padding: .375rem 0;
+                width: 5.625rem;
+
+                font-size: 12px;
+                font-family: MicrosoftYaHei;
+                color: #FFFFFF;
+                line-height: 16px;
+                text-align: center;
+                cursor: pointer;
+
+                &:hover {
+                    box-shadow: 0px -1px 8px 0px rgba(187, 96, 1, 0.5);
+                }
+
+                &:active {
+                    background: #FA9124;
+                }
+
+            }
+
+            .option_btns {
+                display: flex;
+
+                .add,
+                .sub {
+                    padding: .125rem .75rem;
+                    background: rgba(248, 242, 242, 0.93);
+                    border-radius: 5px;
+                    border: 1px solid #FA9124;
+
+                    font-size: 18px;
+                    font-family: MicrosoftYaHei;
+                    color: #3C3C3C;
+                    text-align: center;
+                    line-height: 24px;
+                    position: relative;
+                    cursor: pointer;
+
+                    &:active {
+                        top: -0.0625rem
+                    }
+                }
+
+                .add {
+                    margin-left: .75rem;
+                }
+            }
+        }
+    }
+}
