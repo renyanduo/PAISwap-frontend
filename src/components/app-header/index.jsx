@@ -61,13 +61,13 @@ function Index(props) {
             }}>
             HOME
           </span>
-          <span
-            className={location.pathname === '/pool' ? 'active' : ''}
-            onClick={() => {
-              jump('/pool')
-            }}>
-            POOL
-          </span>
+          {/*<span*/}
+          {/*  className={location.pathname === '/pool' ? 'active' : ''}*/}
+          {/*  onClick={() => {*/}
+          {/*    jump('/pool')*/}
+          {/*  }}>*/}
+          {/*  POOL*/}
+          {/*</span>*/}
           <span
             className={location.pathname === '/l2wallet' ? 'active' : ''}
             onClick={() => {

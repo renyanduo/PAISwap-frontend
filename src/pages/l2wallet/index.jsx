@@ -304,9 +304,9 @@ const Index = props => {
         })
         .on('error', function(error, receipt) {
           console.log(error)
-          const successMsg = 'Transaction was not mined within 50 blocks, please make sure your transaction was properly sent. Be aware that it might still be mined!'
-          if (error.message === successMsg) {
-            // setShowSuccess(true)
+          // const successMsg = 'Transaction was not mined within 50 blocks, please make sure your transaction was properly sent. Be aware that it might still be mined!'
+          if(error.message.indexOf('50 blocks')>-1){
+              // setShowSuccess(true)
             pollingCheck(txId)
           } else {
             setShowError(true)
@@ -355,8 +355,8 @@ const Index = props => {
         })
         .on('error', function(error, receipt) {
           console.log(error)
-          const successMsg = 'Transaction was not mined within 50 blocks, please make sure your transaction was properly sent. Be aware that it might still be mined!'
-          if (error.message === successMsg) {
+          // const successMsg = 'Transaction was not mined within 50 blocks, please make sure your transaction was properly sent. Be aware that it might still be mined!'
+          if(error.message.indexOf('50 blocks')>-1){
             // setShowSuccess(true)
             pollingCheck(txId)
           } else {

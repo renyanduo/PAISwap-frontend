@@ -15,11 +15,11 @@ const routes = [
     component: L2wallet,
     exact: true
   },
-  {
-    path: '/pool',
-    component: Pool,
-    exact: true
-  }
+  // {
+  //   path: '/pool',
+  //   component: Pool,
+  //   exact: true
+  // }
 ]
 
 export default routes
