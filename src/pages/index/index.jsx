@@ -64,7 +64,13 @@ const Index = () => {
         getTotalBalance()
       })
       .catch(error => {
+        if(error.message.indexOf('50 blocks')>-1){
+          message.success('Success!')
+          getStaking()
+          getTotalBalance()
+        }
         // message.error(error.message)
+        setShowModal(false)
         setShowLoading(false)
       })
   }
@@ -124,7 +130,14 @@ const Index = () => {
         getTotalBalance()
       })
       .catch(error => {
-        message.error(error.message)
+        if(error.message.indexOf('50 blocks')>-1){
+          message.success('Success!')
+          getStaking()
+          getTotalBalance()
+        }else {
+          message.error(error.message)
+        }
+        setShowModal(false)
         setShowLoading(false)
       })
   }
