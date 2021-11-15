@@ -341,9 +341,9 @@ const Index = () => {
         <a href="https://pizzap.io/" target="_blank" rel="noopener noreferrer">
           <img src={banner} alt="" />
         </a>
-        <a href="#" rel="noopener noreferrer">
-          <img src={banner2} alt="" />
-        </a>
+        {/*<a href="#" rel="noopener noreferrer">*/}
+        {/*  <img src={banner2} alt="" />*/}
+        {/*</a>*/}
       </Carousel>
       </div>
       {userAddress ? (
