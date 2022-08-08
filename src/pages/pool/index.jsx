@@ -1,15 +1,23 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, lazy } from 'react'
 import { message } from 'antd'
 import { Row, Col } from 'antd'
 import { useSelector } from 'react-redux'
 import { getUserEpoch, getCurrentEpoch } from '../../util/pool';
 import Switch from "@/components/Switch";
-import Pi from '../../components/Pool/Pi';
+// import Pi from '../../components/Pool/Pi';
+import { TESTNET_CHILD } from '@/util/config'
+import TabsControl from "@/components/TabsControl";
 
 import './index.scss'
 
+const Pi = lazy(() => import(/* webpackChunkName: "Pool" */ '@/components/Pool/Pi'))
+const Lp = lazy(() => import(/* webpackChunkName: "Pool" */ '@/components/Pool/Lp'))
+const End = lazy(() => import(/* webpackChunkName: "Pool" */ '@/components/Pool/End'))
+
+
 function Pool(props) {
     const userAddress = useSelector(state => state.address)
+    const piUsdt = useSelector(state => state.piUsdt)
     const [isChecked, setIsChecked] = useState(false);
 
     useEffect(() => {
@@ -30,7 +38,7 @@ function Pool(props) {
             return
         }
         const { chainId } = window.ethereum;
-        if (chainId !== 0x999d4b) {
+        if (chainId !== TESTNET_CHILD.chainId) {
             switchPlianChain(true)
         }
 
@@ -56,16 +64,7 @@ function Pool(props) {
         try {
             const flag = await ethereum.request({
                 method: 'wallet_addEthereumChain',
-                params: [type && {
-                    chainId: '0x999d4b',
-                    chainName: 'Plian-subchain1test',
-                    rpcUrls: ['https://testnet.plian.io/child_test'],
-                    blockExplorerUrls: ['https://testnet.plian.org/child_test'],
-                    nativeCurrency: {
-                        symbol: 'PI',
-                        decimals: 18
-                    }
-                }]
+                params: [type && TESTNET_CHILD]
             })
             return flag
         } catch (switchError) {
@@ -87,8 +86,8 @@ function Pool(props) {
                     />
                     <span>Staked only</span>
                 </div>
-                <Row gutter={[16, 16]} className="cards">
-                    {/* <Col xs={24} sm={24} md={12} lg={8} xl={8}>
+                {/* <Row gutter={[16, 16]} className="cards">
+                    <Col xs={24} sm={24} md={12} lg={8} xl={8}>
                         <div className="card_item">
                             <img className="hot_icon" src={HOT} alt="hot" />
                             <div className="item_warp">
@@ -291,11 +290,27 @@ function Pool(props) {
                                 )}
                             </div>
                         </div>
-                    </Col> */}
+                    </Col>
                     <Col xs={24} sm={24} md={12} lg={8} xl={8}>
                         <Pi userAddress={userAddress} />
                     </Col>
-                </Row>
+                </Row> */}
+            <TabsControl>
+                    <Row gutter={[16, 22]} className="cards" name="ONGOING">
+                        <Col xs={24} sm={24} md={12} lg={8} xl={6}>
+                            <Lp userAddress={userAddress} />
+                        </Col>
+
+                        <Col xs={24} sm={24} md={12} lg={8} xl={6}>
+                            <Pi piUsdt={piUsdt} userAddress={userAddress} />
+                        </Col>
+                    </Row>
+                    <Row gutter={[16, 22]} className="cards" name="ENDED">
+                        <Col xs={24} sm={24} md={12} lg={8} xl={6}>
+                            <End userAddress={userAddress} />
+                        </Col>
+                    </Row>
+                </TabsControl>   
             </div>
         </div >
     )

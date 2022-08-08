@@ -583,62 +583,62 @@ export const crossChainABI = [{
   "name": "DepositInMainChain",
   "constant": false,
   "inputs": [{
-      "name": "chainId",
-      "type": "string"
+    "name": "chainId",
+    "type": "string"
   }
   ],
   "outputs": []
 },
-  {
-      "type": "function",
-      "name": "DepositInChildChain",
-      "constant": false,
-      "inputs": [{
-          "name": "chainId",
-          "type": "string"
-      },
-          {
-              "name": "txHash",
-              "type": "bytes32"
-          }
-      ],
-      "outputs": []
+{
+  "type": "function",
+  "name": "DepositInChildChain",
+  "constant": false,
+  "inputs": [{
+    "name": "chainId",
+    "type": "string"
   },
   {
-      "type": "function",
-      "name": "WithdrawFromChildChain",
-      "constant": false,
-      "inputs": [{
-          "name": "chainId",
-          "type": "string"
-      }
-      ],
-      "outputs": []
-  },
-  {
-      "type": "function",
-      "name": "WithdrawFromMainChain",
-      "constant": false,
-      "inputs": [{
-          "name": "chainId",
-          "type": "string"
-      },
-          {
-              "name": "amount",
-              "type": "uint256"
-          },
-          {
-              "name": "txHash",
-              "type": "bytes32"
-          }
-      ],
-      "outputs": []
+    "name": "txHash",
+    "type": "bytes32"
   }
+  ],
+  "outputs": []
+},
+{
+  "type": "function",
+  "name": "WithdrawFromChildChain",
+  "constant": false,
+  "inputs": [{
+    "name": "chainId",
+    "type": "string"
+  }
+  ],
+  "outputs": []
+},
+{
+  "type": "function",
+  "name": "WithdrawFromMainChain",
+  "constant": false,
+  "inputs": [{
+    "name": "chainId",
+    "type": "string"
+  },
+  {
+    "name": "amount",
+    "type": "uint256"
+  },
+  {
+    "name": "txHash",
+    "type": "bytes32"
+  }
+  ],
+  "outputs": []
+}
 ]
 
-export const PISTAKING_CONTRACT_ADDRESS = '0xdcc437cc8F5f47809923e8636416A9CbabC6463d'
+export const PISTAKING_CONTRACT_ADDRESS = '0x44E4D91Cc9Cde45ff0b4c746edBf31F030F0B819'
 
-export const PNFT_CONTRACT_ADDRESS = '0x10401b9A7E93E10aC92E7bB55Ae87433B9E01e08'
+export const PNFT_CONTRACT_ADDRESS = '0x6a2e954633B53b7b75eD10b35EaB10ec31cEb76C'
 
 export const CROSS_CONTRACCT_ADDRESS = '0x0000000000000000000000000000000000000065'
 
@@ -649,5 +649,5 @@ export const gasPricel2 = 2000000000
 
 // 质押gas
 export const gas = 3000000
- 
+
 export const gasPrice = 20000000000

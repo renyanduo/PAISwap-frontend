@@ -11,7 +11,7 @@ import { numFormat } from '@/util'
 import SmallModal from '@/components/SmallModal'
 import SwitchNetwork from '@/components/SwitchNetwork'
 import { useHistory, useLocation } from 'react-router-dom'
-import { MAINNET_MAIN, MAINNET_CHILD } from '@/util/config'
+import { TESTNET_MAIN, TESTNET_CHILD } from '@/util/config'
 
 import piLogo from '@/assets/images/pi.png'
 import pizza from '@/assets/images/pizza.png'
@@ -372,7 +372,7 @@ const Index = props => {
     try {
       const flag = await ethereum.request({
         method: 'wallet_addEthereumChain',
-        params: [ type === 'toChild' ? MAINNET_CHILD : MAINNET_MAIN ]
+        params: [ type === 'toChild' ? TESTNET_CHILD : TESTNET_MAIN ]
       })
       console.log(flag)
       return flag

@@ -77,11 +77,11 @@ function Pi(props) {
 
     const closeModal = () => {
         setVisible(false)
-        console.log('我是onClose回调')
+        // console.log('我是onClose回调')
     }
     const unCloseModal = () => {
         setUnVisible(false)
-        console.log('我是onClose回调')
+        // console.log('我是onClose回调')
     }
     const initialize = (address) => {
         getPendingReward(address).then(e => {

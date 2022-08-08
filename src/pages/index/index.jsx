@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux'
 import { numFormat } from '@/util'
 import Loading from '@/components/loading'
 import SwitchNetwork from '@/components/SwitchNetwork'
-import { MAINNET_MAIN, MAINNET_CHILD } from '@/util/config'
+import { MAINNET_MAIN, MAINNET_CHILD, TESTNET_MAIN, TESTNET_CHILD } from '@/util/config'
 
 import banner from '@/assets/images/banner.png'
 import banner2 from '@/assets/images/banner2.jpg'
@@ -213,6 +213,21 @@ const Index = () => {
     }
   }
 
+   const switchPlianTestChain = async type => {
+    const { ethereum } = window
+    try {
+      const flag = await ethereum.request({
+        method: 'wallet_addEthereumChain',
+        params: [ type === 'toChild' ? TESTNET_CHILD : TESTNET_MAIN ]
+      })
+      console.log(flag)
+      return flag
+    } catch (switchError) {
+      console.log(switchError)
+      message.error(switchError.message)
+    }
+  }
+
   const isMetaMaskInstalled = () => {
     //Have to check the ethereum binding on the window object to see if it's installed
     const { ethereum } = window
@@ -242,7 +257,7 @@ const Index = () => {
     let timer
     checkChainId().then(res => {
       address && getStaking()
-      if (res === '0x7a3038') {
+      if (res === '0x999d4b') {
         function init() {
           address && getPendingReward()
           getTotalBalance()
@@ -376,7 +391,7 @@ const Index = () => {
       )}
       {showModal ? modal : null}
       <Loading show={showLoading} />
-      <SwitchNetwork show={showSwitch} onClick={()=>{switchPlianChain('toChild')}} text="Switch to Plian Child" desc="Pizzap is running on Plian child chain, you should switch your current network to Plian child."></SwitchNetwork>
+      <SwitchNetwork show={showSwitch} onClick={()=>{switchPlianTestChain('toPlianTestChild')}} text="Switch to Plian Test Child" desc="Test.Paiswap is running on Plian Test child chain, you should switch your current network to Plian Test child."></SwitchNetwork>
     </div>
   )
 }

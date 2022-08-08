@@ -1,7 +1,10 @@
 {
-  "network": "https://bsc-dataseed.binance.org/",
+  "network": "https://testnet.plian.io/child_test",
   "testNetWork": "https://testnet.plian.io/child_test",
-  "piContractAddress": "0x0ac21AFA69f5559F41168D4De6077F62EACd2aa5",
-  "pNftContractAddress": "0xD046766524c66B0b2a53B2A0c92b18B9593C7951",
+  "piContractAddress": "0x44E4D91Cc9Cde45ff0b4c746edBf31F030F0B819",
+  "pNftContractAddress": "0x6a2e954633B53b7b75eD10b35EaB10ec31cEb76C",
+  "lpContractAddress": "0x5DfA41DeB36338F60B05BD82b61Cfa6cB007ee95",
+  "uniswapContractAddress": "0x6483F0E08B8f9Ea5d414692ab3a2796604442A4b",
+  "BalanceContractAddres": "0xbc2cDA5D9aa17DC73b2EFB4E13448aC2E23f9005",
   "symbol": "PI"
 }
