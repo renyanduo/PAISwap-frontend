@@ -39,8 +39,8 @@ function Index(props) {
 
   const nameList = {
     '/': 'HOME',
-    '/l2wallet': 'L2 WALLET',
-    '/pool': 'POOL'
+    // '/l2wallet': 'L2 WALLET',
+    // '/pool': 'POOL'
   }
 
 
@@ -84,7 +84,7 @@ function Index(props) {
               })
             }
             <span>
-              <a href="/liquidity">SWAP</a>
+              <a href="https://swap.paiswap.io/">SWAP</a>
             </span>
           </div>
           <div className="block header-title sm:hidden">{nameList[location.pathname]}</div>
@@ -132,7 +132,7 @@ function Index(props) {
                 )
               })
             }
-            <li><a href="/liquidity">SWAP</a></li>
+            <li><a href="https://swap.paiswap.io/">SWAP</a></li>
           </ul>
         </div>
       )}
